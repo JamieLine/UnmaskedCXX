@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.12)
 
-set (CMAKE_CXX_FLAGS "-lstdc++fs -std=c++17")
+#set (CMAKE_CXX_FLAGS "-lstdc++fs -std=c++17")
+set (CMAKE_CXX_FLAGS "-std=c++17")
 
 SET(TESTED_PROJECT_INCLUDE_DIRECTORY "SampleCXXProject")
 

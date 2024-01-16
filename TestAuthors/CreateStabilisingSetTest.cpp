@@ -95,6 +95,9 @@ std::string CreateStabilisingSetTest(std::vector<std::string> Tokens, std::strin
 
     // The indexes should always neatly cast to `size_t` but this will be written as a string.
     // The conversion isn't valuable.
+    // This should be merged into a single FixedPoint class holding the two strings together
+    // These are 2 objects but shouldn't be.
+    // FixedPointArgumentValues is useless without the index array.
     vector<string> FixedPointIndexes;
     vector<string> FixedPointArgumentValues;
 
@@ -289,7 +292,16 @@ std::string CreateStabilisingSetTest(std::vector<std::string> Tokens, std::strin
     // The \",\";" is because we need to construct the source for a string literal at the end of a local string literal.
     // At some point it might be worth making a COMMA variable just to remove that hideousness.
     for (int LocalIndex = 0; LocalIndex < ArgumentTypes.size(); LocalIndex++) {
-        ArgumentOutputValues.push_back("\t\t\tstd::cout << std::get<" + to_string(LocalIndex) + ">(GeneratedArguments[i]); \n \t\t\tstd::cout << \",\";");
+        // If this is not a fixed point
+        auto FixedPointIndexIterator = std::find(FixedPointIndexes.begin(), FixedPointIndexes.end(), to_string(LocalIndex));
+        if (FixedPointIndexIterator == FixedPointIndexes.end()) {
+            ArgumentOutputValues.push_back("\t\t\tstd::cout << std::get<" + to_string(LocalIndex) + ">(GeneratedArguments[i]); \n \t\t\tstd::cout << \",\";");
+        }
+        else {
+            // Convert the iterator to an index
+            size_t FixedPointArgumentValueIndex = std::distance(FixedPointIndexes.begin(), FixedPointIndexIterator);
+            ArgumentOutputValues.push_back("\t\t\tstd::cout << " + FixedPointArgumentValues[FixedPointArgumentValueIndex] + ";\n \t\t\tstd::cout << \",\";");
+        }
     }
 
     // TODO: MAKE THIS AWARE THAT SOME VALUES ARE FIXED
