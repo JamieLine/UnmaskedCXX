@@ -13,6 +13,7 @@
 #include "FixedArgument.h"
 #include "Logging.h"
 #include <iostream>
+#include "ArgumentType.h"
 
 std::string CreateStabilisingSetTest(std::vector<std::string> Tokens, std::string SourceFileAddress, std::size_t NumTestsToRun) {
     //# NEED TO PARSE THIS
@@ -60,7 +61,7 @@ std::string CreateStabilisingSetTest(std::vector<std::string> Tokens, std::strin
     // where ArgumentType contains the string and some functions
     // to do common manipulations
     // e.g. get the associated generator type and generator call
-    vector<string> ArgumentTypes;
+    vector<ArgumentType> ArgumentTypes;
 
 
     // This is done with the weird if-statement to handle edge-cases easily.
@@ -69,7 +70,7 @@ std::string CreateStabilisingSetTest(std::vector<std::string> Tokens, std::strin
             *CurrentToken != "(" &&
             *CurrentToken != ")")
             {
-                ArgumentTypes.push_back(*CurrentToken);
+                ArgumentTypes.emplace_back(*CurrentToken);
                 Log(std::cout, LOG, "Pulled argument type");
                 Log(std::cout, VALUE_OUTPUT, *CurrentToken);
         }
@@ -158,8 +159,15 @@ std::string CreateStabilisingSetTest(std::vector<std::string> Tokens, std::strin
     TestSource = ReplaceAllInString(TestSource, "RETURN_TYPE", ReturnType);
     TestSource = ReplaceAllInString(TestSource, "NUM_ARGUMENT_TYPES", to_string(ArgumentTypes.size()));
 
-    //string ArgumentTypesAsString = JoinVectorOfStrings(ArgumentTypes, ",");
-    string ArgumentTypesAsString = JoinVectorOfStrings(ArgumentTypes, ",");
+    // TODO: Maybe make this not involve copying the entire ArgumentTypes vector? Can use std::transform
+    vector<string> ArgumentTypeStrings;
+    ArgumentTypeStrings.reserve(ArgumentTypes.size());
+    
+    for (auto const& ArgType : ArgumentTypes) {
+        ArgumentTypeStrings.push_back(ArgType.Type);
+    }
+
+    string ArgumentTypesAsString = JoinVectorOfStrings(ArgumentTypeStrings, ",");
     TestSource = ReplaceAllInString(TestSource, "ARGUMENT_TYPES", ArgumentTypesAsString);
 
     // Insert the final arguments to the functions signature
@@ -170,7 +178,7 @@ std::string CreateStabilisingSetTest(std::vector<std::string> Tokens, std::strin
 
     vector<string> GeneratorTypes;
     for (auto const& ArgType : ArgumentTypes) {
-        GeneratorTypes.push_back("Generator_" + ArgType);
+        GeneratorTypes.push_back(ArgType.GetGeneratorType());
     }
 
     TestSource = ReplaceAllInString(TestSource, "GENERATOR_TYPES", JoinVectorOfStrings(GeneratorTypes, ","));
@@ -201,12 +209,11 @@ std::string CreateStabilisingSetTest(std::vector<std::string> Tokens, std::strin
     // Step 1: Transform argument types to appropriate generator constructor calls
     // Step 2: Join those generator constructor strings for substitution
 
-    // NOTE: Is this vector just GeneratorTypes + "()" elementwise?
     vector<string> GeneratorsSource;
     GeneratorsSource.reserve(ArgumentTypes.size());    
 
     for (auto const& ArgType : ArgumentTypes) {
-        GeneratorsSource.push_back("Generator_" + ArgType + "()");
+        GeneratorsSource.push_back(ArgType.GetGeneratorCall());
     }
 
     TestSource = ReplaceAllInString(TestSource, "GENERATORS", JoinVectorOfStrings(GeneratorsSource, ","));
@@ -260,8 +267,6 @@ std::string CreateStabilisingSetTest(std::vector<std::string> Tokens, std::strin
         else {
             ArgumentOutputValues.push_back("\t\t\tstd::cout << " + (*FixedArgIterator).Value + ";\n \t\t\tstd::cout << \",\";");
         }
-
-
     }
 
     TestSource = ReplaceAllInString(TestSource, "COUT_EACH_ARGUMENT_IN_TURN", JoinVectorOfStrings(ArgumentOutputValues, "\n"));
