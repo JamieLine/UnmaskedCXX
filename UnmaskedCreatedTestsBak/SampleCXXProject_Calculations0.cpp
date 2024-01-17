@@ -1,10 +1,10 @@
 // Substitution values
-// FN_NAME: The name of the tested CPP function.
-// RETURN_TYPE: The return type of the function FN_NAME
-// ARGUMENT_TYPES: The types of each argument of FN_NAME in order.
-// NUM_TESTS_TO_RUN: The number of test iterations to run
+// AddInts: The name of the tested CPP function.
+// int: The return type of the function AddInts
+// int,int: The types of each argument of AddInts in order.
+// 10: The number of test iterations to run
 
-#include "../FILE_ADDRESS"
+#include "../SampleCXXProject/Calculations.h"
 #include "../Generators/AllGenerators.h"
 #include <iostream>
 #include <tuple>
@@ -12,32 +12,32 @@
 
 // Intentionally missing the comma before OTHER_ARGS
 // Returns true if and only if the contained test passed.
-bool TEST_FN_NAME() {
-	RETURN_TYPE ReturnedValues[NUM_TESTS_TO_RUN]{};
+bool SampleCXXProject_Calculations0() {
+	int ReturnedValues[10]{};
 
-	std::vector<std::tuple<ARGUMENT_TYPES>> GeneratedArguments; 
+	std::vector<std::tuple<int,int>> GeneratedArguments; 
 
-	for (int i = 0; i < NUM_TESTS_TO_RUN; i++) {
+	for (int i = 0; i < 10; i++) {
 		// Generate Inputs
 
-		static const size_t NumberOfGenerators = NUM_ARGUMENT_TYPES;
+		static const size_t NumberOfGenerators = 2;
 		//void* Generators[NumberOfGenerators] = { Generator<ArgumentTypes...>() };
 
 
 		// Generate a value for every argument
 		//void* GeneratedValues[NumberOfGenerators] = { Generator<ArgumentTypes>::GenerateValue()... };
-		std::tuple<GENERATOR_TYPES> Generators;
-		//GeneratedArguments[i] = std::tuple<ARGUMENT_TYPES>(GENERATE_ARGUMENTS);
-		GeneratedArguments.push_back(std::make_tuple(GENERATORS_GET_VALUES));
+		std::tuple<Generator_int,Generator_int> Generators;
+		//GeneratedArguments[i] = std::tuple<int,int>(GENERATE_ARGUMENTS);
+		GeneratedArguments.push_back(std::make_tuple(std::get<0>(Generators).GenerateValue(),std::get<1>(Generators).GenerateValue()));
 
 		// Replace the named arguments when we call the function.
 		
-		ReturnedValues[i] = FN_NAME(GENERATED_ARGUMENTS);
+		ReturnedValues[i] = AddInts(0,std::get<1>(GeneratedArguments[i]));
 	}
 
 	// Check if all values are equal
 
-	if (std::all_of(ReturnedValues, ReturnedValues+NUM_TESTS_TO_RUN, [ReturnedValues](RETURN_TYPE x){ return x == ReturnedValues[0];})) {
+	if (std::all_of(ReturnedValues, ReturnedValues+10, [ReturnedValues](int x){ return x == ReturnedValues[0];})) {
 		std::cout << "All values are equal to each other" << std::endl;
 		return true;
 	}
@@ -46,12 +46,15 @@ bool TEST_FN_NAME() {
 		std::cout << "Test failed\n";
 		std::cout << "Printing results in format\n";
 		std::cout << "TEST_NUMBER | INPUT_ARGS_AS_TUPLE | RETURN_VALUE\n";
-		for (int i = 0; i < NUM_TESTS_TO_RUN; i++) {
+		for (int i = 0; i < 10; i++) {
 			std::cout << i;
 			std::cout << " | ";
 			// Intentionally de-indented this token to make generation easier.
 
-COUT_EACH_ARGUMENT_IN_TURN
+			std::cout << 0;
+ 			std::cout << ",";
+			std::cout << std::get<1>(GeneratedArguments[i]); 
+ 			std::cout << ",";
 
 			//std::cout << GeneratedArguments[i];
 			std::cout << " | ";
@@ -66,5 +69,5 @@ COUT_EACH_ARGUMENT_IN_TURN
 }
 
 /*int main(int argc, char** argv) {
-	TEST_FN_NAME();
+	SampleCXXProject_Calculations0();
 }*/

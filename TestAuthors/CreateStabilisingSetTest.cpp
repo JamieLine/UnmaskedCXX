@@ -15,7 +15,7 @@
 #include <iostream>
 #include "ArgumentType.h"
 
-std::string CreateStabilisingSetTest(std::vector<std::string> Tokens, std::string SourceFileAddress, std::size_t NumTestsToRun) {
+std::string CreateStabilisingSetTest(std::vector<std::string> Tokens, std::string SourceFileAddress, std::string OutputFileNameNoExtension, std::size_t NumTestsToRun) {
     //# NEED TO PARSE THIS
     //# UnmaskedTestFixedPoints(std::function<int(int, int)>(&AddInts), 0, 0);
 
@@ -26,7 +26,7 @@ std::string CreateStabilisingSetTest(std::vector<std::string> Tokens, std::strin
 
     Log(std::cout, LOG, "Starting CreateStabilisingSetTest");
 
-    // Before we start, we can make some asserts
+    // Before we start, we can make some assertions
     Log(std::cout, LOG, "Validating that beginning and end of `Tokens` is correct");
     if (Tokens[0] != STABILISING_TEST_MARKER || Tokens[Tokens.size()-1] != ";") {
         Log(std::cout, ERROR, "Incorrect tokens passed into `CreateStabilisingSetTest`");
@@ -57,10 +57,6 @@ std::string CreateStabilisingSetTest(std::vector<std::string> Tokens, std::strin
     Log(std::cout, LOG, "Pulled return type");
     Log(std::cout, VALUE_OUTPUT, ReturnType);
 
-    // TODO: Make ArgumentTypes vector<ArgumentType>
-    // where ArgumentType contains the string and some functions
-    // to do common manipulations
-    // e.g. get the associated generator type and generator call
     vector<ArgumentType> ArgumentTypes;
 
 
@@ -125,6 +121,11 @@ std::string CreateStabilisingSetTest(std::vector<std::string> Tokens, std::strin
 
     Log(std::cout, LOG, "Extracted data from specification.");
 
+
+    // TODO: We can do this entire function in one string allocation.
+    // Read in a section of file Up To And Including a marker to substitute
+    // Then Skip Forward the length of the buffer needed to hold the result 
+    // of the substitution.
     std::ifstream TemplateStream("Templates/StabilisingSetTestTemplate.cpp");
     std::stringstream Buffer;
     Buffer << TemplateStream.rdbuf();
@@ -153,7 +154,7 @@ std::string CreateStabilisingSetTest(std::vector<std::string> Tokens, std::strin
 
     // Set the function name
     // TODO: WHY IS THIS EMPTY?
-    TestSource = ReplaceAllInString(TestSource, "TEST_FN_NAME", "");
+    TestSource = ReplaceAllInString(TestSource, "TEST_FN_NAME", OutputFileNameNoExtension);
 
     // Fix the return type and argument types
     TestSource = ReplaceAllInString(TestSource, "RETURN_TYPE", ReturnType);
@@ -274,8 +275,8 @@ std::string CreateStabilisingSetTest(std::vector<std::string> Tokens, std::strin
     return TestSource;
 }
 
-std::string CreateStabilisingSetTest(std::vector<std::string> Tokens, std::string SourceFileAddress) {
-    return CreateStabilisingSetTest(Tokens, SourceFileAddress, DEFAULT_NUM_TESTS_TO_RUN);
+std::string CreateStabilisingSetTest(std::vector<std::string> Tokens, std::string SourceFileAddress, std::string OutputFileNameNoExtension) {
+    return CreateStabilisingSetTest(Tokens, SourceFileAddress, OutputFileNameNoExtension, DEFAULT_NUM_TESTS_TO_RUN);
 }
 
 std::vector<NameTestPair> CreateAllStabilisingTests(std::vector<std::string> Tokens, std::string SourceFileAddress, std::size_t NumTestsToRun) {
@@ -299,9 +300,28 @@ std::vector<NameTestPair> CreateAllStabilisingTests(std::vector<std::string> Tok
 
         vector<string> NeededTokens(CurrentToken, EndingToken);
 
-        string TestName = SourceFileAddress + std::to_string(CurrentTestNumber);
+        string TestName = SourceFileAddress;
+        
+
+        // Clean the source file address
+        // Then use that to generate the name of the generated test function.
+        const std::vector<std::string> PartsToRemove = {"../", "./", ".h", ".hpp", ".cxx", ".c", ".cpp", ".hxx"};
+		for (auto const& Extension : PartsToRemove) {
+			std::string::size_type Index = TestName.find(Extension);
+
+			if (Index != std::string::npos)
+   				TestName.erase(Index, Extension.length());
+		}
+
+        
+        // Replace `/` in the directory tree with `_` to avoid Directory Trickery
+		TestName = ReplaceAllInString(TestName, "/", "_");
+		TestName = ReplaceAllInString(TestName, "\\", "_"); 
+        
+        TestName += std::to_string(CurrentTestNumber);
         CurrentTestNumber++;
-        string TestSource = CreateStabilisingSetTest(NeededTokens, SourceFileAddress, NumTestsToRun);
+
+        string TestSource = CreateStabilisingSetTest(NeededTokens, SourceFileAddress, TestName, NumTestsToRun);
 
         ToReturn.emplace_back(TestName, TestSource);
 

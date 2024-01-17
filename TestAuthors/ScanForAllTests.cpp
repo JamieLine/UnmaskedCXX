@@ -50,45 +50,25 @@ int main(int argc, char** argv) {
 
     Tokens = std::vector<std::string>(StartOfTestSpec, EndOfTestSpec);
 
-    //std::cout << "-------" << std::endl;
-    //std::cout << "Printing tokens" << std::endl;
-
-    //for (auto const& Token : Tokenize(CalculationsSourceString, KeptDelimiters, DiscardedDelimiters)) {
-    //  std::cout << Token << std::endl;
-    //}
-
-    //std::cout << "-------" << std::endl;
-
     Log(std::cout, LOG, "Here are the results");
 
     std::vector<NameTestPair> Results = CreateAllStabilisingTests(Tokenize(CalculationsSourceString, KeptDelimiters, DiscardedDelimiters), "./SampleCXXProject/Calculations.h");
-    //for (auto const& Result : Results) { 
-    //  std::cout << Result.Name;
-    //  std::cout << Result.Test;
-    //  std::cout << "\n-----------\n";
-    //  std::cout << std::endl;
-    //}
-    //std::cout << std::endl;
 
     Log(std::cout, LOG, "Writing results to appropriate files");
 
+	// Generate the source files for each individual test.
 	for (auto const& Result : Results) {
 		std::string OutputFileName = Result.Name;
 
-		// Remove the extension from the file name, and then re-add it.
-		// Also remove any ../ or ./ occurrences.
-		const std::vector<std::string> PartsToRemove = {"../", "./", ".h", ".hpp", ".cxx", ".c", ".cpp", ".hxx"};
+		// Remove any ../ or ./ occurrences from the file name, and then add the file extension.
+		const std::vector<std::string> PartsToRemove = {"../", "./",};
 		for (auto const& Extension : PartsToRemove) {
 			std::string::size_type Index = OutputFileName.find(Extension);
 
-			if (Index != std::string::npos)
-   				OutputFileName.erase(Index, Extension.length());
-			//OutputFileName.erase(std::remove(OutputFileName.begin(), OutputFileName.end(), Extension), OutputFileName.end());
+			if (Index != std::string::npos) {
+				OutputFileName.erase(Index, Extension.length()); 
+			}
 		}
-
-		// Replace `/` in the directory tree with `_` to avoid Directory Trickery
-		OutputFileName = ReplaceAllInString(OutputFileName, "/", "_");
-		OutputFileName = ReplaceAllInString(OutputFileName, "\\", "_");
 		
 		OutputFileName.append(".cpp");
 
@@ -96,9 +76,9 @@ int main(int argc, char** argv) {
 
 		std::ofstream CurrentFile;
 		CurrentFile.open(OutputFileName, 
-			std::fstream::in |
-			std::fstream::out |
-			std::fstream::trunc);
+		std::fstream::in |
+		std::fstream::out |
+		std::fstream::trunc);
 
 		if (!CurrentFile.is_open()) {
 			Log(std::cout, VALUE_OUTPUT, std::strerror(errno));
@@ -118,4 +98,64 @@ int main(int argc, char** argv) {
 
 		CurrentFile.close();
     }
+
+	// Now generate the appropriate "main" file.
+
+	std::ifstream FileRunnerTemplate;
+	FileRunnerTemplate.open("./Templates/TestRunnerTemplate.cpp");
+
+	if (FileRunnerTemplate.is_open()) {
+      Log(std::cout, LOG, "Opened file successfully.");
+    }
+
+    else {
+      Log(std::cout, ERROR, "Error in opening FileRunnerTemplate.cpp.");
+      return 0;
+    }
+
+    std::string TestRunnerSource( (std::istreambuf_iterator<char>(FileRunnerTemplate) ),
+                       (std::istreambuf_iterator<char>()    ) );
+
+    Log(std::cout, LOG, "Created TestRunnerSource string from template.");
+
+	// We need to include every generated test in this file.
+	// It's not standard to include a .cpp file
+	// but this skips awkwardness with CMake.
+	std::vector<std::string> GeneratedTestIncludeDirectives;
+	GeneratedTestIncludeDirectives.reserve(Results.size());
+	for (auto const& Result : Results) {
+		GeneratedTestIncludeDirectives.push_back("#include \"" + Result.Name + ".cpp\"");
+	}
+
+	TestRunnerSource = ReplaceAllInString(TestRunnerSource, "INCLUDE_TESTS", JoinVectorOfStrings(GeneratedTestIncludeDirectives, "\n"));
+
+	// We now need to run those tests and push their results into the Results array in "TestRunnerTemplate.cpp"
+	std::vector<std::string> RunTestSource;
+	RunTestSource.reserve(Results.size());
+
+	for (auto const& Result : Results) {
+		RunTestSource.push_back("\tResults.emplace_back(\"" + Result.Name + "\", " + Result.Name + "());");
+	}
+
+	TestRunnerSource = ReplaceAllInString(TestRunnerSource, "RUN_TESTS_AND_PUSH_RESULTS", JoinVectorOfStrings(RunTestSource, "\n"));
+
+	Log(std::cout, LOG, "Finished TestRunnerSource");
+
+	std::string FileRunnerAddress = "./UnmaskedCreatedTests/TestRunner.cpp";
+	std::ofstream TestRunnerFile;
+	TestRunnerFile.open(FileRunnerAddress,
+						std::fstream::in |
+						std::fstream::out |
+						std::fstream::trunc);
+
+	if (TestRunnerFile.is_open()) {
+		Log(std::cout, LOG, "Successfully opened TestRunner.cpp");
+		TestRunnerFile << TestRunnerSource;
+		TestRunnerFile.close();
+	}
+
+	else {
+		Log(std::cout, ERROR, "Failed to open TestRunner.cpp. To recovery manually, here is the data that would be written into that file.");
+		Log(std::cout, VALUE_OUTPUT, TestRunnerSource);
+	}
 }

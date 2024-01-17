@@ -13,10 +13,14 @@ SET(TEST_AUTHOR_FILES "TestAuthors/CreateStabilisingSetTest.cpp")
 SET(UNMASKED_INCLUDE_DIRECTORIES "./")
 SET(EVERYWHERE_INCLUDED_SOURCE_CODE "StringOperations.cpp" "Logging.cpp")
 
-add_executable(TestRunner TestAuthors/RunAllTests.cpp ${EVERYWHERE_INCLUDED_SOURCE_CODE} ${TEST_AUTHOR_FILES})
-target_include_directories(TestRunner PUBLIC ${TESTED_PROJECT_INCLUDE_DIRECTORY})
-target_include_directories(TestRunner PUBLIC ${UNMASKED_INCLUDE_DIRECTORIES})
-target_include_directories(TestRunner PUBLIC ${UNMASKED_USER_INCLUDE_DIRECTORY})
+add_executable(RunTests UnmaskedCreatedTests/TestRunner.cpp ${EVERYWHERE_INCLUDED_SOURCE_CODE})
+target_include_directories(RunTests PUBLIC ${TESTED_PROJECT_INCLUDE_DIRECTORY})
+target_include_directories(RunTests PUBLIC ${UNMASKED_INCLUDE_DIRECTORIES})
+target_include_directories(RunTests PUBLIC ${UNMASKED_USER_INCLUDE_DIRECTORY})
+set_target_properties( RunTests
+    PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY "./UnmaskedCreatedTests"
+)
 
 add_executable(TestAuthor TestAuthors/ScanForAllTests.cpp ${EVERYWHERE_INCLUDED_SOURCE_CODE} ${TEST_AUTHOR_FILES})
 target_include_directories(TestAuthor PUBLIC ${TESTED_PROJECT_INCLUDE_DIRECTORY})
