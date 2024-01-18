@@ -18,16 +18,8 @@ bool TEST_FN_NAME() {
 	std::vector<std::tuple<ARGUMENT_TYPES>> GeneratedArguments; 
 
 	for (int i = 0; i < NUM_TESTS_TO_RUN; i++) {
-		// Generate Inputs
-
-		static const size_t NumberOfGenerators = NUM_ARGUMENT_TYPES;
-		//void* Generators[NumberOfGenerators] = { Generator<ArgumentTypes...>() };
-
-
 		// Generate a value for every argument
-		//void* GeneratedValues[NumberOfGenerators] = { Generator<ArgumentTypes>::GenerateValue()... };
 		std::tuple<GENERATOR_TYPES> Generators;
-		//GeneratedArguments[i] = std::tuple<ARGUMENT_TYPES>(GENERATE_ARGUMENTS);
 		GeneratedArguments.push_back(std::make_tuple(GENERATORS_GET_VALUES));
 
 		// Replace the named arguments when we call the function.
@@ -36,7 +28,6 @@ bool TEST_FN_NAME() {
 	}
 
 	// Check if all values are equal
-
 	if (std::all_of(ReturnedValues, ReturnedValues+NUM_TESTS_TO_RUN, [ReturnedValues](RETURN_TYPE x){ return x == ReturnedValues[0];})) {
 		std::cout << "All values are equal to each other" << std::endl;
 		return true;
@@ -53,7 +44,6 @@ bool TEST_FN_NAME() {
 
 COUT_EACH_ARGUMENT_IN_TURN
 
-			//std::cout << GeneratedArguments[i];
 			std::cout << " | ";
 			std::cout << ReturnedValues[i];
 			std::cout << "\n";
@@ -64,7 +54,3 @@ COUT_EACH_ARGUMENT_IN_TURN
 		return false;
 	}
 }
-
-/*int main(int argc, char** argv) {
-	TEST_FN_NAME();
-}*/

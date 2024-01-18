@@ -12,13 +12,9 @@
 #include <cstring>
 
 int main(int argc, char** argv) {
-    // TODO: This should write into `RunAllTests.cpp`
-    // such that that script forms a program which performs all tests
-
-    // TODO: MAKE THIS GENERAL
-
     Log(std::cout, LOG, "UnmaskedCXX started");
 
+    // TODO: MAKE THIS GENERAL
     std::ifstream SourceFileStream;
     SourceFileStream.open("./SampleCXXProject/Calculations.h");
 
