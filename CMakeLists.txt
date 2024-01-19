@@ -9,7 +9,7 @@ SET(UNMASKED_USER_INCLUDE_DIRECTORY "UserlandIncludes")
 
 project(UnmaskedCXX VERSION 1.0 LANGUAGES CXX)
 
-SET(TEST_AUTHOR_FILES "TestAuthors/CreateStabilisingSetTest.cpp")
+SET(TEST_AUTHOR_FILES "TestAuthors/CreateStabilisingSetTest.cpp" "TestAuthors/CreateAlwaysReturnValueTest.cpp")
 SET(UNMASKED_INCLUDE_DIRECTORIES "./")
 SET(EVERYWHERE_INCLUDED_SOURCE_CODE "StringOperations.cpp" "Logging.cpp")
 

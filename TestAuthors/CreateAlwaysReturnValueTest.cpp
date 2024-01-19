@@ -1,4 +1,4 @@
-#include "CreateStabilisingSetTest.h"
+#include "CreateAlwaysReturnValueTest.h"
 
 #include <ctgmath>
 #include <string>
@@ -15,7 +15,7 @@
 #include <iostream>
 #include "ArgumentType.h"
 
-std::string CreateStabilisingSetTest(std::vector<std::string> Tokens, std::string SourceFileAddress, std::string OutputFileNameNoExtension, std::size_t NumTestsToRun) {
+std::string CreateAlwaysReturnValueTest(std::vector<std::string> Tokens, std::string SourceFileAddress, std::string OutputFileNameNoExtension, std::size_t NumTestsToRun) {
     //# NEED TO PARSE THIS
     //# UnmaskedTestFixedPoints(std::function<int(int, int)>(&AddInts), 0, 0);
 
@@ -24,12 +24,12 @@ std::string CreateStabilisingSetTest(std::vector<std::string> Tokens, std::strin
     using std::vector;
     using std::size_t;
 
-    Log(std::cout, LOG, "Starting CreateStabilisingSetTest");
+    Log(std::cout, LOG, "Starting CreateAlwaysReturnValueTest");
 
     // Before we start, we can make some assertions
     Log(std::cout, LOG, "Validating that beginning and end of `Tokens` is correct");
-    if (Tokens[0] != STABILISING_TEST_MARKER || Tokens[Tokens.size()-1] != ";") {
-        Log(std::cout, ERROR, "Incorrect tokens passed into `CreateStabilisingSetTest`");
+    if (Tokens[0] != ALWAYS_RETURN_VALUE_TEST_MARKER || Tokens[Tokens.size()-1] != ";") {
+        Log(std::cout, ERROR, "Incorrect tokens passed into `CreateAlwaysReturnValueTest`");
         Log(std::cout, ERROR, "Outputting first and last value.");
         Log(std::cout, VALUE_OUTPUT, Tokens[0]);
         Log(std::cout, VALUE_OUTPUT, Tokens[Tokens.size()-1]);
@@ -97,6 +97,12 @@ std::string CreateStabilisingSetTest(std::vector<std::string> Tokens, std::strin
     // These are 2 objects but shouldn't be.
     // FixedPointArgumentValues is useless without the index array.
 
+	// Read in the target value, and then skip the comma after it.
+	string TargetValue = *CurrentToken;
+	CurrentToken += 2;
+
+	//TODO: FINISH MAKING THIS TEST WORK AND NOT JUST A COPY OF STABILISING_SET_TEST!!!!!!
+
     vector<FixedArgument> FixedArguments;
 
     Log(std::cout, LOG, "Pulling Fixed Points");
@@ -126,7 +132,7 @@ std::string CreateStabilisingSetTest(std::vector<std::string> Tokens, std::strin
     // Read in a section of file Up To And Including a marker to substitute
     // Then Skip Forward the length of the buffer needed to hold the result 
     // of the substitution.
-    std::ifstream TemplateStream("Templates/StabilisingSetTestTemplate.cpp");
+    std::ifstream TemplateStream("Templates/AlwaysReturnValueTestTemplate.cpp");
     std::stringstream Buffer;
     Buffer << TemplateStream.rdbuf();
 
@@ -272,14 +278,16 @@ std::string CreateStabilisingSetTest(std::vector<std::string> Tokens, std::strin
 
     TestSource = ReplaceAllInString(TestSource, "COUT_EACH_ARGUMENT_IN_TURN", JoinVectorOfStrings(ArgumentOutputValues, "\n"));
 
+	TestSource = ReplaceAllInString(TestSource, "TARGET_VALUE", TargetValue);
+
     return TestSource;
 }
 
-std::string CreateStabilisingSetTest(std::vector<std::string> Tokens, std::string SourceFileAddress, std::string OutputFileNameNoExtension) {
-    return CreateStabilisingSetTest(Tokens, SourceFileAddress, OutputFileNameNoExtension, DEFAULT_NUM_TESTS_TO_RUN);
+std::string CreateAlwaysReturnValueTest(std::vector<std::string> Tokens, std::string SourceFileAddress, std::string OutputFileNameNoExtension) {
+    return CreateAlwaysReturnValueTest(Tokens, SourceFileAddress, OutputFileNameNoExtension, DEFAULT_NUM_TESTS_TO_RUN);
 }
 
-std::vector<TestSpecification> CreateAllStabilisingTests(std::vector<std::string> Tokens, std::string SourceFileAddress, std::size_t NumTestsToRun) {
+std::vector<TestSpecification> CreateAllAlwaysReturnValueTests(std::vector<std::string> Tokens, std::string SourceFileAddress, std::size_t NumTestsToRun) {
     auto CurrentToken = Tokens.begin();
 
     using std::vector;
@@ -289,7 +297,7 @@ std::vector<TestSpecification> CreateAllStabilisingTests(std::vector<std::string
     // Potentially there should be a reservation step here.
     // Reserve space for 1 string per instance of the marker.
 
-    CurrentToken = std::find(CurrentToken, Tokens.end(), STABILISING_TEST_MARKER);
+    CurrentToken = std::find(CurrentToken, Tokens.end(), ALWAYS_RETURN_VALUE_TEST_MARKER);
     Log(std::cout, LOG, "If this CurrentToken is Tokens.end(), then no tests were found.");
     Log(std::cout, VALUE_OUTPUT, std::to_string(CurrentToken == Tokens.end()));
 
@@ -313,26 +321,27 @@ std::vector<TestSpecification> CreateAllStabilisingTests(std::vector<std::string
    				TestName.erase(Index, Extension.length());
 		}
 
-		TestName += "_" + STABILISING_TEST_MARKER + "_";
         
         // Replace `/` in the directory tree with `_` to avoid Directory Trickery
 		TestName = ReplaceAllInString(TestName, "/", "_");
 		TestName = ReplaceAllInString(TestName, "\\", "_"); 
         
+		TestName += "_" + ALWAYS_RETURN_VALUE_TEST_MARKER + "_";
+
         TestName += std::to_string(CurrentTestNumber);
         CurrentTestNumber++;
 
-        string TestSource = CreateStabilisingSetTest(NeededTokens, SourceFileAddress, TestName, NumTestsToRun);
+        string TestSource = CreateAlwaysReturnValueTest(NeededTokens, SourceFileAddress, TestName, NumTestsToRun);
 
-        ToReturn.emplace_back(TestName, STABILISING_TEST_MARKER, TestSource);
+        ToReturn.emplace_back(TestName, ALWAYS_RETURN_VALUE_TEST_MARKER, TestSource);
 
-        CurrentToken = std::find(CurrentToken+1, Tokens.end(), STABILISING_TEST_MARKER);
+        CurrentToken = std::find(CurrentToken+1, Tokens.end(), ALWAYS_RETURN_VALUE_TEST_MARKER);
     }
 
     return ToReturn;
 }
 
 
-std::vector<TestSpecification> CreateAllStabilisingTests(std::vector<std::string> Tokens, std::string SourceFileAddress) {
-    return CreateAllStabilisingTests(Tokens, SourceFileAddress, DEFAULT_NUM_TESTS_TO_RUN);
+std::vector<TestSpecification> CreateAllAlwaysReturnValueTests(std::vector<std::string> Tokens, std::string SourceFileAddress) {
+    return CreateAllAlwaysReturnValueTests(Tokens, SourceFileAddress, DEFAULT_NUM_TESTS_TO_RUN);
 }

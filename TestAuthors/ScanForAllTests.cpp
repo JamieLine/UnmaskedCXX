@@ -1,5 +1,6 @@
 #include <iostream>
 #include "TestAuthors/CreateStabilisingSetTest.h"
+#include "TestAuthors/CreateAlwaysReturnValueTest.h"
 #include "StringOperations.h"
 #include <fstream>
 #include <string>
@@ -49,7 +50,15 @@ int main(int argc, char** argv) {
 
     Log(std::cout, LOG, "Here are the results");
 
-    std::vector<TestSpecification> Tests = CreateAllStabilisingTests(Tokenize(CalculationsSourceString, KeptDelimiters, DiscardedDelimiters), "./SampleCXXProject/Calculations.h");
+	// This really wants to become a specific "store" of Tests
+	// That is more efficient than this
+    std::vector<TestSpecification> StabilisingTests = CreateAllStabilisingTests(Tokenize(CalculationsSourceString, KeptDelimiters, DiscardedDelimiters), "./SampleCXXProject/Calculations.h");
+	std::vector<TestSpecification> ReturnValueTests = CreateAllAlwaysReturnValueTests(Tokenize(CalculationsSourceString, KeptDelimiters, DiscardedDelimiters), "./SampleCXXProject/Calculations.h");
+
+	std::vector<TestSpecification> Tests;
+	Tests.reserve(StabilisingTests.size() + ReturnValueTests.size());
+	Tests.insert(Tests.end(), StabilisingTests.begin(), StabilisingTests.end());
+	Tests.insert(Tests.end(), ReturnValueTests.begin(), ReturnValueTests.end());
 
     Log(std::cout, LOG, "Writing results to appropriate files");
 
