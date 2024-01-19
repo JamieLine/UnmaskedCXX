@@ -10,6 +10,7 @@
 #include <cerrno>
 #include <sys/stat.h>
 #include <cstring>
+#include "TestSpecification.h"
 
 int main(int argc, char** argv) {
     Log(std::cout, LOG, "UnmaskedCXX started");
@@ -48,13 +49,13 @@ int main(int argc, char** argv) {
 
     Log(std::cout, LOG, "Here are the results");
 
-    std::vector<NameTestPair> Results = CreateAllStabilisingTests(Tokenize(CalculationsSourceString, KeptDelimiters, DiscardedDelimiters), "./SampleCXXProject/Calculations.h");
+    std::vector<TestSpecification> Tests = CreateAllStabilisingTests(Tokenize(CalculationsSourceString, KeptDelimiters, DiscardedDelimiters), "./SampleCXXProject/Calculations.h");
 
     Log(std::cout, LOG, "Writing results to appropriate files");
 
 	// Generate the source files for each individual test.
-	for (auto const& Result : Results) {
-		std::string OutputFileName = Result.Name;
+	for (auto const& Test : Tests) {
+		std::string OutputFileName = Test.Name;
 
 		// Remove any ../ or ./ occurrences from the file name, and then add the file extension.
 		const std::vector<std::string> PartsToRemove = {"../", "./",};
@@ -82,14 +83,14 @@ int main(int argc, char** argv) {
 			Log(std::cout, ERROR, "Attempted to open file and didn't work?");
 			Log(std::cout, VALUE_OUTPUT, OutputFileName);
 			Log(std::cout, LOG, "To fix the error manually, here are the contents that would have been written");
-			Log(std::cout, VALUE_OUTPUT, Result.Test);
+			Log(std::cout, VALUE_OUTPUT, Test.SourceCode);
 		}
 
 		else {
 			Log(std::cout, LOG, "Successfully opened file");
 			Log(std::cout, VALUE_OUTPUT, OutputFileName);
 
-			CurrentFile << Result.Test;
+			CurrentFile << Test.SourceCode;
 		}
 
 		CurrentFile.close();
@@ -118,19 +119,23 @@ int main(int argc, char** argv) {
 	// It's not standard to include a .cpp file
 	// but this skips awkwardness with CMake.
 	std::vector<std::string> GeneratedTestIncludeDirectives;
-	GeneratedTestIncludeDirectives.reserve(Results.size());
-	for (auto const& Result : Results) {
-		GeneratedTestIncludeDirectives.push_back("#include \"" + Result.Name + ".cpp\"");
+	GeneratedTestIncludeDirectives.reserve(Tests.size());
+	for (auto const& Test : Tests) {
+		GeneratedTestIncludeDirectives.push_back("#include \"" + Test.Name + ".cpp\"");
 	}
 
 	TestRunnerSource = ReplaceAllInString(TestRunnerSource, "INCLUDE_TESTS", JoinVectorOfStrings(GeneratedTestIncludeDirectives, "\n"));
 
 	// We now need to run those tests and push their results into the Results array in "TestRunnerTemplate.cpp"
 	std::vector<std::string> RunTestSource;
-	RunTestSource.reserve(Results.size());
+	RunTestSource.reserve(Tests.size());
 
-	for (auto const& Result : Results) {
-		RunTestSource.push_back("\tResults.emplace_back(\"" + Result.Name + "\", " + Result.Name + "());");
+	for (auto const& Test : Tests) {
+		// The first call to Test.Name inserts the name into the struct in the new code
+		// The second is used to generate a function call
+		// Test.Name as a string is a usable, readable name
+		// {Test.Name}() calls that function.
+		RunTestSource.push_back("\tTests.emplace_back(\"" + Test.Name + "\", \"" + Test.Type + "\", " + Test.Name + "());");
 	}
 
 	TestRunnerSource = ReplaceAllInString(TestRunnerSource, "RUN_TESTS_AND_PUSH_RESULTS", JoinVectorOfStrings(RunTestSource, "\n"));

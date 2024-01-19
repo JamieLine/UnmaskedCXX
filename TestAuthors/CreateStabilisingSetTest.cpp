@@ -9,7 +9,7 @@
 #include <algorithm>
 
 #include "../StringOperations.h"
-#include "NameTestPair.h"
+#include "TestSpecification.h"
 #include "FixedArgument.h"
 #include "Logging.h"
 #include <iostream>
@@ -279,13 +279,13 @@ std::string CreateStabilisingSetTest(std::vector<std::string> Tokens, std::strin
     return CreateStabilisingSetTest(Tokens, SourceFileAddress, OutputFileNameNoExtension, DEFAULT_NUM_TESTS_TO_RUN);
 }
 
-std::vector<NameTestPair> CreateAllStabilisingTests(std::vector<std::string> Tokens, std::string SourceFileAddress, std::size_t NumTestsToRun) {
+std::vector<TestSpecification> CreateAllStabilisingTests(std::vector<std::string> Tokens, std::string SourceFileAddress, std::size_t NumTestsToRun) {
     auto CurrentToken = Tokens.begin();
 
     using std::vector;
     using std::string;
 
-    vector<NameTestPair> ToReturn;
+    vector<TestSpecification> ToReturn;
     // Potentially there should be a reservation step here.
     // Reserve space for 1 string per instance of the marker.
 
@@ -323,7 +323,7 @@ std::vector<NameTestPair> CreateAllStabilisingTests(std::vector<std::string> Tok
 
         string TestSource = CreateStabilisingSetTest(NeededTokens, SourceFileAddress, TestName, NumTestsToRun);
 
-        ToReturn.emplace_back(TestName, TestSource);
+        ToReturn.emplace_back(TestName, STABILISING_TEST_MARKER, TestSource);
 
         CurrentToken = std::find(CurrentToken+1, Tokens.end(), STABILISING_TEST_MARKER);
     }
@@ -332,6 +332,6 @@ std::vector<NameTestPair> CreateAllStabilisingTests(std::vector<std::string> Tok
 }
 
 
-std::vector<NameTestPair> CreateAllStabilisingTests(std::vector<std::string> Tokens, std::string SourceFileAddress) {
+std::vector<TestSpecification> CreateAllStabilisingTests(std::vector<std::string> Tokens, std::string SourceFileAddress) {
     return CreateAllStabilisingTests(Tokens, SourceFileAddress, DEFAULT_NUM_TESTS_TO_RUN);
 }

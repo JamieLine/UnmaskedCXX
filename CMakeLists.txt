@@ -13,14 +13,19 @@ SET(TEST_AUTHOR_FILES "TestAuthors/CreateStabilisingSetTest.cpp")
 SET(UNMASKED_INCLUDE_DIRECTORIES "./")
 SET(EVERYWHERE_INCLUDED_SOURCE_CODE "StringOperations.cpp" "Logging.cpp")
 
-add_executable(RunTests UnmaskedCreatedTests/TestRunner.cpp ${EVERYWHERE_INCLUDED_SOURCE_CODE})
-target_include_directories(RunTests PUBLIC ${TESTED_PROJECT_INCLUDE_DIRECTORY})
-target_include_directories(RunTests PUBLIC ${UNMASKED_INCLUDE_DIRECTORIES})
-target_include_directories(RunTests PUBLIC ${UNMASKED_USER_INCLUDE_DIRECTORY})
-set_target_properties( RunTests
-    PROPERTIES
-    RUNTIME_OUTPUT_DIRECTORY "./UnmaskedCreatedTests"
-)
+if(EXISTS "UnmaskedCreatedTests/TestRunner.cpp")
+	add_executable(RunTests UnmaskedCreatedTests/TestRunner.cpp ${EVERYWHERE_INCLUDED_SOURCE_CODE})
+	target_include_directories(RunTests PUBLIC ${TESTED_PROJECT_INCLUDE_DIRECTORY})
+	target_include_directories(RunTests PUBLIC ${UNMASKED_INCLUDE_DIRECTORIES})
+	target_include_directories(RunTests PUBLIC ${UNMASKED_USER_INCLUDE_DIRECTORY})
+	set_target_properties( RunTests
+		PROPERTIES
+		RUNTIME_OUTPUT_DIRECTORY "./UnmaskedCreatedTests"
+	)
+	message("TestRunner created sucessfully.")
+else()
+	message("WARNING: CMAKE COULD NOT FIND UnmaskedCreatedTests/TestRunner.cpp. This file will be generated once TestAuthor is run. At this point, re-run CMake and then RunTests will be available as a target.")
+endif()
 
 add_executable(TestAuthor TestAuthors/ScanForAllTests.cpp ${EVERYWHERE_INCLUDED_SOURCE_CODE} ${TEST_AUTHOR_FILES})
 target_include_directories(TestAuthor PUBLIC ${TESTED_PROJECT_INCLUDE_DIRECTORY})
