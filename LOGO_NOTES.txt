@@ -1,0 +1,14 @@
+Vertices of the left hand rhombus at 800x800 are
+
+125, 200
+125, 450 (+0, +250)
+400, 675 (+275, +225)
+400, 425
+
+The white is #ffffff
+grey is #222222 (in hex)
+red is #cc0000
+
+HSV noise is used for the red half
+
+white drop shadows provide the glow
