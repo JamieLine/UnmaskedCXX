@@ -1,6 +1,8 @@
 UNMASKEDCXX README
 ------------------
 
+![UnmaskedCXX]([http://url/to/img.png](https://github.com/JamieLine/UnmaskedCXX/blob/main/Logo.png))
+
 UnmaskedCXX is a WIP automatic test generator for C/C++, written in C++. Currently the project is only tested under C++17, but is hoping to target everything from C++11 onwards.
 
 ./SampleCXXProject/ gives an example of an extremely small (header-only) library for which UnmaskedCXX can generate tests.
