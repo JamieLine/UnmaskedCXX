@@ -19,9 +19,10 @@ To build the software itself, use CMake.
 From the root directory of this project, run
 `cmake .`
 
-And two targets will become availabBuild and Run Instructionsle for your build system.
+And the first target will become available for your build system.
 
-The first is `TestAuthor`, which you will need to build first.
+That target is `TestAuthor`, which you will need to build first.
+
 On Linux/Mac, you can run
 
 `make TestAuthor`
@@ -29,6 +30,8 @@ On Linux/Mac, you can run
 `./TestAuthor`
 
 to build and run the `TestAuthor`. Currently this will only search for `SampleCXXProject/Calculations.h` by name, however in future this will be generalised.
+
+Then re-run `cmake .` and it will generate the second target for you. The new target is `RunTests`, which by default outputs its binaries to `UnmaskedCreatedTests/`.
 
 Then run
 `make RunTests`
@@ -45,8 +48,7 @@ Usage Instructions
 See `SampleCXXProject/Calculations.h` for an example.
 
 
-In a source file which contains the implementation of a function you wish to test, create a new function which will never be called directly.
-In `SampleCXXProject/Calculations.h`, this function is `void TestSpecifications()`, but the actual name does not matter. This function should not
+In a source file which contains the implementation of a function you wish to test, include `UserlandIncludes/UnmaskedTests.h` and create a new function which will never be called directly. In `SampleCXXProject/Calculations.h`, this function is `void TestSpecifications()`, but the actual name does not matter. This function should not
 appear in any compiled binaries and will never be called. 
 
 Within this new function, add the specifications of the tests you wish to run. These will take the following form.
