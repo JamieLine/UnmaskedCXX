@@ -7,4 +7,5 @@ CMakeFiles/*
 Output.txt
 Makefile
 UnmaskedCreatedTests/*
+!UnmaskedCreatedTests
 UnmaskedCreatedTestsBak/*
