@@ -6,6 +6,4 @@ CMakeFiles/*
 .vscode/*
 Output.txt
 Makefile
-UnmaskedCreatedTests/*
-!UnmaskedCreatedTests
 UnmaskedCreatedTestsBak/*
