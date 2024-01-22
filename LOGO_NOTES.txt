@@ -8,6 +8,7 @@ Vertices of the left hand rhombus at 800x800 are
 The white is #ffffff
 grey is #222222 (in hex)
 red is #cc0000
+purple is #662a8c
 
 HSV noise is used for the red half
 
