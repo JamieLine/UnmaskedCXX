@@ -1,0 +1,8 @@
+# This directory should be empty in the repo
+# However, we need it for test generation
+# so we add this single (small) .gitignore to 
+# ensure the directory exists.
+
+# This directory will be populated by TestAuthor
+*
+!.gitignore
