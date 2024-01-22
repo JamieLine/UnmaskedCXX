@@ -1,5 +1,4 @@
-UNMASKEDCXX README
-------------------
+<h1 style="text-align: center;">UnmaskedCXX Readme</h3>
 
 <p align="center">
 <img src="https://github.com/JamieLine/UnmaskedCXX/blob/main/Graphics/PurpleLogo.png?raw=true" width=40% height=40% align="center">
