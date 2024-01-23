@@ -21,40 +21,34 @@ int main(int argc, char** argv) {
     SourceFileStream.open("./SampleCXXProject/Calculations.h");
 
     if (SourceFileStream.is_open()) {
-      Log(std::cout, LOG, "Opened file successfully.");
+		Log(std::cout, LOG, "Opened file successfully.");
     }
 
     else {
-      Log(std::cout, ERROR, "Error in opening file.");
-      return 0;
-    }
+		Log(std::cout, ERROR, "Error in opening file.");
+		return 0;
+	}
 
+	// Now that the file is open, we read it into a single string for processing.
     std::string CalculationsSourceString( (std::istreambuf_iterator<char>(SourceFileStream) ),
                        (std::istreambuf_iterator<char>()    ) );
 
     Log(std::cout, LOG, "Created source string.");
 
+	// We wish to tokenize this file but some delimiters are important and some can be discarded.
+	// Broadly, it is important if it carries specific meaning.
     std::vector<std::string> KeptDelimiters = {"&", ",", ";", "(", ")", "{", "}", "[", "]", "<", ">"};
     std::vector<std::string> DiscardedDelimiters = {" ", "\n", "\t", };
 
-    Log(std::cout, LOG, "Started to create test.");
-
-    std::vector<std::string> Tokens = Tokenize(CalculationsSourceString, KeptDelimiters, DiscardedDelimiters);
-    // We now have Tokens over the entire file, we want to find the Tokens which are relevant
-    // for creating tests.
-
-    auto StartOfTestSpec = std::find(Tokens.begin(), Tokens.end(), "UnmaskedTestStabilisingSet");
-    auto EndOfTestSpec = std::find(StartOfTestSpec, Tokens.end(), ";");
-
-    Tokens = std::vector<std::string>(StartOfTestSpec, EndOfTestSpec);
-
-    Log(std::cout, LOG, "Here are the results");
+    Log(std::cout, LOG, "Started to create tests.");
 
 	// This really wants to become a specific "store" of Tests
 	// That is more efficient than this
     std::vector<TestSpecification> StabilisingTests = CreateAllStabilisingTests(Tokenize(CalculationsSourceString, KeptDelimiters, DiscardedDelimiters), "./SampleCXXProject/Calculations.h");
 	std::vector<TestSpecification> ReturnValueTests = CreateAllAlwaysReturnValueTests(Tokenize(CalculationsSourceString, KeptDelimiters, DiscardedDelimiters), "./SampleCXXProject/Calculations.h");
 
+	// This union isn't particularly clean but it does work and with std::vector it's 
+	// at least approximately optimal.
 	std::vector<TestSpecification> Tests;
 	Tests.reserve(StabilisingTests.size() + ReturnValueTests.size());
 	Tests.insert(Tests.end(), StabilisingTests.begin(), StabilisingTests.end());
@@ -64,6 +58,7 @@ int main(int argc, char** argv) {
 
 	// Generate the source files for each individual test.
 	for (auto const& Test : Tests) {
+		// `OutputFileName` will be changed from here, but this is a good seed.
 		std::string OutputFileName = Test.Name;
 
 		// Remove any ../ or ./ occurrences from the file name, and then add the file extension.
@@ -82,9 +77,9 @@ int main(int argc, char** argv) {
 
 		std::ofstream CurrentFile;
 		CurrentFile.open(OutputFileName, 
-		std::fstream::in |
-		std::fstream::out |
-		std::fstream::trunc);
+						std::fstream::in |
+						std::fstream::out |
+						std::fstream::trunc);
 
 		if (!CurrentFile.is_open()) {
 			Log(std::cout, VALUE_OUTPUT, std::strerror(errno));
@@ -106,6 +101,7 @@ int main(int argc, char** argv) {
     }
 
 	// Now generate the appropriate "main" file.
+	// This file will run all of the tests.
 
 	std::ifstream FileRunnerTemplate;
 	FileRunnerTemplate.open("./Templates/TestRunnerTemplate.cpp");
@@ -116,6 +112,7 @@ int main(int argc, char** argv) {
 
     else {
       Log(std::cout, ERROR, "Error in opening FileRunnerTemplate.cpp.");
+	  // We can return here as without the template there really is nothing to save.
       return 0;
     }
 
@@ -168,4 +165,6 @@ int main(int argc, char** argv) {
 		Log(std::cout, ERROR, "Failed to open TestRunner.cpp. To recovery manually, here is the data that would be written into that file.");
 		Log(std::cout, VALUE_OUTPUT, TestRunnerSource);
 	}
+
+	return 0;
 }

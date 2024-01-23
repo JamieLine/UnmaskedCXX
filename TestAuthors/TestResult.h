@@ -2,8 +2,6 @@
 
 #include <string>
 
-// TODO: Make the test runner generate these, and make it output these structures to Report.csv
-
 struct TestResult {
 public:
 	std::string Name;
