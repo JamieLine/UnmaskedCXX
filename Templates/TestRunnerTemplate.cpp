@@ -28,10 +28,10 @@ int main(int argc, char** argv) {
 RUN_TESTS_AND_PUSH_RESULTS
 
 	int NumberOfPassedTests = 0;
-	for (auto Test : Tests) {
+	for (auto Tegit branch -m <newname>st : Tests) {
 		std::cout << "Test name : " + Test.Name + "\n";
     std::cout << "Test type : " + Test.Type + "\n";
-		std::cout << "Test passed? :" + BoolToString(Test.Passed) + "\n";
+		std::cout <git branch -m <newname>< "Test passed? :" + BoolToString(Test.Passed) + "\n";
 		if (Test.Passed) {
 			NumberOfPassedTests++;
 		}

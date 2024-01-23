@@ -22,7 +22,7 @@ std::string CreateAlwaysReturnValueTest(std::vector<std::string> Tokens, std::st
     // Expects the following of the input.
 
     // 1. Begins with UnmaskedAlwaysReturnsValueTest (given in this file as "ALWAYS_RETURN_VALUE_TEST_MARKER")
-    // 2. The call to UnmaskedAlwaysReturnsValueTest takes in a std::function<RETURN_TYPE(ARGUMENT_TYPES) constructed 
+    // 2. The call to UnmaskedAlwaysReturnsValueTest takes in a std::function<RETURN_TYPE(ARGUMENT_TYPES)> constructed 
     // by taking the address of the tested function.
     // 3. The first non-function parameter is the expected return value.
     // 4. The expected return value is followed by Index-Value pairs.
@@ -308,8 +308,8 @@ std::string CreateAlwaysReturnValueTest(std::vector<std::string> Tokens, std::st
     for (int LocalIndex = 0; LocalIndex < ArgumentTypes.size(); LocalIndex++) {
         // Determine if we're investigating a fixed argument, and if we are, what that argument is.
         // TODO: If the number of fixed arguments becomes large enough, it'll become worth the investment
-        // to preserve the position of the last fixed argument, and enforce that FixedArguments
-        // is sorted with respect to index.
+        // to begin the next search just after the position of the last fixed argument, and enforce 
+        // that FixedArguments is sorted with respect to index.
         auto FixedArgIterator = std::find_if( FixedArguments.begin(),
                                                 FixedArguments.end(),
                                                 [LocalIndex](FixedArgument const& F) {return F.MatchesIndex(LocalIndex); });
