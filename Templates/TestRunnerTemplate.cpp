@@ -28,7 +28,7 @@ int main(int argc, char** argv) {
 RUN_TESTS_AND_PUSH_RESULTS
 
 	int NumberOfPassedTests = 0;
-	for (auto  Test : Tests) {
+	for (auto Test : Tests) {
 		std::cout << "Test name : " + Test.Name + "\n";
     	std::cout << "Test type : " + Test.Type + "\n";
 		std::cout << "Test passed? :" + BoolToString(Test.Passed) + "\n";
