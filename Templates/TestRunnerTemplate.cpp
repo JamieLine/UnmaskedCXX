@@ -6,14 +6,6 @@ INCLUDE_TESTS
 #include "../TestAuthors/TestResult.h"
   
 const std::string REPORT_FILE_NAME = "UnmaskedReport.csv";
-/*
-struct NameResultPair {
-public:
-	std::string Name;
-	bool Passed;
-
-	NameResultPair(std::string InName, bool InPassed) : Name(InName), Passed(InPassed) {}
-};*/
 
 std::string BoolToString(bool B) {
 	if (B) { return "True"; }
@@ -30,7 +22,7 @@ RUN_TESTS_AND_PUSH_RESULTS
 	int NumberOfPassedTests = 0;
 	for (auto Test : Tests) {
 		std::cout << "Test name : " + Test.Name + "\n";
-    	std::cout << "Test type : " + Test.Type + "\n";
+		std::cout << "Test type : " + Test.Type + "\n";
 		std::cout << "Test passed? :" + BoolToString(Test.Passed) + "\n";
 		if (Test.Passed) {
 			NumberOfPassedTests++;
