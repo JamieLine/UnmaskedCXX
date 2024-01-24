@@ -2,8 +2,9 @@
 
 #include <string>
 
-// TODO: Make the test runner generate these, and make it output these structures to Report.csv
 
+// A POD struct which groups together data regarding a test which has already been completed.
+// Used in TestRunnerTemplate and generated runners.
 struct TestResult {
 public:
 	std::string Name;

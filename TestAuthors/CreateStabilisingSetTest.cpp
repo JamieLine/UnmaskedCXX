@@ -16,9 +16,20 @@
 #include "ArgumentType.h"
 
 std::string CreateStabilisingSetTest(std::vector<std::string> Tokens, std::string SourceFileAddress, std::string OutputFileNameNoExtension, std::size_t NumTestsToRun) {
-    //# NEED TO PARSE THIS
-    //# UnmaskedTestFixedPoints(std::function<int(int, int)>(&AddInts), 0, 0);
+    // Creates a test from Tokens extracted from input similar to the following:
+    // `UnmaskedStabilisingSetTest(std::function<int(int, int)>(&AddInts), 0, 0);`
+    
+    // Expects the following of the input.
 
+    // 1. Begins with UnmaskedStabilisingSetTest (given in this file as "STABILISING_TEST_MARKER")
+    // 2. The call to UnmaskedStabilisingSetTest takes in a std::function<RETURN_TYPE(ARGUMENT_TYPES)> constructed 
+    // by taking the address of the tested function.
+    // 3. The arguments form Index-Value pairs.
+    // In this example, the argument at index 0 is set to a value of 0.
+    // If we had a 1 as the final argument, we would be setting the argument at index 0 to have a value of 1.
+    // 4. The last token should be ";".
+    // 5. This string originates from a file with address `SourceFileAddress`, where the implementation of the tested function can be found.
+     
     using std::string;
     using std::to_string;
     using std::vector;
@@ -26,13 +37,17 @@ std::string CreateStabilisingSetTest(std::vector<std::string> Tokens, std::strin
 
     Log(std::cout, LOG, "Starting CreateStabilisingSetTest");
 
-    // Before we start, we can make some assertions
+    // Before we start, we should enforce that our assumptions on the input hold.
     Log(std::cout, LOG, "Validating that beginning and end of `Tokens` is correct");
     if (Tokens[0] != STABILISING_TEST_MARKER || Tokens[Tokens.size()-1] != ";") {
         Log(std::cout, ERROR, "Incorrect tokens passed into `CreateStabilisingSetTest`");
         Log(std::cout, ERROR, "Outputting first and last value.");
         Log(std::cout, VALUE_OUTPUT, Tokens[0]);
         Log(std::cout, VALUE_OUTPUT, Tokens[Tokens.size()-1]);
+        // TODO: Maybe this should signal to calling code that it failed?
+        // Calling code can then take the generated output and treat it as "suspicious"?
+        // Will need the return type to change from std::string to something like a Pair<std::string, bool> where
+        // The bool is "trustworthiness".
     }
     else {
         Log(std::cout, LOG, "Beginning and end of `Tokens` is correct");
@@ -51,6 +66,9 @@ std::string CreateStabilisingSetTest(std::vector<std::string> Tokens, std::strin
     // These can all be discarded
     CurrentToken += 4;
 
+    // After the opening angular bracket, we find the return type
+    // The angular bracket contains something like <float(int, int)>
+    // for a function `float F(int, int);`
     string ReturnType = *CurrentToken;
     CurrentToken++;
 
@@ -60,7 +78,12 @@ std::string CreateStabilisingSetTest(std::vector<std::string> Tokens, std::strin
     vector<ArgumentType> ArgumentTypes;
 
 
+    // On the first run through this loop, it should be true that
+    // (*CurrentToken) == "("
+
     // This is done with the weird if-statement to handle edge-cases easily.
+    // The characters that are checked for do not contain information, they are
+    // simply delimiters between strings that do.
     while (*CurrentToken != ")") {
         if (*CurrentToken != "," &&
             *CurrentToken != "(" &&
@@ -78,9 +101,17 @@ std::string CreateStabilisingSetTest(std::vector<std::string> Tokens, std::strin
     // Now `CurrentToken` points to a closing bracket. 
     // The next token is a closing angular bracket so we may skip that as well as the opening bracket and ampersand immediately following.
 
+    // UnmaskedStabilisingSetTest(std::function<int(int, int)>(&AddInts), 0, 0);`
+    //                                                          ^
+    //                                                          ^
+    // We are here.
+
     CurrentToken += 4;
-    
-    //Next is the function name
+
+    // UnmaskedStabilisingSetTest(std::function<int(int, int)>(&AddInts), 0, 0);`
+    //                                                          ^^^^^^^
+    //                                                          ^^^^^^^
+    // Now we are here.
 
     Log(std::cout, LOG, "Pulling function name");
     string FunctionName = *CurrentToken;
@@ -91,14 +122,14 @@ std::string CreateStabilisingSetTest(std::vector<std::string> Tokens, std::strin
 
     // Now we pick up the fixed points.
 
-    // The indexes should always neatly cast to `size_t` but this will be written as a string.
+    // The indexes should always neatly cast to `size_t` but this will be written as a string
+    // into a FixedArgument instance.
     // The conversion isn't valuable.
-    // This should be merged into a single FixedArgument class holding the two strings together
-    // These are 2 objects but shouldn't be.
-    // FixedPointArgumentValues is useless without the index array.
-
     vector<FixedArgument> FixedArguments;
 
+    // It's unknown (but knowable) how many fixed points we will define.
+    // We just know that the last one will be followed by a ")".
+    // And if there are no fixed points, we know that *CurrentToken == ")".
     Log(std::cout, LOG, "Pulling Fixed Points");
     while (*CurrentToken != ")") { 
         if (*CurrentToken == ",") { CurrentToken++; }
@@ -126,6 +157,9 @@ std::string CreateStabilisingSetTest(std::vector<std::string> Tokens, std::strin
     // Read in a section of file Up To And Including a marker to substitute
     // Then Skip Forward the length of the buffer needed to hold the result 
     // of the substitution.
+
+    // For now, we simply read in the template, convert that stringstream to a std::string
+    // and then perform a series of text substituions upon that string.
     std::ifstream TemplateStream("Templates/StabilisingSetTestTemplate.cpp");
     std::stringstream Buffer;
     Buffer << TemplateStream.rdbuf();
@@ -153,7 +187,6 @@ std::string CreateStabilisingSetTest(std::vector<std::string> Tokens, std::strin
     TestSource = ReplaceAllInString(TestSource, "FILE_ADDRESS", SourceFileAddress);
 
     // Set the function name
-    // TODO: WHY IS THIS EMPTY?
     TestSource = ReplaceAllInString(TestSource, "TEST_FN_NAME", OutputFileNameNoExtension);
 
     // Fix the return type and argument types
@@ -161,6 +194,8 @@ std::string CreateStabilisingSetTest(std::vector<std::string> Tokens, std::strin
     TestSource = ReplaceAllInString(TestSource, "NUM_ARGUMENT_TYPES", to_string(ArgumentTypes.size()));
 
     // TODO: Maybe make this not involve copying the entire ArgumentTypes vector? Can use std::transform
+    // Or make JoinVectorOfStrings accept a vector<ArgumentType> parameter as ArgumentType is just
+    // `std::string` with extra utilities.
     vector<string> ArgumentTypeStrings;
     ArgumentTypeStrings.reserve(ArgumentTypes.size());
     
@@ -177,6 +212,8 @@ std::string CreateStabilisingSetTest(std::vector<std::string> Tokens, std::strin
     // Create generators and generate values
     // We could use std::format from C++20 but Jamie wants this to compile under C++14-ish
 
+    // Again, this could be made easier by having JoinVectorOfStrings directly read this data 
+    // out of the array.
     vector<string> GeneratorTypes;
     for (auto const& ArgType : ArgumentTypes) {
         GeneratorTypes.push_back(ArgType.GetGeneratorType());
@@ -192,10 +229,16 @@ std::string CreateStabilisingSetTest(std::vector<std::string> Tokens, std::strin
     // f"std::get<{Index}>(Generators).GenerateValue()"
     // which is the actual code we wish to subsitute into the template.
 
+    // Again, std::format isn't used as it's a C++20 feature.
+    // And in this case, the format string is just adding strings into the middle.
+    // So they aren't too bad to write as "string sums".
+
     vector<string> GetValueFromGeneratorCalls;
     GetValueFromGeneratorCalls.reserve(ArgumentTypes.size());
 
     for (int i = 0; i < ArgumentTypes.size(); i++) {
+        // Maybe the ArgumentType should know its own index?
+        // But that might require specialising `vector<ArgumentType>` or replacing it.
         GetValueFromGeneratorCalls.push_back("std::get<" + to_string(i) + ">(Generators).GenerateValue()");
     }
 
@@ -257,10 +300,15 @@ std::string CreateStabilisingSetTest(std::vector<std::string> Tokens, std::strin
 
     for (int LocalIndex = 0; LocalIndex < ArgumentTypes.size(); LocalIndex++) {
         // Determine if we're investigating a fixed argument, and if we are, what that argument is.
+        // TODO: If the number of fixed arguments becomes large enough, it'll become worth the investment
+        // to begin the next search just after the position of the last fixed argument, and enforce 
+        // that FixedArguments is sorted with respect to index.
         auto FixedArgIterator = std::find_if( FixedArguments.begin(),
                                                 FixedArguments.end(),
                                                 [LocalIndex](FixedArgument const& F) {return F.MatchesIndex(LocalIndex); });
 
+        // In the following strings, the three "\t" chars are there to ensure that the generated code has the
+        // indentation expected of human-written code.
         // If this is not a fixed argument.
         if (FixedArgIterator == FixedArguments.end()) {
             ArgumentOutputValues.push_back("\t\t\tstd::cout << std::get<" + to_string(LocalIndex) + ">(GeneratedArguments[i]); \n \t\t\tstd::cout << \",\";");
@@ -280,10 +328,12 @@ std::string CreateStabilisingSetTest(std::vector<std::string> Tokens, std::strin
 }
 
 std::vector<TestSpecification> CreateAllStabilisingTests(std::vector<std::string> Tokens, std::string SourceFileAddress, std::size_t NumTestsToRun) {
-    auto CurrentToken = Tokens.begin();
-
+    // This function is expecting to get every token that is contained within a single file.
+    // This function does the filtering necessary to create "well-formed" calls to `CreateStabilisingSetTest`.
     using std::vector;
     using std::string;
+
+    auto CurrentToken = Tokens.begin();
 
     vector<TestSpecification> ToReturn;
     // Potentially there should be a reservation step here.
@@ -293,13 +343,22 @@ std::vector<TestSpecification> CreateAllStabilisingTests(std::vector<std::string
     Log(std::cout, LOG, "If this CurrentToken is Tokens.end(), then no tests were found.");
     Log(std::cout, VALUE_OUTPUT, std::to_string(CurrentToken == Tokens.end()));
 
+    // For each value of `SourceFileAddress`, the CurrentTestNumber should be unique for each test.
+    // Currently that relies on `SourceFileAddress` being different each time this function is called.
+    // TODO: Enforce this requirement.
     int CurrentTestNumber = 0;
 
     while (CurrentToken != Tokens.end()) {
+        // CurrentToken will now be the start of the test (ALWAYS_RETURN_VALUE_TEST_MARKER's value)
+        // EndingToken will be the end of the test (;)
         auto EndingToken = std::find(CurrentToken, Tokens.end(), ";");
 
+        // Create a copy of the needed tokens to pass forward.
+        // Ideally, this would be a "view" into the previous tokens vector
         vector<string> NeededTokens(CurrentToken, EndingToken);
 
+        // We will modify TestName to make it unique, but `SourceFileAddress` is a useful "somewhat unique"
+        // starting point.
         string TestName = SourceFileAddress;
         
 
@@ -320,12 +379,15 @@ std::vector<TestSpecification> CreateAllStabilisingTests(std::vector<std::string
 		TestName = ReplaceAllInString(TestName, "\\", "_"); 
         
         TestName += std::to_string(CurrentTestNumber);
+        // Now that this test number has been used, preload the next one.
         CurrentTestNumber++;
 
+        // Create the source for the specified test.
         string TestSource = CreateStabilisingSetTest(NeededTokens, SourceFileAddress, TestName, NumTestsToRun);
 
         ToReturn.emplace_back(TestName, STABILISING_TEST_MARKER, TestSource);
 
+        // If we start searching from `CurrentToken`, we will only ever find `CurrentToken`.
         CurrentToken = std::find(CurrentToken+1, Tokens.end(), STABILISING_TEST_MARKER);
     }
 

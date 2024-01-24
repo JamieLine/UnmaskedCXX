@@ -10,7 +10,6 @@
 #include <tuple>
 #include <algorithm>
 
-// Intentionally missing the comma before OTHER_ARGS
 // Returns true if and only if the contained test passed.
 bool TEST_FN_NAME() {
 	RETURN_TYPE ReturnedValues[NUM_TESTS_TO_RUN]{};

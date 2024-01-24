@@ -1,6 +1,5 @@
 cmake_minimum_required(VERSION 3.12)
 
-#set (CMAKE_CXX_FLAGS "-lstdc++fs -std=c++17")
 set (CMAKE_CXX_FLAGS "-std=c++17")
 
 SET(TESTED_PROJECT_INCLUDE_DIRECTORY "SampleCXXProject")
@@ -13,6 +12,7 @@ SET(TEST_AUTHOR_FILES "TestAuthors/CreateStabilisingSetTest.cpp" "TestAuthors/Cr
 SET(UNMASKED_INCLUDE_DIRECTORIES "./")
 SET(EVERYWHERE_INCLUDED_SOURCE_CODE "StringOperations.cpp" "Logging.cpp")
 
+# CMake complains if it is asked to create build information for non-existent files.
 if(EXISTS "UnmaskedCreatedTests/TestRunner.cpp")
 	add_executable(RunTests UnmaskedCreatedTests/TestRunner.cpp ${EVERYWHERE_INCLUDED_SOURCE_CODE})
 	target_include_directories(RunTests PUBLIC ${TESTED_PROJECT_INCLUDE_DIRECTORY})

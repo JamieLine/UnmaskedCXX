@@ -10,9 +10,6 @@ std::string ReplaceAllInString(std::string Destination, std::string OldContent, 
     auto Index = Destination.find(OldContent);
     
     while (Index != std::string::npos) {
-        //line.erase( pos, oldSize );
-        //line.insert( pos, newString );
-        //Destination.replace(Index, sizeof(OldContent) - 1, NewContent);
         Destination.replace(Index, OldContent.size(), NewContent);
         Index = Destination.find(OldContent);
     }
@@ -53,6 +50,16 @@ std::vector<std::string> Tokenize(std::string ToTokenize, std::vector<std::strin
     for (auto Delim : KeptDelimiters) { Delimiters.push_back(Delim); }
     for (auto Delim : DiscardedDelimiters) { Delimiters.push_back(Delim); }
 
+    // DelimiterIndexes contains the index at which each type of delimiter is found
+    // in the `ToTokenize" string. 
+
+    // It forms a mapping where for example
+    // Delimiters = [",", ".", ...]
+    // DelimiterIndexes = [1, 10, ...]
+    // And therefore "," gets related to 1 and "." gets related to 10
+
+    // This could become a map later, but it is nice to avoid various
+    // Hashing calculations in the process.
     vector<size_t> DelimiterIndexes;
     DelimiterIndexes.reserve(Delimiters.size());
 
@@ -73,7 +80,7 @@ std::vector<std::string> Tokenize(std::string ToTokenize, std::vector<std::strin
         // Get an iterator that points to the next delimiter in `ToTokenize`
         auto NextDelimiterIterator = min_element(DelimiterIndexes.begin(), DelimiterIndexes.end());
 
-    // The distance call converts the iterator to a vector index in `DelimiterIndexes`
+        // The distance call converts the iterator to a vector index in `DelimiterIndexes`
         // It's important to note here that `DelimiterIndexes` contains string indexes
         // And our current calculation is regarding vector indexes which point to those
         // string indexes.
@@ -82,35 +89,18 @@ std::vector<std::string> Tokenize(std::string ToTokenize, std::vector<std::strin
         // We already know the next delimiter exists in `ToTokenize`
         // It's implied by the condition to enter this loop
 
-        ///TODO: DELETE THIS
-        //if (((*NextDelimiterIterator) - StartIndex) == 0) {
-        //    std::cout << "GOT IT" << std::endl;
-        //}
         ToReturn.push_back(ToTokenize.substr(StartIndex, (*NextDelimiterIterator) - StartIndex));
         // Some delimiters are kept, some are discarded.
         // Where a delimiter is kept, it becomes its own token in the token stream.
 
         // This is shorthand to make the next line easier to read.
         // No additional code should be generated here.
-
-        if (NextDelimiter == " ") {
-            Log(std::cout, LOG, "A space char has been found.");
-        }
-
-        if (NextDelimiter == "") {
-            Log(std::cout, LOG, "An empty string has been found.");
-        }
-
         vector<string> const& Kepts = KeptDelimiters;
+
         if (std::find(Kepts.begin(), Kepts.end(), NextDelimiter) != Kepts.end()) { ToReturn.push_back(NextDelimiter); } // We wish to keep the delimiters in the final result.
         StartIndex = (*NextDelimiterIterator) + NextDelimiter.length();
 
-        if (NextDelimiter == " " || NextDelimiter == "") {
-            Log(std::cout, LOG, "The last token in the stream at this point is");
-            Log(std::cout, VALUE_OUTPUT, *(ToReturn.end()-1));
-        }
-
-        // Update DelimiterIndexes
+        // Update DelimiterIndexes now that another delimiter has been processed.
         for (size_t Index = 0; Index < Delimiters.size(); Index++) {
             DelimiterIndexes[Index] = ToTokenize.find(Delimiters[Index], StartIndex);
         }
@@ -119,6 +109,10 @@ std::vector<std::string> Tokenize(std::string ToTokenize, std::vector<std::strin
 
     // Empty strings can appear
     // We pull those out here
+    // Because they can throw off 
+    // the calculations in other
+    // sections that assume they'll never
+    // draw an empty token.
     ToReturn.erase(
         std::remove_if(
             ToReturn.begin(), ToReturn.end(),
