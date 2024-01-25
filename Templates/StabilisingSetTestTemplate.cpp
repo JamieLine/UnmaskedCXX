@@ -6,12 +6,15 @@
 
 #include "../FILE_ADDRESS"
 #include "../Generators/AllGenerators.h"
+#include "../Generators/GeneratorParameterStore.h"
 #include <iostream>
 #include <tuple>
 #include <algorithm>
 
 // Returns true if and only if the contained test passed.
 bool TEST_FN_NAME() {
+	GeneratorParameterStore Parameters;
+
 	RETURN_TYPE ReturnedValues[NUM_TESTS_TO_RUN]{};
 
 	std::vector<std::tuple<ARGUMENT_TYPES>> GeneratedArguments; 

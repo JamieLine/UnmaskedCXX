@@ -5,6 +5,7 @@
 #include <iostream>
 #include <numeric>
 #include <algorithm>
+#include <fstream>
 
 std::string ReplaceAllInString(std::string Destination, std::string OldContent, std::string NewContent) {
     auto Index = Destination.find(OldContent);
@@ -126,4 +127,21 @@ std::vector<std::string> Tokenize(std::string ToTokenize, std::vector<std::strin
     }
 
     return ToReturn;
+}
+
+Optional<std::string> FilepathToString(std::string Filepath)
+{
+    std::ifstream InputFilestream;
+    InputFilestream.open(Filepath);
+
+    if (!InputFilestream.is_open()) {
+        return Optional<std::string>("", false);
+    }
+
+    std::string Data( (std::istreambuf_iterator<char>(InputFilestream) ),
+                       (std::istreambuf_iterator<char>()    ) );
+
+    return Optional<std::string>(Data, true);
+
+    
 }

@@ -14,7 +14,7 @@ SET(EVERYWHERE_INCLUDED_SOURCE_CODE "StringOperations.cpp" "Logging.cpp")
 
 # CMake complains if it is asked to create build information for non-existent files.
 if(EXISTS "UnmaskedCreatedTests/TestRunner.cpp")
-	add_executable(RunTests UnmaskedCreatedTests/TestRunner.cpp ${EVERYWHERE_INCLUDED_SOURCE_CODE})
+	add_executable(RunTests UnmaskedCreatedTests/TestRunner.cpp Generators/GeneratorParameterStore.cpp ${EVERYWHERE_INCLUDED_SOURCE_CODE})
 	target_include_directories(RunTests PUBLIC ${TESTED_PROJECT_INCLUDE_DIRECTORY})
 	target_include_directories(RunTests PUBLIC ${UNMASKED_INCLUDE_DIRECTORIES})
 	target_include_directories(RunTests PUBLIC ${UNMASKED_USER_INCLUDE_DIRECTORY})
