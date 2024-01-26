@@ -2,6 +2,7 @@
 
 #include <string>
 
+// POD struct which holds the type of an argument and a few small utility methods
 struct ArgumentType {
 public:
     std::string Type;

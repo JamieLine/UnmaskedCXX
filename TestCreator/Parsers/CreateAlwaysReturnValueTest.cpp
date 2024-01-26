@@ -1,4 +1,4 @@
-#include "CreateStabilisingSetTest.h"
+#include "CreateAlwaysReturnValueTest.h"
 
 #include <ctgmath>
 #include <string>
@@ -9,52 +9,61 @@
 #include <algorithm>
 
 #include "../StringOperations.h"
-#include "TestSpecification.h"
-#include "FixedArgument.h"
-#include "TestMarkers.h"
+#include "../Structs/TestSpecification.h"
+#include "../Consts/TestMarkers.h"
+#include "../Structs/FixedArgument.h"
 #include "../Logging.h"
 #include <iostream>
-#include "ArgumentType.h"
+#include "../Structs/ArgumentType.h"
 
-std::string CreateStabilisingSetTest(std::vector<std::string> Tokens, std::string SourceFileAddress, std::string OutputFileNameNoExtension, std::size_t NumTestsToRun) {
+std::string CreateAlwaysReturnValueTest(
+    std::vector<std::string>::iterator& FirstToken,
+    GeneratorParameterStoreSeed Params,
+    std::string SourceFileAddress,
+    std::string OutputFileNameNoExtension,
+    std::size_t NumTestsToRun) 
+    {
     // Creates a test from Tokens extracted from input similar to the following:
-    // `UnmaskedStabilisingSetTest(std::function<int(int, int)>(&AddInts), 0, 0);`
+    // `UnmaskedAlwaysReturnsValueTest(std::function<int(int, int)>(&AddInts), 0, 0, 0);`
     
     // Expects the following of the input.
 
-    // 1. Begins with UnmaskedStabilisingSetTest (given in this file as "STABILISING_TEST_MARKER")
-    // 2. The call to UnmaskedStabilisingSetTest takes in a std::function<RETURN_TYPE(ARGUMENT_TYPES)> constructed 
+    // 1. Begins with UnmaskedAlwaysReturnsValueTest (given in this file as "ALWAYS_RETURN_VALUE_TEST_MARKER")
+    // 2. The call to UnmaskedAlwaysReturnsValueTest takes in a std::function<RETURN_TYPE(ARGUMENT_TYPES)> constructed 
     // by taking the address of the tested function.
-    // 3. The arguments form Index-Value pairs.
+    // 3. The first non-function parameter is the expected return value.
+    // 4. The expected return value is followed by Index-Value pairs.
     // In this example, the argument at index 0 is set to a value of 0.
     // If we had a 1 as the final argument, we would be setting the argument at index 0 to have a value of 1.
-    // 4. The last token should be ";".
-    // 5. This string originates from a file with address `SourceFileAddress`, where the implementation of the tested function can be found.
+    // 5. The last token should be ";".
+    // 6. This string originates from a file with address `SourceFileAddress`, where the implementation of the tested function can be found.
      
+
     using std::string;
     using std::to_string;
     using std::vector;
     using std::size_t;
 
-    Log(std::cout, LOG, "Starting CreateStabilisingSetTest");
+    auto& CurrentToken = FirstToken;
+
+    Log(std::cout, LOG, "Starting CreateAlwaysReturnValueTest");
 
     // Before we start, we should enforce that our assumptions on the input hold.
-    Log(std::cout, LOG, "Validating that beginning and end of `Tokens` is correct");
-    if (Tokens[0] != STABILISING_TEST_MARKER || Tokens[Tokens.size()-1] != ";") {
-        Log(std::cout, ERROR, "Incorrect tokens passed into `CreateStabilisingSetTest`");
-        Log(std::cout, ERROR, "Outputting first and last value.");
-        Log(std::cout, VALUE_OUTPUT, Tokens[0]);
-        Log(std::cout, VALUE_OUTPUT, Tokens[Tokens.size()-1]);
+    Log(std::cout, LOG, "Validating that the first token is correct");
+    if (*FirstToken != ALWAYS_RETURN_VALUE_TEST_MARKER) {
+        Log(std::cout, ERROR, "Incorrect tokens passed into `CreateAlwaysReturnValueTest`");
+        Log(std::cout, ERROR, "Outputting first value.");
+        Log(std::cout, VALUE_OUTPUT, *FirstToken);
         // TODO: Maybe this should signal to calling code that it failed?
         // Calling code can then take the generated output and treat it as "suspicious"?
         // Will need the return type to change from std::string to something like a Pair<std::string, bool> where
         // The bool is "trustworthiness".
     }
     else {
-        Log(std::cout, LOG, "Beginning and end of `Tokens` is correct");
+        Log(std::cout, LOG, "First token is correct");
     }
 
-    auto CurrentToken = Tokens.begin();
+   
 
     Log(std::cout, LOG, "Created CurrentToken iterator");
 
@@ -77,7 +86,6 @@ std::string CreateStabilisingSetTest(std::vector<std::string> Tokens, std::strin
     Log(std::cout, VALUE_OUTPUT, ReturnType);
 
     vector<ArgumentType> ArgumentTypes;
-
 
     // On the first run through this loop, it should be true that
     // (*CurrentToken) == "("
@@ -102,16 +110,16 @@ std::string CreateStabilisingSetTest(std::vector<std::string> Tokens, std::strin
     // Now `CurrentToken` points to a closing bracket. 
     // The next token is a closing angular bracket so we may skip that as well as the opening bracket and ampersand immediately following.
 
-    // UnmaskedStabilisingSetTest(std::function<int(int, int)>(&AddInts), 0, 0);`
+    // UnmaskedAlwaysReturnsValueTest(std::function<int(int, int)>(&AddInts), 0, 0, 0);`
     //                                                          ^
     //                                                          ^
     // We are here.
 
     CurrentToken += 4;
 
-    // UnmaskedStabilisingSetTest(std::function<int(int, int)>(&AddInts), 0, 0);`
-    //                                                          ^^^^^^^
-    //                                                          ^^^^^^^
+    // UnmaskedAlwaysReturnsValueTest(std::function<int(int, int)>(&AddInts), 0, 0, 0);`
+    //                                                              ^^^^^^^
+    //                                                              ^^^^^^^
     // Now we are here.
 
     Log(std::cout, LOG, "Pulling function name");
@@ -123,6 +131,11 @@ std::string CreateStabilisingSetTest(std::vector<std::string> Tokens, std::strin
 
     // Now we pick up the fixed points.
 
+
+	// Read in the target value, and then skip the comma after it.
+	string TargetValue = *CurrentToken;
+	CurrentToken += 2;
+
     // The indexes should always neatly cast to `size_t` but this will be written as a string
     // into a FixedArgument instance.
     // The conversion isn't valuable.
@@ -132,7 +145,7 @@ std::string CreateStabilisingSetTest(std::vector<std::string> Tokens, std::strin
     // We just know that the last one will be followed by a ")".
     // And if there are no fixed points, we know that *CurrentToken == ")".
     Log(std::cout, LOG, "Pulling Fixed Points");
-    while (*CurrentToken != ")") { 
+    while (*CurrentToken != ")") {
         if (*CurrentToken == ",") { CurrentToken++; }
 
         string ThisPointIndex = *CurrentToken;
@@ -161,7 +174,7 @@ std::string CreateStabilisingSetTest(std::vector<std::string> Tokens, std::strin
 
     // For now, we simply read in the template, convert that stringstream to a std::string
     // and then perform a series of text substituions upon that string.
-    std::ifstream TemplateStream("Templates/StabilisingSetTestTemplate.cpp");
+    std::ifstream TemplateStream("Templates/AlwaysReturnValueTestTemplate.cpp");
     std::stringstream Buffer;
     Buffer << TemplateStream.rdbuf();
 
@@ -181,7 +194,7 @@ std::string CreateStabilisingSetTest(std::vector<std::string> Tokens, std::strin
     // If `SourceFileAddress` begins with ./, we need to swap that with ../
     // As the tests are sitting one level higher in the directory tree.
 
-    // As the template has the ../, this is done by removing it.
+    // As the template has the ../, this is done by removing it from `SourceFileAddress`.
     if (SourceFileAddress.find("./", 0) == 0) {
         SourceFileAddress.erase(0, 2);
     }
@@ -290,9 +303,10 @@ std::string CreateStabilisingSetTest(std::vector<std::string> Tokens, std::strin
 
     TestSource = ReplaceAllInString(TestSource, "FN_NAME", FunctionName);
 
-    
-    vector<string> ArgumentOutputValues;
-    ArgumentOutputValues.reserve(ArgumentTypes.size());
+    // This will contain a series of lines which take the arguments passed into the tested function
+    // and outputs them to the console.
+    vector<string> TestedFunctionArguments;
+    TestedFunctionArguments.reserve(ArgumentTypes.size());
 
     // Here `i` refers to a for-loop in the generated code
     // LocalIndex is the index in the for-loop local to this file and this program
@@ -312,25 +326,29 @@ std::string CreateStabilisingSetTest(std::vector<std::string> Tokens, std::strin
         // indentation expected of human-written code.
         // If this is not a fixed argument.
         if (FixedArgIterator == FixedArguments.end()) {
-            ArgumentOutputValues.push_back("\t\t\tstd::cout << std::get<" + to_string(LocalIndex) + ">(GeneratedArguments[i]); \n \t\t\tstd::cout << \",\";");
+            TestedFunctionArguments.push_back("\t\t\tstd::cout << std::get<" + to_string(LocalIndex) + ">(GeneratedArguments[i]); \n \t\t\tstd::cout << \",\";");
         }
         else {
-            ArgumentOutputValues.push_back("\t\t\tstd::cout << " + (*FixedArgIterator).Value + ";\n \t\t\tstd::cout << \",\";");
+            TestedFunctionArguments.push_back("\t\t\tstd::cout << " + (*FixedArgIterator).Value + ";\n \t\t\tstd::cout << \",\";");
         }
     }
 
-    TestSource = ReplaceAllInString(TestSource, "COUT_EACH_ARGUMENT_IN_TURN", JoinVectorOfStrings(ArgumentOutputValues, "\n"));
+    TestSource = ReplaceAllInString(TestSource, "COUT_EACH_ARGUMENT_IN_TURN", JoinVectorOfStrings(TestedFunctionArguments, "\n"));
+
+    // TargetValue here is the value we expect the tested function to always return.
+	TestSource = ReplaceAllInString(TestSource, "TARGET_VALUE", TargetValue);
 
     return TestSource;
 }
 
-std::string CreateStabilisingSetTest(std::vector<std::string> Tokens, std::string SourceFileAddress, std::string OutputFileNameNoExtension) {
-    return CreateStabilisingSetTest(Tokens, SourceFileAddress, OutputFileNameNoExtension, DEFAULT_NUM_TESTS_TO_RUN);
+/*
+std::string CreateAlwaysReturnValueTest(std::vector<std::string> Tokens, std::string SourceFileAddress, std::string OutputFileNameNoExtension) {
+    return CreateAlwaysReturnValueTest(Tokens, SourceFileAddress, OutputFileNameNoExtension, DEFAULT_NUM_TESTS_TO_RUN);
 }
 
-std::vector<TestSpecification> CreateAllStabilisingTests(std::vector<std::string> Tokens, std::string SourceFileAddress, std::size_t NumTestsToRun) {
+std::vector<TestSpecification> CreateAllAlwaysReturnValueTests(std::vector<std::string> Tokens, std::string SourceFileAddress, std::size_t NumTestsToRun) {
     // This function is expecting to get every token that is contained within a single file.
-    // This function does the filtering necessary to create "well-formed" calls to `CreateStabilisingSetTest`.
+    // This function does the filtering necessary to create "well-formed" calls to `CreateAlwaysReturnValueTest`.
     using std::vector;
     using std::string;
 
@@ -340,7 +358,7 @@ std::vector<TestSpecification> CreateAllStabilisingTests(std::vector<std::string
     // Potentially there should be a reservation step here.
     // Reserve space for 1 string per instance of the marker.
 
-    CurrentToken = std::find(CurrentToken, Tokens.end(), STABILISING_TEST_MARKER);
+    CurrentToken = std::find(CurrentToken, Tokens.end(), ALWAYS_RETURN_VALUE_TEST_MARKER);
     Log(std::cout, LOG, "If this CurrentToken is Tokens.end(), then no tests were found.");
     Log(std::cout, VALUE_OUTPUT, std::to_string(CurrentToken == Tokens.end()));
 
@@ -361,7 +379,6 @@ std::vector<TestSpecification> CreateAllStabilisingTests(std::vector<std::string
         // We will modify TestName to make it unique, but `SourceFileAddress` is a useful "somewhat unique"
         // starting point.
         string TestName = SourceFileAddress;
-        
 
         // Clean the source file address
         // Then use that to generate the name of the generated test function.
@@ -373,29 +390,30 @@ std::vector<TestSpecification> CreateAllStabilisingTests(std::vector<std::string
    				TestName.erase(Index, Extension.length());
 		}
 
-		TestName += "_" + STABILISING_TEST_MARKER + "_";
         
         // Replace `/` in the directory tree with `_` to avoid Directory Trickery
 		TestName = ReplaceAllInString(TestName, "/", "_");
 		TestName = ReplaceAllInString(TestName, "\\", "_"); 
         
+		TestName += "_" + ALWAYS_RETURN_VALUE_TEST_MARKER + "_";
+
         TestName += std::to_string(CurrentTestNumber);
         // Now that this test number has been used, preload the next one.
         CurrentTestNumber++;
 
         // Create the source for the specified test.
-        string TestSource = CreateStabilisingSetTest(NeededTokens, SourceFileAddress, TestName, NumTestsToRun);
+        string TestSource = CreateAlwaysReturnValueTest(NeededTokens, SourceFileAddress, TestName, NumTestsToRun);
 
-        ToReturn.emplace_back(TestName, STABILISING_TEST_MARKER, TestSource);
+        ToReturn.emplace_back(TestName, ALWAYS_RETURN_VALUE_TEST_MARKER, TestSource);
 
         // If we start searching from `CurrentToken`, we will only ever find `CurrentToken`.
-        CurrentToken = std::find(CurrentToken+1, Tokens.end(), STABILISING_TEST_MARKER);
+        CurrentToken = std::find(CurrentToken+1, Tokens.end(), ALWAYS_RETURN_VALUE_TEST_MARKER);
     }
 
     return ToReturn;
 }
 
 
-std::vector<TestSpecification> CreateAllStabilisingTests(std::vector<std::string> Tokens, std::string SourceFileAddress) {
-    return CreateAllStabilisingTests(Tokens, SourceFileAddress, DEFAULT_NUM_TESTS_TO_RUN);
-}
+std::vector<TestSpecification> CreateAllAlwaysReturnValueTests(std::vector<std::string> Tokens, std::string SourceFileAddress) {
+    return CreateAllAlwaysReturnValueTests(Tokens, SourceFileAddress, DEFAULT_NUM_TESTS_TO_RUN);
+}*/

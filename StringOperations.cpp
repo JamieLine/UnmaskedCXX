@@ -129,7 +129,7 @@ std::vector<std::string> Tokenize(std::string ToTokenize, std::vector<std::strin
     return ToReturn;
 }
 
-Optional<std::string> FilepathToString(std::string Filepath)
+Optional<std::string> ReadContentsOfFile(std::string Filepath)
 {
     std::ifstream InputFilestream;
     InputFilestream.open(Filepath);
@@ -144,4 +144,32 @@ Optional<std::string> FilepathToString(std::string Filepath)
     return Optional<std::string>(Data, true);
 
     
+}
+
+std::string FilepathToLegalIdentifier(std::string Filepath)
+{
+    std::string ToReturn = Filepath;
+    ToReturn = ReplaceAllInString(ToReturn, "..", "DOT_DOT");
+    ToReturn = ReplaceAllInString(ToReturn, ".", "DOT");
+    ToReturn = ReplaceAllInString(ToReturn, "/", "_");
+    ToReturn = ReplaceAllInString(ToReturn, "\\", "_");
+
+    return ToReturn;
+}
+
+bool WriteStringIntoFileOverwriting(std::string Filepath, std::string Content)
+{
+    std::ofstream File;
+    File.open(Filepath, std::ofstream::in |
+                        std::ofstream::out |
+                        std::ofstream::trunc);
+
+    if (!File.is_open()) {
+        return false;
+    }
+
+    File << Content;
+    File.close();
+
+    return true;
 }

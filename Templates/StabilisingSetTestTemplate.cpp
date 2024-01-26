@@ -22,11 +22,16 @@ bool TEST_FN_NAME() {
 	for (int i = 0; i < NUM_TESTS_TO_RUN; i++) {
 		// Generate a value for every argument
 		std::tuple<GENERATOR_TYPES> Generators;
+
+		PUSH_PARAMETERS_TO_STORE
+
 		GeneratedArguments.push_back(std::make_tuple(GENERATORS_GET_VALUES));
 
 		// Replace the named arguments when we call the function.
 		
 		ReturnedValues[i] = FN_NAME(GENERATED_ARGUMENTS);
+
+		Parameters.ClearEverything();
 	}
 
 	// Check if all values are equal

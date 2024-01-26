@@ -8,7 +8,10 @@ SET(UNMASKED_USER_INCLUDE_DIRECTORY "UserlandIncludes")
 
 project(UnmaskedCXX VERSION 1.0 LANGUAGES CXX)
 
-SET(TEST_AUTHOR_FILES "TestAuthors/CreateStabilisingSetTest.cpp" "TestAuthors/CreateAlwaysReturnValueTest.cpp")
+SET(TEST_AUTHOR_FILES "TestCreator/Parsers/CreateStabilisingSetTest.cpp"
+					  "TestCreator/Parsers/CreateAlwaysReturnValueTest.cpp"
+					  "TestCreator/Structs/GeneratorParameterStoreSeed.cpp"
+					  "TestCreator/TestCreator.cpp")
 SET(UNMASKED_INCLUDE_DIRECTORIES "./")
 SET(EVERYWHERE_INCLUDED_SOURCE_CODE "StringOperations.cpp" "Logging.cpp")
 
@@ -27,7 +30,7 @@ else()
 	message("WARNING: CMAKE COULD NOT FIND UnmaskedCreatedTests/TestRunner.cpp. This file will be generated once TestAuthor is run. At this point, re-run CMake and then RunTests will be available as a target.")
 endif()
 
-add_executable(TestAuthor TestAuthors/ScanForAllTests.cpp ${EVERYWHERE_INCLUDED_SOURCE_CODE} ${TEST_AUTHOR_FILES})
+add_executable(TestAuthor Main.cpp  ${EVERYWHERE_INCLUDED_SOURCE_CODE} ${TEST_AUTHOR_FILES})
 target_include_directories(TestAuthor PUBLIC ${TESTED_PROJECT_INCLUDE_DIRECTORY})
 target_include_directories(TestAuthor PUBLIC ${UNMASKED_INCLUDE_DIRECTORIES})
 target_include_directories(TestAuthor PUBLIC ${UNMASKED_USER_INCLUDE_DIRECTORY})

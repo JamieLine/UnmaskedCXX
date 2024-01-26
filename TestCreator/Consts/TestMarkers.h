@@ -6,3 +6,5 @@ const std::string ALWAYS_RETURN_VALUE_TEST_MARKER = "UnmaskedAlwaysReturnsValueT
 const std::string STABILISING_TEST_MARKER = "UnmaskedStabilisingSetTest";
 const std::string SET_PARAMETER_MARKER = "UnmaskedSetParameter";
 const std::string SET_TEMP_PARAMETER_MARKER = "UnmaskedSetTempParameter";
+
+//const std::vector<const std::string> TEST_MARKERS = {ALWAYS_RETURN_VALUE_TEST_MARKER, STABILISING_TEST_MARKER};
