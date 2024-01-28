@@ -1,4 +1,9 @@
 #include "GeneratorParameterStore.h"
+#include "MapOperations.h"
+#include "Logging.h"
+#include <iostream>
+#include <set>
+#include "SetOperations.h"
 
 void GeneratorParameterStore::ClearEverything()
 {
@@ -20,33 +25,31 @@ void GeneratorParameterStore::ClearEverything()
 
 Optional<int> GeneratorParameterStore::GetIntegerParameter(UnmaskedTestParameter Parameter)
 {
-    // In C++ versions before C++20, std::map has no methods to see if a key has a value
-    // So here we'll use `try_emplace` as a dodgy workaround.
-    // If the parameter had no value, we'll give it an empty queue.
-    // Otherwise, it'll be left alone.
-    // This effectively "lazy-loads" creation of the queue.
-    // We'll do the permanent parameters.
-    TemporaryIntegerParameters.try_emplace(Parameter);
-    IntegerParameters.try_emplace(Parameter, Optional<int>(0, false));
-
-
     // We wish to pull a temporary value before a permanent one.
-    if (!TemporaryIntegerParameters[Parameter].empty()) {
-        // For some reason there's no public interface to do these
-        // two steps in one line.
-        auto ToReturn = TemporaryIntegerParameters[Parameter].front();
-        TemporaryIntegerParameters[Parameter].pop();
-        return Optional<int>(ToReturn, true);
+    // Check that the map contains the key, then see if that key leads to a useful int
+    if (TemporaryIntegerParameters.find(Parameter) != TemporaryIntegerParameters.end()) {
+    //if (MapContainsKey(TemporaryIntegerParameters, Parameter)) {
+        if (!TemporaryIntegerParameters[Parameter].empty()) {
+            // For some reason there's no public interface to do these
+            // two steps in one line.
+            auto ToReturn = TemporaryIntegerParameters[Parameter].front();
+            TemporaryIntegerParameters[Parameter].pop();
+            Log(std::cout, LOG, "Fetched Temporary Parameter");
+            return Optional<int>(ToReturn, true);
+        }
     }
-
-    // Now we find out if there really is a permanent parameter.
-    else if (IntegerParameters[Parameter].DataExists) {
-        return Optional<int>(IntegerParameters[Parameter].Data, true);
+    
+    if (IntegerParameters.find(Parameter) != IntegerParameters.end()) {
+    //if (MapContainsKey(IntegerParameters, Parameter)) {
+        // Now we find out if there really is a permanent parameter.
+        if (IntegerParameters[Parameter].DataExists) {
+            Log(std::cout, LOG, "Fetched Normal Parameter");
+            return IntegerParameters[Parameter];
+        }
     }
 
     // Otherwise we simply signal back that there is no parameter available
     // in which case the caller should take a reasonable default.
-    else {
-        return Optional<int>(0, false);
-    }
+    return Optional<int>(0, false);
 }
+

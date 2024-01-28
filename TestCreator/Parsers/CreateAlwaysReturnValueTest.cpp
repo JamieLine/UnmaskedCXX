@@ -235,6 +235,8 @@ std::string CreateAlwaysReturnValueTest(
 
     TestSource = ReplaceAllInString(TestSource, "GENERATOR_TYPES", JoinVectorOfStrings(GeneratorTypes, ","));
 
+    TestSource = ReplaceAllInString(TestSource, "PUSH_PARAMETERS_TO_STORE", Params.CreateGeneratorParameterStoreDefinition());
+
     // This would be a normal JoinVectorOfStrings and replace but the input data needs some amount of transformation
     
     // We have a list of Argument Types

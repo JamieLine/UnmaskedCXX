@@ -149,6 +149,7 @@ Optional<std::string> ReadContentsOfFile(std::string Filepath)
 std::string FilepathToLegalIdentifier(std::string Filepath)
 {
     std::string ToReturn = Filepath;
+    ToReturn = ReplaceAllInString(ToReturn, "./", "");
     ToReturn = ReplaceAllInString(ToReturn, "..", "DOT_DOT");
     ToReturn = ReplaceAllInString(ToReturn, ".", "DOT");
     ToReturn = ReplaceAllInString(ToReturn, "/", "_");

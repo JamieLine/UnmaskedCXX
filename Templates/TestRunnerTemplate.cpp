@@ -3,7 +3,7 @@ INCLUDE_TESTS
 #include <string>
 #include <iostream>
 #include <fstream>
-#include "../TestAuthors/TestResult.h"
+#include "../TestCreator/Structs/TestResult.h"
   
 const std::string REPORT_FILE_NAME = "UnmaskedReport.csv";
 

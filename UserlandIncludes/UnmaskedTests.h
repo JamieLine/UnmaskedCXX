@@ -4,6 +4,9 @@
 // The specifications will never be run directly, they are simply there 
 // so UnmaskedCXX knows where to look.
 
+// TODO: Swap this to a std::set<std::string>
+// And if possible, find a way to get compile time
+// checks back
 enum UnmaskedTestParameter {
     INT_LOWER_BOUND,
     INT_UPPER_BOUND,

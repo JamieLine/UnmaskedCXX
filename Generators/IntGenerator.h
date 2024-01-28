@@ -22,7 +22,7 @@ public:
         // Choose a sensible default in the absence of a parameter.
         else { LowerBound = -1000; }
 
-        if (FetchedUpperBound.DataExists) { LowerBound = FetchedUpperBound.Data; }
+        if (FetchedUpperBound.DataExists) { UpperBound = FetchedUpperBound.Data; }
         else { UpperBound = 1000; }
 
         Log(std::cout, LOG, "Upper and lower bounds are");
@@ -34,3 +34,6 @@ public:
         return Distribution(RNG);
     }
 };
+
+//TODO: MAKE THE GENERATOR NOT POP VALUES FROM THE TEMPORARY COLLECTION IF ITS VALUE IS BEING IGNORED
+// OR EVEN BETTER, ACTUALLY BE INTELLIGENT AND DONT GENERATE THE UNNEEDED VALUE AT ALL

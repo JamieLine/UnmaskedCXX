@@ -13,7 +13,7 @@ SET(TEST_AUTHOR_FILES "TestCreator/Parsers/CreateStabilisingSetTest.cpp"
 					  "TestCreator/Structs/GeneratorParameterStoreSeed.cpp"
 					  "TestCreator/TestCreator.cpp")
 SET(UNMASKED_INCLUDE_DIRECTORIES "./")
-SET(EVERYWHERE_INCLUDED_SOURCE_CODE "StringOperations.cpp" "Logging.cpp")
+SET(EVERYWHERE_INCLUDED_SOURCE_CODE "StringOperations.cpp" "Logging.cpp" "SetOperations.cpp" "MapOperations.cpp")
 
 # CMake complains if it is asked to create build information for non-existent files.
 if(EXISTS "UnmaskedCreatedTests/TestRunner.cpp")

@@ -215,6 +215,20 @@
 <VALUE_OUTPUT> -|-|-|-|-|-
 <VALUE_OUTPUT> ;
 <VALUE_OUTPUT> -|-|-|-|-|-
+<VALUE_OUTPUT> UnmaskedSetTempParameter
+<VALUE_OUTPUT> -|-|-|-|-|-
+<VALUE_OUTPUT> (
+<VALUE_OUTPUT> -|-|-|-|-|-
+<VALUE_OUTPUT> INT_LOWER_BOUND
+<VALUE_OUTPUT> -|-|-|-|-|-
+<VALUE_OUTPUT> ,
+<VALUE_OUTPUT> -|-|-|-|-|-
+<VALUE_OUTPUT> 50
+<VALUE_OUTPUT> -|-|-|-|-|-
+<VALUE_OUTPUT> )
+<VALUE_OUTPUT> -|-|-|-|-|-
+<VALUE_OUTPUT> ;
+<VALUE_OUTPUT> -|-|-|-|-|-
 <VALUE_OUTPUT> UnmaskedStabilisingSetTest
 <VALUE_OUTPUT> -|-|-|-|-|-
 <VALUE_OUTPUT> (
@@ -500,4 +514,180 @@
 <VALUE_OUTPUT> }
 <VALUE_OUTPUT> -|-|-|-|-|-
 <LOG> Found NextUsefulToken
-<LOG> NextUsefulToken dereferenced into something not handled by the "switch statement"? Continuing as possible. NextUsefulToken deref'd to
+<LOG> Found SET_PARAMETER_MARKER in TestCreator
+<LOG> Found NextUsefulToken
+<LOG> Found SET_TEMP_PARAMETER_MARKER in TestCreator
+<LOG> Found NextUsefulToken
+<LOG> Found STABILISING_TEST_MARKER in TestCreator
+<LOG> Starting CreateStabilisingSetTest
+<LOG> Validating that beginning and end of `Tokens` is correct
+<LOG> Beginning and end of `Tokens` is correct
+<LOG> Pulled return type
+<VALUE_OUTPUT> int
+<LOG> Pulled argument type
+<VALUE_OUTPUT> int
+<LOG> Pulled argument type
+<VALUE_OUTPUT> int
+<LOG> Finished pulling argument types
+<LOG> Pulling function name
+<VALUE_OUTPUT> AddInts
+<LOG> Pulling Fixed Points
+<LOG> Pulled fixed point index
+<VALUE_OUTPUT> 0
+<LOG> Pulling fixed point argument value
+<VALUE_OUTPUT> 0
+<LOG> Extracted data from specification.
+<LOG> Finished reading template.
+<LOG> Beginning substitutions.
+<LOG> Found NextUsefulToken
+<LOG> Found SET_TEMP_PARAMETER_MARKER in TestCreator
+<LOG> Found NextUsefulToken
+<LOG> Found STABILISING_TEST_MARKER in TestCreator
+<LOG> Starting CreateStabilisingSetTest
+<LOG> Validating that beginning and end of `Tokens` is correct
+<LOG> Beginning and end of `Tokens` is correct
+<LOG> Pulled return type
+<VALUE_OUTPUT> int
+<LOG> Pulled argument type
+<VALUE_OUTPUT> int
+<LOG> Pulled argument type
+<VALUE_OUTPUT> int
+<LOG> Pulled argument type
+<VALUE_OUTPUT> int
+<LOG> Pulled argument type
+<VALUE_OUTPUT> int
+<LOG> Finished pulling argument types
+<LOG> Pulling function name
+<VALUE_OUTPUT> LinearCombination
+<LOG> Pulling Fixed Points
+<LOG> Pulled fixed point index
+<VALUE_OUTPUT> 0
+<LOG> Pulling fixed point argument value
+<VALUE_OUTPUT> 0
+<LOG> Pulled fixed point index
+<VALUE_OUTPUT> 2
+<LOG> Pulling fixed point argument value
+<VALUE_OUTPUT> 0
+<LOG> Extracted data from specification.
+<LOG> Finished reading template.
+<LOG> Beginning substitutions.
+<LOG> Found NextUsefulToken
+<LOG> Found STABILISING_TEST_MARKER in TestCreator
+<LOG> Starting CreateStabilisingSetTest
+<LOG> Validating that beginning and end of `Tokens` is correct
+<LOG> Beginning and end of `Tokens` is correct
+<LOG> Pulled return type
+<VALUE_OUTPUT> int
+<LOG> Pulled argument type
+<VALUE_OUTPUT> int
+<LOG> Pulled argument type
+<VALUE_OUTPUT> int
+<LOG> Pulled argument type
+<VALUE_OUTPUT> int
+<LOG> Pulled argument type
+<VALUE_OUTPUT> int
+<LOG> Finished pulling argument types
+<LOG> Pulling function name
+<VALUE_OUTPUT> LinearCombinationWrong
+<LOG> Pulling Fixed Points
+<LOG> Pulled fixed point index
+<VALUE_OUTPUT> 0
+<LOG> Pulling fixed point argument value
+<VALUE_OUTPUT> 0
+<LOG> Pulled fixed point index
+<VALUE_OUTPUT> 2
+<LOG> Pulling fixed point argument value
+<VALUE_OUTPUT> 0
+<LOG> Extracted data from specification.
+<LOG> Finished reading template.
+<LOG> Beginning substitutions.
+<LOG> Found NextUsefulToken
+<LOG> Found STABILISING_TEST_MARKER in TestCreator
+<LOG> Starting CreateStabilisingSetTest
+<LOG> Validating that beginning and end of `Tokens` is correct
+<LOG> Beginning and end of `Tokens` is correct
+<LOG> Pulled return type
+<VALUE_OUTPUT> int
+<LOG> Pulled argument type
+<VALUE_OUTPUT> int
+<LOG> Pulled argument type
+<VALUE_OUTPUT> int
+<LOG> Pulled argument type
+<VALUE_OUTPUT> int
+<LOG> Pulled argument type
+<VALUE_OUTPUT> int
+<LOG> Finished pulling argument types
+<LOG> Pulling function name
+<VALUE_OUTPUT> LinearCombination
+<LOG> Pulling Fixed Points
+<LOG> Pulled fixed point index
+<VALUE_OUTPUT> 1
+<LOG> Pulling fixed point argument value
+<VALUE_OUTPUT> 0
+<LOG> Pulled fixed point index
+<VALUE_OUTPUT> 3
+<LOG> Pulling fixed point argument value
+<VALUE_OUTPUT> 0
+<LOG> Extracted data from specification.
+<LOG> Finished reading template.
+<LOG> Beginning substitutions.
+<LOG> Found NextUsefulToken
+<LOG> Found ALWAYS_RETURN_VALUE_TEST_MARKER in TestCreator
+<LOG> Starting CreateAlwaysReturnValueTest
+<LOG> Validating that the first token is correct
+<LOG> First token is correct
+<LOG> Created CurrentToken iterator
+<LOG> Pulled return type
+<VALUE_OUTPUT> int
+<LOG> Pulled argument type
+<VALUE_OUTPUT> int
+<LOG> Pulled argument type
+<VALUE_OUTPUT> int
+<LOG> Finished pulling argument types
+<LOG> Pulling function name
+<VALUE_OUTPUT> AddInts
+<LOG> Pulling Fixed Points
+<LOG> Pulled fixed point index
+<VALUE_OUTPUT> 0
+<LOG> Pulling fixed point argument value
+<VALUE_OUTPUT> 0
+<LOG> Pulled fixed point index
+<VALUE_OUTPUT> 1
+<LOG> Pulling fixed point argument value
+<VALUE_OUTPUT> 0
+<LOG> Extracted data from specification.
+<LOG> Finished reading template.
+<LOG> Beginning substitutions.
+<LOG> Found NextUsefulToken
+<LOG> Found ALWAYS_RETURN_VALUE_TEST_MARKER in TestCreator
+<LOG> Starting CreateAlwaysReturnValueTest
+<LOG> Validating that the first token is correct
+<LOG> First token is correct
+<LOG> Created CurrentToken iterator
+<LOG> Pulled return type
+<VALUE_OUTPUT> int
+<LOG> Pulled argument type
+<VALUE_OUTPUT> int
+<LOG> Pulled argument type
+<VALUE_OUTPUT> int
+<LOG> Finished pulling argument types
+<LOG> Pulling function name
+<VALUE_OUTPUT> AddInts
+<LOG> Pulling Fixed Points
+<LOG> Pulled fixed point index
+<VALUE_OUTPUT> 0
+<LOG> Pulling fixed point argument value
+<VALUE_OUTPUT> 0
+<LOG> Pulled fixed point index
+<VALUE_OUTPUT> 1
+<LOG> Pulling fixed point argument value
+<VALUE_OUTPUT> 0
+<LOG> Extracted data from specification.
+<LOG> Finished reading template.
+<LOG> Beginning substitutions.
+<LOG> Found NextUsefulToken
+<LOG> Found final token in TestCreator
+<LOG> Created TestRunnerSource string from template.
+<LOG> Finished TestRunnerSource
+<LOG> Successfully wrote TestRunner.cpp
+0
