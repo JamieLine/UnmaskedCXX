@@ -28,7 +28,6 @@ Optional<int> GeneratorParameterStore::GetIntegerParameter(UnmaskedTestParameter
     // We wish to pull a temporary value before a permanent one.
     // Check that the map contains the key, then see if that key leads to a useful int
     if (TemporaryIntegerParameters.find(Parameter) != TemporaryIntegerParameters.end()) {
-    //if (MapContainsKey(TemporaryIntegerParameters, Parameter)) {
         if (!TemporaryIntegerParameters[Parameter].empty()) {
             // For some reason there's no public interface to do these
             // two steps in one line.
@@ -40,7 +39,6 @@ Optional<int> GeneratorParameterStore::GetIntegerParameter(UnmaskedTestParameter
     }
     
     if (IntegerParameters.find(Parameter) != IntegerParameters.end()) {
-    //if (MapContainsKey(IntegerParameters, Parameter)) {
         // Now we find out if there really is a permanent parameter.
         if (IntegerParameters[Parameter].DataExists) {
             Log(std::cout, LOG, "Fetched Normal Parameter");

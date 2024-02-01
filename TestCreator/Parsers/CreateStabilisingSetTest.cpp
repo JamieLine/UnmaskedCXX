@@ -234,7 +234,7 @@ std::string CreateStabilisingSetTest(
     // We have a list of Argument Types
     // We wish to map each index into that list to a string
     // Which Python3 would call
-    // f"std::get<{Index}>(Generators).GenerateValue(Parameters)"
+    // f"std::get<{Index}>(Generators).GenerateValue(Parameters, {IsUsed})"
     // which is the actual code we wish to subsitute into the template.
 
     // Again, std::format isn't used as it's a C++20 feature.

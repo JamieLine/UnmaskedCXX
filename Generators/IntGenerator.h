@@ -16,7 +16,6 @@ public:
 
         std::random_device Device;
         std::mt19937 RNG(Device());
-        // TODO: Make the bounds parameters
 
         Optional<int> FetchedLowerBound = Parameters.GetIntegerParameter(INT_LOWER_BOUND);
         Optional<int> FetchedUpperBound = Parameters.GetIntegerParameter(INT_UPPER_BOUND);
@@ -45,6 +44,3 @@ public:
         return Distribution(RNG);
     }
 };
-
-//TODO: MAKE THE GENERATOR NOT POP VALUES FROM THE TEMPORARY COLLECTION IF ITS VALUE IS BEING IGNORED
-// OR EVEN BETTER, ACTUALLY BE INTELLIGENT AND DONT GENERATE THE UNNEEDED VALUE AT ALL
