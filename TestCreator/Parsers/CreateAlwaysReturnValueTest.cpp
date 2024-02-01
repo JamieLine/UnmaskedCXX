@@ -255,7 +255,16 @@ std::string CreateAlwaysReturnValueTest(
     for (int i = 0; i < ArgumentTypes.size(); i++) {
         // Maybe the ArgumentType should know its own index?
         // But that might require specialising `vector<ArgumentType>` or replacing it.
-        GetValueFromGeneratorCalls.push_back("std::get<" + to_string(i) + ">(Generators).GenerateValue(Parameters)");
+
+        bool IsUsed = (
+            std::find_if(FixedArguments.begin(),
+                         FixedArguments.end(),
+                         [i](FixedArgument FArg) { 
+                            return FArg.MatchesIndex(i); }
+                        )
+                        == FixedArguments.end());
+
+        GetValueFromGeneratorCalls.push_back("std::get<" + to_string(i) + ">(Generators).GenerateValue(Parameters, " + std::to_string(IsUsed) + ")");
     }
 
     TestSource = ReplaceAllInString(TestSource,

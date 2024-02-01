@@ -21,8 +21,7 @@ void TestSpecifications() {
 
     UnmaskedStabilisingSetTest(std::function<int(int, int)>(&AddInts), 0, 0);
 
-    UnmaskedSetTempParameter(INT_LOWER_BOUND, 50);
-    //UnmaskedSetTempParameter(INT_LOWER_BOUND, 50);
+    UnmaskedSetTempParameter(INT_LOWER_BOUND, 990);
     UnmaskedStabilisingSetTest(std::function<int(int, int, int, int)>(&LinearCombination), 0, 0, 2, 0);
     UnmaskedStabilisingSetTest(std::function<int(int, int, int, int)>(&LinearCombinationWrong), 0, 0, 2, 0);
 	UnmaskedStabilisingSetTest(std::function<int(int, int, int, int)>(&LinearCombination), 1, 0, 3, 0);

@@ -7,7 +7,13 @@
 
 class Generator_int {
 public:
-    int GenerateValue(GeneratorParameterStore& Parameters) {
+    int GenerateValue(GeneratorParameterStore& Parameters, bool IsUsed) {
+        if (!IsUsed) {
+            Log(std::cout, LOG, "Generator was told its value will be ignored."); 
+            std::cout << std::endl;
+            return 1; 
+        }
+
         std::random_device Device;
         std::mt19937 RNG(Device());
         // TODO: Make the bounds parameters
@@ -28,8 +34,13 @@ public:
         Log(std::cout, LOG, "Upper and lower bounds are");
         Log(std::cout, VALUE_OUTPUT, std::to_string(UpperBound));
         Log(std::cout, VALUE_OUTPUT, std::to_string(LowerBound));
-
         std::uniform_int_distribution<std::mt19937::result_type> Distribution(LowerBound, UpperBound);
+
+        int ToReturn = Distribution(RNG);
+        Log(std::cout, LOG, "Generated value was");
+        Log(std::cout, VALUE_OUTPUT, std::to_string(ToReturn));
+
+        std::cout << std::endl;
 
         return Distribution(RNG);
     }
