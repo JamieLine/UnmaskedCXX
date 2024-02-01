@@ -8,3 +8,5 @@ Output.txt
 Makefile
 UnmaskedCreatedTestsBak/*
 Report.csv
+.cache/*
+*.log

@@ -6,12 +6,15 @@
 
 #include "../FILE_ADDRESS"
 #include "../Generators/AllGenerators.h"
+#include "../Generators/GeneratorParameterStore.h"
 #include <iostream>
 #include <tuple>
 #include <algorithm>
 
 // Returns true if and only if the contained test passed.
 bool TEST_FN_NAME() {
+	GeneratorParameterStore Parameters;
+
 	RETURN_TYPE ReturnedValues[NUM_TESTS_TO_RUN]{};
 
 	std::vector<std::tuple<ARGUMENT_TYPES>> GeneratedArguments; 
@@ -19,11 +22,17 @@ bool TEST_FN_NAME() {
 	for (int i = 0; i < NUM_TESTS_TO_RUN; i++) {
 		// Generate a value for every argument
 		std::tuple<GENERATOR_TYPES> Generators;
+
+// Intentionally un-indented
+PUSH_PARAMETERS_TO_STORE
+
 		GeneratedArguments.push_back(std::make_tuple(GENERATORS_GET_VALUES));
 
 		// Replace the named arguments when we call the function.
 		
 		ReturnedValues[i] = FN_NAME(GENERATED_ARGUMENTS);
+
+		Parameters.ClearEverything();
 	}
 
 	// Check if all values are equal

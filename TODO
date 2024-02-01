@@ -1,0 +1,23 @@
+PLAN TO ALLOW PARAMETERS
+
+Move all the test generation into a single scanner
+
+that scanner then delegates to the SINGULAR versions of the test creation functions
+
+e.g. to parse
+
+UnmaskedSetParameter(INT_LOWER_BOUND, 10);
+UnmaskedSetTempParameter(INT_UPPER_BOUND, 100);
+
+UnmaskedStabilisingSetTest(std::function<int(int, int)>(&AddInts), 0, 0);
+UnmaskedStabilisingSetTest(std::function<int(int, int, int, int)>(&LinearCombination), 0, 0, 2, 0);
+UnmaskedStabilisingSetTest(std::function<int(int, int, int, int)>(&LinearCombinationWrong), 0, 0, 2, 0);
+UnmaskedStabilisingSetTest(std::function<int(int, int, int, int)>(&LinearCombination), 1, 0, 3, 0);
+
+UnmaskedAlwaysReturnsValueTest(std::function<int(int, int)>(&AddInts), 0, 0, 0, 1, 0);
+UnmaskedAlwaysReturnsValueTest(std::function<int(int, int)>(&AddInts), 5, 0, 0, 1, 0);
+
+We accept the first marker (UnmaskedSetParameter), then let its parser move the overall iterator forwards and Do Its Work At That Time
+Then we accept the second, building up a GeneratorParameterStore object
+
+Then when we accept UnmaskedStabilisingSetTest, we can pass it a COPY of the GeneratorParameterStore and remove all Temp Params.
