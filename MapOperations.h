@@ -1,4 +1,5 @@
-#pragma once
+#ifndef MAPOPERATIONS_H
+#define MAPOPERATIONS_H
 
 #include <map>
 
@@ -6,4 +7,6 @@
 // This is absolutely not worth requiring everyone's code to run
 // under C++20.
 template <typename K, typename... V>
-bool MapContainsKey(std::map<K, V...>& Map, K Key);
+auto MapContainsKey(std::map<K, V...>& Map, K Key) -> bool;
+
+#endif /* MAPOPERATIONS_H */

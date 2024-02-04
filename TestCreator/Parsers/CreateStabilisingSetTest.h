@@ -1,17 +1,17 @@
-#pragma once
+#ifndef TESTCREATOR_PARSERS_CREATESTABILISINGSETTEST_H
+#define TESTCREATOR_PARSERS_CREATESTABILISINGSETTEST_H
 
 #include <string>
 #include <vector>
 
-#include "../Structs/GeneratorParameterStoreSeed.h"
-
 #include "../Consts/TestDefaults.h"
+#include "../Structs/GeneratorParameterStoreSeed.h"
+#include "TestCreator/Structs/Filepath.h"
 
+auto CreateStabilisingSetTest(std::vector<std::string>::iterator& FirstToken,
+                              GeneratorParameterStoreSeed Params,
+                              Filepath& TestDefinitionPath,
+                              const std::string& GeneratedFunctionName,
+                              std::size_t NumTestsToRun) -> std::string;
 
-std::string CreateStabilisingSetTest(std::vector<std::string>::iterator& FirstToken, GeneratorParameterStoreSeed Params, std::string SourceFileAddress, std::string OutputFileNameNoExtension, std::size_t NumTestsToRun);
-
-// These batch versions assume the SourceFileAddress and NumTestsToRun are constant across the batch.
-// These are also ready to take in an entire file, they will find the tests within the noise.
-// The file may also contain other types of tests.
-//std::vector<TestSpecification> CreateAllStabilisingTests(std::vector<std::string> Tokens, std::string SourceFileAddress);
-//std::vector<TestSpecification> CreateAllStabilisingTests(std::vector<std::string> Tokens, std::string SourceFileAddress, std::size_t NumTestsToRun);
+#endif /* TESTCREATOR_PARSERS_CREATESTABILISINGSETTEST_H */

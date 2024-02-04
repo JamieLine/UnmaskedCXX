@@ -1,176 +1,148 @@
 #include "StringOperations.h"
 
-#include "Logging.h"
-
-#include <iostream>
-#include <numeric>
 #include <algorithm>
 #include <fstream>
+#include <iostream>
+#include <numeric>
 
-std::string ReplaceAllInString(std::string Destination, std::string OldContent, std::string NewContent) {
-    auto Index = Destination.find(OldContent);
-    
-    while (Index != std::string::npos) {
-        Destination.replace(Index, OldContent.size(), NewContent);
-        Index = Destination.find(OldContent);
-    }
+#include "Logging.h"
 
-    return Destination;
+auto ReplaceAllInString(std::string Destination, const std::string& OldContent,
+                        const std::string& NewContent) -> std::string {
+  auto Index = Destination.find(OldContent);
+
+  while (Index != std::string::npos) {
+    Destination.replace(Index, OldContent.size(), NewContent);
+    Index = Destination.find(OldContent);
+  }
+
+  return Destination;
 }
 
-std::string JoinVectorOfStrings(std::vector<std::string> Strings, std::string Delimiter) {
-    return std::accumulate(
-        std::next(Strings.begin()), 
-        Strings.end(), 
-        Strings[0], 
-        [Delimiter](std::string a, std::string b) {
-            return a + Delimiter + b;
-        }   
-    );
+auto JoinVectorOfStrings(std::vector<std::string> Strings,
+                         const std::string& Delimiter) -> std::string {
+  return std::accumulate(
+      std::next(Strings.begin()), Strings.end(), Strings[0],
+      [Delimiter](const std::string& Prefix, const std::string& Suffix) {
+        return Prefix + Delimiter + Suffix;
+      });
 }
 
-std::vector<std::string> Tokenize(std::string ToTokenize, std::vector<std::string> KeptDelimiters, std::vector<std::string> DiscardedDelimiters) {
-    // Again, this function is much nicer with a few using std::* statements
-    using std::size_t;
-    using std::string;
-    using std::vector;
-    using std::all_of;
-    using std::distance;
-    using std::min_element;
+std::vector<std::string> Tokenize(
+    const std::string& ToTokenize, std::vector<std::string> KeptDelimiters,
+    std::vector<std::string> DiscardedDelimiters) {
+  // Again, this function is much nicer with a few using std::* statements
+  using std::all_of;
+  using std::distance;
+  using std::min_element;
+  using std::size_t;
+  using std::string;
+  using std::vector;
 
-    size_t StartIndex = 0;
-    size_t EndIndex;
-    
-    string CurrentToken;
-    vector<string> ToReturn;
+  size_t StartIndex = 0;
 
-    // We're merging these because the difference between Kept and Discarded is minimal
-    vector<string> Delimiters;
-    // This could become std::merge?
-    // But its expected that the delimiter strings are "small"
-    for (auto Delim : KeptDelimiters) { Delimiters.push_back(Delim); }
-    for (auto Delim : DiscardedDelimiters) { Delimiters.push_back(Delim); }
+  string CurrentToken;
+  vector<string> ToReturn;
 
-    // DelimiterIndexes contains the index at which each type of delimiter is found
-    // in the `ToTokenize" string. 
+  // We're merging these because the difference between Kept and Discarded is
+  // minimal
+  vector<string> Delimiters;
+  // This could become std::merge?
+  // But its expected that the delimiter strings are "small"
+  Delimiters.reserve(KeptDelimiters.size());
 
-    // It forms a mapping where for example
-    // Delimiters = [",", ".", ...]
-    // DelimiterIndexes = [1, 10, ...]
-    // And therefore "," gets related to 1 and "." gets related to 10
+  std::copy(KeptDelimiters.begin(), KeptDelimiters.end(),
+            std::back_inserter(Delimiters));
+  std::copy(DiscardedDelimiters.begin(), DiscardedDelimiters.end(),
+            std::back_inserter(Delimiters));
 
-    // This could become a map later, but it is nice to avoid various
-    // Hashing calculations in the process.
-    vector<size_t> DelimiterIndexes;
-    DelimiterIndexes.reserve(Delimiters.size());
+  /*for (const auto& Delim : KeptDelimiters) {
+    Delimiters.push_back(Delim);
+  }
+  for (const auto& Delim : DiscardedDelimiters) {
+    Delimiters.push_back(Delim);
+  }*/
 
-    // Later on, we want to access this by index, so we need a value to be there in advance.
-    // Avoids crashes of the form `DelimiterIndexes[4] = 3` when only up to `DelimiterIndexes[2]` is defined
-    for (auto _ : Delimiters) {
-        DelimiterIndexes.push_back(string::npos);
-    }
+  // DelimiterIndexes contains the index at which each type of delimiter is
+  // found in the `ToTokenize" string.
 
-    // Populate DelimiterIndexes
+  // It forms a mapping where for example
+  // Delimiters = [",", ".", ...]
+  // DelimiterIndexes = [1, 10, ...]
+  // And therefore "," gets related to 1 and "." gets related to 10
+
+  // This could become a map later, but it is nice to avoid various
+  // Hashing calculations in the process.
+  vector<size_t> DelimiterIndexes;
+  DelimiterIndexes.reserve(Delimiters.size());
+
+  // Later on, we want to access this by index, so we need a value to be there
+  // in advance. Avoids crashes of the form `DelimiterIndexes[4] = 3` when only
+  // up to `DelimiterIndexes[2]` is defined
+  for (auto Delim : Delimiters) {
+    DelimiterIndexes.push_back(string::npos);
+  }
+
+  // Populate DelimiterIndexes
+  for (size_t Index = 0; Index < Delimiters.size(); Index++) {
+    DelimiterIndexes[Index] = ToTokenize.find(Delimiters[Index], StartIndex);
+  }
+
+  // while at least one delimiter can be found
+  while (!all_of(DelimiterIndexes.begin(), DelimiterIndexes.end(),
+                 [](size_t FirstInstance) -> bool {
+                   return FirstInstance == string::npos;
+                 })) {
+    // Get an iterator that points to the next delimiter in `ToTokenize`
+    auto NextDelimiterIterator =
+        min_element(DelimiterIndexes.begin(), DelimiterIndexes.end());
+
+    // The distance call converts the iterator to a vector index in
+    // `DelimiterIndexes` It's important to note here that `DelimiterIndexes`
+    // contains string indexes And our current calculation is regarding vector
+    // indexes which point to those string indexes.
+    string NextDelimiter =
+        Delimiters[distance(DelimiterIndexes.begin(), NextDelimiterIterator)];
+
+    // We already know the next delimiter exists in `ToTokenize`
+    // It's implied by the condition to enter this loop
+
+    ToReturn.push_back(
+        ToTokenize.substr(StartIndex, (*NextDelimiterIterator) - StartIndex));
+    // Some delimiters are kept, some are discarded.
+    // Where a delimiter is kept, it becomes its own token in the token stream.
+
+    // This is shorthand to make the next line easier to read.
+    // No additional code should be generated here.
+    vector<string> const& Kepts = KeptDelimiters;
+
+    if (std::find(Kepts.begin(), Kepts.end(), NextDelimiter) != Kepts.end()) {
+      ToReturn.push_back(NextDelimiter);
+    }  // We wish to keep the delimiters in the final result.
+    StartIndex = (*NextDelimiterIterator) + NextDelimiter.length();
+
+    // Update DelimiterIndexes now that another delimiter has been processed.
     for (size_t Index = 0; Index < Delimiters.size(); Index++) {
-        DelimiterIndexes[Index] = ToTokenize.find(Delimiters[Index], StartIndex);
+      DelimiterIndexes[Index] = ToTokenize.find(Delimiters[Index], StartIndex);
     }
+  }
 
-    // while at least one delimiter can be found
-    while (!all_of(DelimiterIndexes.begin(), DelimiterIndexes.end(),
-            [](size_t x) { return x == string::npos; })) {
-        // Get an iterator that points to the next delimiter in `ToTokenize`
-        auto NextDelimiterIterator = min_element(DelimiterIndexes.begin(), DelimiterIndexes.end());
+  // Empty strings can appear
+  // We pull those out here
+  // Because they can throw off
+  // the calculations in other
+  // sections that assume they'll never
+  // draw an empty token.
+  ToReturn.erase(
+      std::remove_if(ToReturn.begin(), ToReturn.end(),
+                     [](const string& Str) -> bool { return Str.empty(); }),
+      ToReturn.end());
 
-        // The distance call converts the iterator to a vector index in `DelimiterIndexes`
-        // It's important to note here that `DelimiterIndexes` contains string indexes
-        // And our current calculation is regarding vector indexes which point to those
-        // string indexes.
-        string NextDelimiter = Delimiters[distance(DelimiterIndexes.begin(), NextDelimiterIterator)];
+  Log(std::cout, LOG, "Tokenizer output is");
+  for (auto const& Token : ToReturn) {
+    Log(std::cout, VALUE_OUTPUT, Token);
+    Log(std::cout, VALUE_OUTPUT, "-|-|-|-|-|-");
+  }
 
-        // We already know the next delimiter exists in `ToTokenize`
-        // It's implied by the condition to enter this loop
-
-        ToReturn.push_back(ToTokenize.substr(StartIndex, (*NextDelimiterIterator) - StartIndex));
-        // Some delimiters are kept, some are discarded.
-        // Where a delimiter is kept, it becomes its own token in the token stream.
-
-        // This is shorthand to make the next line easier to read.
-        // No additional code should be generated here.
-        vector<string> const& Kepts = KeptDelimiters;
-
-        if (std::find(Kepts.begin(), Kepts.end(), NextDelimiter) != Kepts.end()) { ToReturn.push_back(NextDelimiter); } // We wish to keep the delimiters in the final result.
-        StartIndex = (*NextDelimiterIterator) + NextDelimiter.length();
-
-        // Update DelimiterIndexes now that another delimiter has been processed.
-        for (size_t Index = 0; Index < Delimiters.size(); Index++) {
-            DelimiterIndexes[Index] = ToTokenize.find(Delimiters[Index], StartIndex);
-        }
-
-    }
-
-    // Empty strings can appear
-    // We pull those out here
-    // Because they can throw off 
-    // the calculations in other
-    // sections that assume they'll never
-    // draw an empty token.
-    ToReturn.erase(
-        std::remove_if(
-            ToReturn.begin(), ToReturn.end(),
-            [](string s){ return s == "";}),
-        ToReturn.end());
-
-    Log(std::cout, LOG, "Tokenizer output is");
-    for (auto const& Token : ToReturn) {
-        Log(std::cout, VALUE_OUTPUT, Token);
-        Log(std::cout, VALUE_OUTPUT, "-|-|-|-|-|-");
-    }
-
-    return ToReturn;
-}
-
-Optional<std::string> ReadContentsOfFile(std::string Filepath)
-{
-    std::ifstream InputFilestream;
-    InputFilestream.open(Filepath);
-
-    if (!InputFilestream.is_open()) {
-        return Optional<std::string>("", false);
-    }
-
-    std::string Data( (std::istreambuf_iterator<char>(InputFilestream) ),
-                       (std::istreambuf_iterator<char>()    ) );
-
-    return Optional<std::string>(Data, true);
-
-    
-}
-
-std::string FilepathToLegalIdentifier(std::string Filepath)
-{
-    std::string ToReturn = Filepath;
-    ToReturn = ReplaceAllInString(ToReturn, "./", "");
-    ToReturn = ReplaceAllInString(ToReturn, "..", "DOT_DOT");
-    ToReturn = ReplaceAllInString(ToReturn, ".", "DOT");
-    ToReturn = ReplaceAllInString(ToReturn, "/", "_");
-    ToReturn = ReplaceAllInString(ToReturn, "\\", "_");
-
-    return ToReturn;
-}
-
-bool WriteStringIntoFileOverwriting(std::string Filepath, std::string Content)
-{
-    std::ofstream File;
-    File.open(Filepath, std::ofstream::in |
-                        std::ofstream::out |
-                        std::ofstream::trunc);
-
-    if (!File.is_open()) {
-        return false;
-    }
-
-    File << Content;
-    File.close();
-
-    return true;
+  return ToReturn;
 }

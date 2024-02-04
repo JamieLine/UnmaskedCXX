@@ -1,0 +1,82 @@
+[
+{
+  "directory": "/home/linej/UnmaskedCXX",
+  "command": "/usr/bin/c++  -I/home/linej/UnmaskedCXX/SampleCXXProject -I/home/linej/UnmaskedCXX/. -I/home/linej/UnmaskedCXX/UserlandIncludes -std=c++11 -o CMakeFiles/RunTests.dir/UnmaskedCreatedTests/TestRunner.cpp.o -c /home/linej/UnmaskedCXX/UnmaskedCreatedTests/TestRunner.cpp",
+  "file": "/home/linej/UnmaskedCXX/UnmaskedCreatedTests/TestRunner.cpp"
+},
+{
+  "directory": "/home/linej/UnmaskedCXX",
+  "command": "/usr/bin/c++  -I/home/linej/UnmaskedCXX/SampleCXXProject -I/home/linej/UnmaskedCXX/. -I/home/linej/UnmaskedCXX/UserlandIncludes -std=c++11 -o CMakeFiles/RunTests.dir/Generators/GeneratorParameterStore.cpp.o -c /home/linej/UnmaskedCXX/Generators/GeneratorParameterStore.cpp",
+  "file": "/home/linej/UnmaskedCXX/Generators/GeneratorParameterStore.cpp"
+},
+{
+  "directory": "/home/linej/UnmaskedCXX",
+  "command": "/usr/bin/c++  -I/home/linej/UnmaskedCXX/SampleCXXProject -I/home/linej/UnmaskedCXX/. -I/home/linej/UnmaskedCXX/UserlandIncludes -std=c++11 -o CMakeFiles/RunTests.dir/StringOperations.cpp.o -c /home/linej/UnmaskedCXX/StringOperations.cpp",
+  "file": "/home/linej/UnmaskedCXX/StringOperations.cpp"
+},
+{
+  "directory": "/home/linej/UnmaskedCXX",
+  "command": "/usr/bin/c++  -I/home/linej/UnmaskedCXX/SampleCXXProject -I/home/linej/UnmaskedCXX/. -I/home/linej/UnmaskedCXX/UserlandIncludes -std=c++11 -o CMakeFiles/RunTests.dir/Logging.cpp.o -c /home/linej/UnmaskedCXX/Logging.cpp",
+  "file": "/home/linej/UnmaskedCXX/Logging.cpp"
+},
+{
+  "directory": "/home/linej/UnmaskedCXX",
+  "command": "/usr/bin/c++  -I/home/linej/UnmaskedCXX/SampleCXXProject -I/home/linej/UnmaskedCXX/. -I/home/linej/UnmaskedCXX/UserlandIncludes -std=c++11 -o CMakeFiles/RunTests.dir/SetOperations.cpp.o -c /home/linej/UnmaskedCXX/SetOperations.cpp",
+  "file": "/home/linej/UnmaskedCXX/SetOperations.cpp"
+},
+{
+  "directory": "/home/linej/UnmaskedCXX",
+  "command": "/usr/bin/c++  -I/home/linej/UnmaskedCXX/SampleCXXProject -I/home/linej/UnmaskedCXX/. -I/home/linej/UnmaskedCXX/UserlandIncludes -std=c++11 -o CMakeFiles/RunTests.dir/MapOperations.cpp.o -c /home/linej/UnmaskedCXX/MapOperations.cpp",
+  "file": "/home/linej/UnmaskedCXX/MapOperations.cpp"
+},
+{
+  "directory": "/home/linej/UnmaskedCXX",
+  "command": "/usr/bin/c++  -I/home/linej/UnmaskedCXX/SampleCXXProject -I/home/linej/UnmaskedCXX/. -I/home/linej/UnmaskedCXX/UserlandIncludes -std=c++11 -o CMakeFiles/TestAuthor.dir/Main.cpp.o -c /home/linej/UnmaskedCXX/Main.cpp",
+  "file": "/home/linej/UnmaskedCXX/Main.cpp"
+},
+{
+  "directory": "/home/linej/UnmaskedCXX",
+  "command": "/usr/bin/c++  -I/home/linej/UnmaskedCXX/SampleCXXProject -I/home/linej/UnmaskedCXX/. -I/home/linej/UnmaskedCXX/UserlandIncludes -std=c++11 -o CMakeFiles/TestAuthor.dir/StringOperations.cpp.o -c /home/linej/UnmaskedCXX/StringOperations.cpp",
+  "file": "/home/linej/UnmaskedCXX/StringOperations.cpp"
+},
+{
+  "directory": "/home/linej/UnmaskedCXX",
+  "command": "/usr/bin/c++  -I/home/linej/UnmaskedCXX/SampleCXXProject -I/home/linej/UnmaskedCXX/. -I/home/linej/UnmaskedCXX/UserlandIncludes -std=c++11 -o CMakeFiles/TestAuthor.dir/Logging.cpp.o -c /home/linej/UnmaskedCXX/Logging.cpp",
+  "file": "/home/linej/UnmaskedCXX/Logging.cpp"
+},
+{
+  "directory": "/home/linej/UnmaskedCXX",
+  "command": "/usr/bin/c++  -I/home/linej/UnmaskedCXX/SampleCXXProject -I/home/linej/UnmaskedCXX/. -I/home/linej/UnmaskedCXX/UserlandIncludes -std=c++11 -o CMakeFiles/TestAuthor.dir/SetOperations.cpp.o -c /home/linej/UnmaskedCXX/SetOperations.cpp",
+  "file": "/home/linej/UnmaskedCXX/SetOperations.cpp"
+},
+{
+  "directory": "/home/linej/UnmaskedCXX",
+  "command": "/usr/bin/c++  -I/home/linej/UnmaskedCXX/SampleCXXProject -I/home/linej/UnmaskedCXX/. -I/home/linej/UnmaskedCXX/UserlandIncludes -std=c++11 -o CMakeFiles/TestAuthor.dir/MapOperations.cpp.o -c /home/linej/UnmaskedCXX/MapOperations.cpp",
+  "file": "/home/linej/UnmaskedCXX/MapOperations.cpp"
+},
+{
+  "directory": "/home/linej/UnmaskedCXX",
+  "command": "/usr/bin/c++  -I/home/linej/UnmaskedCXX/SampleCXXProject -I/home/linej/UnmaskedCXX/. -I/home/linej/UnmaskedCXX/UserlandIncludes -std=c++11 -o CMakeFiles/TestAuthor.dir/TestCreator/Parsers/CreateStabilisingSetTest.cpp.o -c /home/linej/UnmaskedCXX/TestCreator/Parsers/CreateStabilisingSetTest.cpp",
+  "file": "/home/linej/UnmaskedCXX/TestCreator/Parsers/CreateStabilisingSetTest.cpp"
+},
+{
+  "directory": "/home/linej/UnmaskedCXX",
+  "command": "/usr/bin/c++  -I/home/linej/UnmaskedCXX/SampleCXXProject -I/home/linej/UnmaskedCXX/. -I/home/linej/UnmaskedCXX/UserlandIncludes -std=c++11 -o CMakeFiles/TestAuthor.dir/TestCreator/Parsers/CreateAlwaysReturnValueTest.cpp.o -c /home/linej/UnmaskedCXX/TestCreator/Parsers/CreateAlwaysReturnValueTest.cpp",
+  "file": "/home/linej/UnmaskedCXX/TestCreator/Parsers/CreateAlwaysReturnValueTest.cpp"
+},
+{
+  "directory": "/home/linej/UnmaskedCXX",
+  "command": "/usr/bin/c++  -I/home/linej/UnmaskedCXX/SampleCXXProject -I/home/linej/UnmaskedCXX/. -I/home/linej/UnmaskedCXX/UserlandIncludes -std=c++11 -o CMakeFiles/TestAuthor.dir/TestCreator/Structs/GeneratorParameterStoreSeed.cpp.o -c /home/linej/UnmaskedCXX/TestCreator/Structs/GeneratorParameterStoreSeed.cpp",
+  "file": "/home/linej/UnmaskedCXX/TestCreator/Structs/GeneratorParameterStoreSeed.cpp"
+},
+{
+  "directory": "/home/linej/UnmaskedCXX",
+  "command": "/usr/bin/c++  -I/home/linej/UnmaskedCXX/SampleCXXProject -I/home/linej/UnmaskedCXX/. -I/home/linej/UnmaskedCXX/UserlandIncludes -std=c++11 -o CMakeFiles/TestAuthor.dir/TestCreator/TestCreator.cpp.o -c /home/linej/UnmaskedCXX/TestCreator/TestCreator.cpp",
+  "file": "/home/linej/UnmaskedCXX/TestCreator/TestCreator.cpp"
+},
+{
+  "directory": "/home/linej/UnmaskedCXX",
+  "command": "/usr/bin/c++  -I/home/linej/UnmaskedCXX/SampleCXXProject -I/home/linej/UnmaskedCXX/. -I/home/linej/UnmaskedCXX/UserlandIncludes -std=c++11 -o CMakeFiles/TestAuthor.dir/TestCreator/Structs/Filepath.cpp.o -c /home/linej/UnmaskedCXX/TestCreator/Structs/Filepath.cpp",
+  "file": "/home/linej/UnmaskedCXX/TestCreator/Structs/Filepath.cpp"
+}
+]

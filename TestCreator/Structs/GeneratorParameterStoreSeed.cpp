@@ -1,65 +1,78 @@
 #include "GeneratorParameterStoreSeed.h"
+
+#include <algorithm>
+#include <iterator>
+#include <numeric>
+#include <set>
+
+#include "SetOperations.h"
 #include "UserlandIncludes/UnmaskedTests.h"
 
-#include <set>
-#include "SetOperations.h"
-
-//std::set<UnmaskedTestParameter> IntegerParameterKeys = {
-    //INT_LOWER_BOUND,
-    //INT_UPPER_BOUND,
+// std::set<UnmaskedTestParameter> IntegerParameterKeys = {
+// INT_LOWER_BOUND,
+// INT_UPPER_BOUND,
 //};
 
-GeneratorParameterStoreSeed::GeneratorParameterStoreSeed() {}
+GeneratorParameterStoreSeed::GeneratorParameterStoreSeed() = default;
 
-// TODO: Should this and the temp version be merged and have an input arg which specifies
-// temporary-ness?
-void GeneratorParameterStoreSeed::ReadInParameterDeclaration(std::vector<std::string>::iterator &FirstToken)
-{
-    auto& CurrentToken = FirstToken;
+// TODO(linej): Should this and the temp version be merged and have an input arg
+// which specifies temporary-ness?
+void GeneratorParameterStoreSeed::ReadInParameterDeclaration(
+    std::vector<std::string>::iterator& FirstToken) {
+  auto& CurrentToken = FirstToken;
 
-    // Skip the marker and the opening bracket
-    CurrentToken += 2;
-    std::string Param = *CurrentToken;
+  // Skip the marker and the opening bracket
+  CurrentToken += 2;
+  std::string Param = *CurrentToken;
 
-    // Skip the comma between the parameter and its value
-    CurrentToken += 2;
-    std::string Value = *CurrentToken;
+  // Skip the comma between the parameter and its value
+  CurrentToken += 2;
+  std::string Value = *CurrentToken;
 
-    ParametersAndValues.emplace_back(Param, Value);
+  ParametersAndValues.emplace_back(Param, Value);
 }
 
-void GeneratorParameterStoreSeed::ReadInTempParameterDeclaration(std::vector<std::string>::iterator &FirstToken)
-{
-    auto& CurrentToken = FirstToken;
+void GeneratorParameterStoreSeed::ReadInTempParameterDeclaration(
+    std::vector<std::string>::iterator& FirstToken) {
+  auto& CurrentToken = FirstToken;
 
-    // Skip the marker and the opening bracket
-    CurrentToken += 2;
-    std::string Param = *CurrentToken;
+  // Skip the marker and the opening bracket
+  CurrentToken += 2;
+  std::string Param = *CurrentToken;
 
-    // Skip the comma between the parameter and its value
-    CurrentToken += 2;
-    std::string Value = *CurrentToken;
+  // Skip the comma between the parameter and its value
+  CurrentToken += 2;
+  std::string Value = *CurrentToken;
 
-    TempParametersAndValues.emplace_back(Param, Value);
+  TempParametersAndValues.emplace_back(Param, Value);
 }
 
-void GeneratorParameterStoreSeed::ResetTempParameters()
-{
-    TempParametersAndValues = std::vector<std::pair<std::string, std::string>>();
+void GeneratorParameterStoreSeed::ResetTempParameters() {
+  TempParametersAndValues = std::vector<std::pair<std::string, std::string>>();
 }
 
-std::string GeneratorParameterStoreSeed::CreateGeneratorParameterStoreDefinition() {
-    std::string ToReturn = "";
-    for (auto ParameterAndValue : ParametersAndValues) {
-        // Dealing with the real types of these values is the job of the Generators
-        // that pull the values out.
+auto GeneratorParameterStoreSeed::CreateGeneratorParameterStoreDefinition()
+    -> std::string {
+  // Cppcheck tells us to std::accumulate here.
+  // In C++20 this is fine, but in C++11 its extremely slow
+  // Because accumulate doesn't acknowledge std::move exists.
 
-        ToReturn += "\t\tParameters.PushParameter(" + ParameterAndValue.first + "," + ParameterAndValue.second +");\n";
-    }
+  std::string ToReturn;
+  for (const auto& ParameterAndValue : ParametersAndValues) {
+    // Dealing with the real types of these values is the job of the Generators
+    // that pull the values out.
 
-    for (auto TempParameterAndValue : TempParametersAndValues) {
-        ToReturn += "\t\tParameters.PushTempParameter(" + TempParameterAndValue.first + "," + TempParameterAndValue.second +");\n";
-    }
+    // cppcheck-suppress useStlAlgorithm
+    ToReturn += "\t\tParameters.PushParameter(" + ParameterAndValue.first +
+                "," + ParameterAndValue.second + ");\n";
+  }
 
-    return ToReturn;
+  for (const auto& TempParameterAndValue : TempParametersAndValues) {
+    // cppcheck-suppress useStlAlgorithm
+    ToReturn += "\t\tParameters.PushTempParameter(" +
+                TempParameterAndValue.first + "," +
+                TempParameterAndValue.second + ");\n";
+  }
+
+  return ToReturn;
 }

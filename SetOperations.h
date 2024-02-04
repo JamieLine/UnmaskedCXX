@@ -1,12 +1,17 @@
-#pragma once
+#ifndef SETOPERATIONS_H
+#define SETOPERATIONS_H
 
 #include <set>
+
 #include "UserlandIncludes/UnmaskedTests.h"
 
 template <typename T, typename... Ts>
-bool SetContainsItem(std::set<T, Ts...>& Set, T Item);
+auto SetContainsItem(std::set<T, Ts...>& Set, T Item) -> bool;
 
 template <typename T, typename... Ts>
-bool SetContainsItem(const std::set<T, Ts...>& ConstSet, T Item);
+auto SetContainsItem(const std::set<T, Ts...>& ConstSet, T Item) -> bool;
 
-bool SetContainsParameter(const std::set<UnmaskedTestParameter>& ParamSet, UnmaskedTestParameter Item);
+auto SetContainsParameter(const std::set<UnmaskedTestParameter>& ParamSet,
+                          UnmaskedTestParameter Item) -> bool;
+
+#endif /* SETOPERATIONS_H */
