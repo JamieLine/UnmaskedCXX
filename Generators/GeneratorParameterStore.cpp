@@ -24,8 +24,8 @@ void GeneratorParameterStore::ClearEverything() {
   }
 }
 
-Optional<int> GeneratorParameterStore::GetIntegerParameter(
-    UnmaskedTestParameter Parameter) {
+auto GeneratorParameterStore::GetIntegerParameter(
+    UnmaskedTestParameter Parameter) -> Optional<int> {
   // We wish to pull a temporary value before a permanent one.
   // Check that the map contains the key, then see if that key leads to a useful
   // int
@@ -37,7 +37,7 @@ Optional<int> GeneratorParameterStore::GetIntegerParameter(
       auto ToReturn = TemporaryIntegerParameters[Parameter].front();
       TemporaryIntegerParameters[Parameter].pop();
       Log(std::cout, LOG, "Fetched Temporary Parameter");
-      return Optional<int>(ToReturn, true);
+      return {ToReturn, true};
     }
   }
 
@@ -51,5 +51,5 @@ Optional<int> GeneratorParameterStore::GetIntegerParameter(
 
   // Otherwise we simply signal back that there is no parameter available
   // in which case the caller should take a reasonable default.
-  return Optional<int>(0, false);
+  return {0, false};
 }

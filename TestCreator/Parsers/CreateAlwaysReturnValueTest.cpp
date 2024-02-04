@@ -206,8 +206,8 @@ auto CreateAlwaysReturnValueTest(std::vector<std::string>::iterator& FirstToken,
                                   string(TestDefinitionPath));
 
   // Set the function name
-  TestSource = ReplaceAllInString(TestSource, "TEST_FN_NAME",
-                                  std::move(GeneratedFunctionName));
+  TestSource =
+      ReplaceAllInString(TestSource, "TEST_FN_NAME", GeneratedFunctionName);
 
   // Fix the return type and argument types
   TestSource = ReplaceAllInString(TestSource, "RETURN_TYPE", ReturnType);
@@ -311,7 +311,7 @@ auto CreateAlwaysReturnValueTest(std::vector<std::string>::iterator& FirstToken,
   GeneratorsSource.reserve(ArgumentTypes.size());
 
   std::transform(ArgumentTypes.begin(), ArgumentTypes.end(),
-                 std::back_inserter(GeneratorTypes),
+                 std::back_inserter(GeneratorsSource),
                  [](const ArgumentType& ArgType) -> string {
                    return ArgType.GetGeneratorCall();
                  });

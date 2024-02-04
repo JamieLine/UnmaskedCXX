@@ -200,8 +200,8 @@ auto CreateStabilisingSetTest(std::vector<std::string>::iterator& FirstToken,
                                   std::string(TestDefinitionPath));
 
   // Set the function name
-  TestSource = ReplaceAllInString(TestSource, "TEST_FN_NAME",
-                                  std::move(GeneratedFunctionName));
+  TestSource =
+      ReplaceAllInString(TestSource, "TEST_FN_NAME", GeneratedFunctionName);
 
   // Fix the return type and argument types
   TestSource = ReplaceAllInString(TestSource, "RETURN_TYPE", ReturnType);

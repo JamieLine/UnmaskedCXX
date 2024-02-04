@@ -21,16 +21,17 @@ auto ReplaceAllInString(std::string Destination, const std::string& OldContent,
 
 auto JoinVectorOfStrings(std::vector<std::string> Strings,
                          const std::string& Delimiter) -> std::string {
-  return std::accumulate(
-      std::next(Strings.begin()), Strings.end(), Strings[0],
-      [Delimiter](const std::string& Prefix, const std::string& Suffix) {
-        return Prefix + Delimiter + Suffix;
-      });
+  return std::accumulate(std::next(Strings.begin()), Strings.end(), Strings[0],
+                         [Delimiter](const std::string& Prefix,
+                                     const std::string& Suffix) -> std::string {
+                           return Prefix + Delimiter + Suffix;
+                         });
 }
 
-std::vector<std::string> Tokenize(
-    const std::string& ToTokenize, std::vector<std::string> KeptDelimiters,
-    std::vector<std::string> DiscardedDelimiters) {
+auto Tokenize(const std::string& ToTokenize,
+              std::vector<std::string> KeptDelimiters,
+              std::vector<std::string> DiscardedDelimiters)
+    -> std::vector<std::string> {
   // Again, this function is much nicer with a few using std::* statements
   using std::all_of;
   using std::distance;
