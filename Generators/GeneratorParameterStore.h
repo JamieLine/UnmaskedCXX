@@ -17,7 +17,8 @@ class GeneratorParameterStore {
 
   void ClearEverything();
 
-  Optional<int> GetIntegerParameter(UnmaskedTestParameter Parameter);
+  auto GetIntegerParameter(UnmaskedTestParameter Parameter) -> Optional<int>;
+  auto GetFloatParameter(UnmaskedTestParameter Parameter) -> Optional<float>;
 
   template <typename T>
   void PushParameter(UnmaskedTestParameter Param, T Value);
@@ -28,11 +29,19 @@ class GeneratorParameterStore {
  private:
   std::map<UnmaskedTestParameter, Optional<int>> IntegerParameters;
   std::map<UnmaskedTestParameter, std::queue<int>> TemporaryIntegerParameters;
+
+  std::map<UnmaskedTestParameter, Optional<float>> FloatParameters;
+  std::map<UnmaskedTestParameter, std::queue<float>> TemporaryFloatParameters;
 };
 
 const std::set<UnmaskedTestParameter> LegalIntegerParameters = {
     INT_LOWER_BOUND,
     INT_UPPER_BOUND,
+};
+
+const std::set<UnmaskedTestParameter> LegalFloatParameters = {
+    FLOAT_LOWER_BOUND,
+    FLOAT_UPPER_BOUND,
 };
 
 // WARNING: WEAK TYPING AHEAD
@@ -43,6 +52,8 @@ void GeneratorParameterStore::PushParameter(UnmaskedTestParameter Param,
                                             T Value) {
   if (SetContainsParameter(LegalIntegerParameters, Param)) {
     IntegerParameters[Param] = Optional<int>(Value, true);
+  } else if (SetContainsParameter(LegalFloatParameters, Param)) {
+    FloatParameters[Param] = Optional<float>(Value, true);
   } else {
     Log(std::cout, WARN,
         "Parameter was pushed to GeneratorParameterStore that it wasn't "
@@ -57,6 +68,8 @@ void GeneratorParameterStore::PushTempParameter(UnmaskedTestParameter Param,
                                                 T Value) {
   if (SetContainsParameter(LegalIntegerParameters, Param)) {
     TemporaryIntegerParameters[Param].emplace(int(Value));
+  } else if (SetContainsParameter(LegalFloatParameters, Param)) {
+    TemporaryFloatParameters[Param].emplace(float(Value));
   } else {
     Log(std::cout, WARN,
         "Temporary parameter was pushed to GeneratorParameterStore that it "

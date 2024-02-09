@@ -9,6 +9,8 @@
 enum UnmaskedTestParameter {
   INT_LOWER_BOUND,
   INT_UPPER_BOUND,
+  FLOAT_LOWER_BOUND,
+  FLOAT_UPPER_BOUND,
 };
 
 template <typename... Ts>

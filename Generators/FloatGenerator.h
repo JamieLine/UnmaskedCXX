@@ -1,5 +1,5 @@
-#ifndef GENERATORS_INTGENERATOR_H
-#define GENERATORS_INTGENERATOR_H
+#ifndef GENERATORS_FLOATGENERATOR_H
+#define GENERATORS_FLOATGENERATOR_H
 
 #include <iostream>
 #include <random>
@@ -8,11 +8,13 @@
 #include "Logging.h"
 #include "Optional.h"
 
-class Generator_int {
+class Generator_float {
  public:
-  auto GenerateValue(GeneratorParameterStore& Parameters, bool IsUsed) -> int {
+  auto GenerateValue(GeneratorParameterStore& Parameters, bool IsUsed)
+      -> float {
     if (!IsUsed) {
-      Log(std::cout, LOG, "Int Generator was told its value will be ignored.");
+      Log(std::cout, LOG,
+          "Float Generator was told its value will be ignored.");
       std::cout << std::endl;
       return 1;
     }
@@ -20,36 +22,35 @@ class Generator_int {
     std::random_device Device;
     std::mt19937 RNG(Device());
 
-    Optional<int> FetchedLowerBound =
-        Parameters.GetIntegerParameter(INT_LOWER_BOUND);
-    Optional<int> FetchedUpperBound =
-        Parameters.GetIntegerParameter(INT_UPPER_BOUND);
+    Optional<float> FetchedLowerBound =
+        Parameters.GetFloatParameter(FLOAT_LOWER_BOUND);
+    Optional<float> FetchedUpperBound =
+        Parameters.GetFloatParameter(FLOAT_UPPER_BOUND);
 
-    int LowerBound;
-    int UpperBound;
+    float LowerBound;
+    float UpperBound;
 
     if (FetchedLowerBound.DataExists) {
       LowerBound = FetchedLowerBound.Data;
     }
     // Choose a sensible default in the absence of a parameter.
     else {
-      LowerBound = -1000;
+      LowerBound = -1000.0f;
     }
 
     if (FetchedUpperBound.DataExists) {
       UpperBound = FetchedUpperBound.Data;
     } else {
-      UpperBound = 1000;
+      UpperBound = 1000.0f;
     }
 
-    Log(std::cout, LOG, "Int generator invoked.");
+    Log(std::cout, LOG, "Float generator invoked.");
     Log(std::cout, LOG, "Upper and lower bounds are");
     Log(std::cout, VALUE_OUTPUT, std::to_string(UpperBound));
     Log(std::cout, VALUE_OUTPUT, std::to_string(LowerBound));
-    std::uniform_int_distribution<std::mt19937::result_type> Distribution(
-        LowerBound, UpperBound);
+    std::uniform_real_distribution<float> Distribution(LowerBound, UpperBound);
 
-    int ToReturn = Distribution(RNG);
+    float ToReturn = Distribution(RNG);
     Log(std::cout, LOG, "Generated value was");
     Log(std::cout, VALUE_OUTPUT, std::to_string(ToReturn));
 
@@ -59,4 +60,4 @@ class Generator_int {
   }
 };
 
-#endif /* GENERATORS_INTGENERATOR_H */
+#endif /* GENERATORS_FLOATGENERATOR_H */
