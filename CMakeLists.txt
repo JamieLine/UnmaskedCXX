@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.12)
 
-set (CMAKE_CXX_FLAGS "-std=c++17")
+set (CMAKE_CXX_FLAGS "-std=c++11")
 
 SET(TESTED_PROJECT_INCLUDE_DIRECTORY "SampleCXXProject")
 
@@ -11,7 +11,8 @@ project(UnmaskedCXX VERSION 1.0 LANGUAGES CXX)
 SET(TEST_AUTHOR_FILES "TestCreator/Parsers/CreateStabilisingSetTest.cpp"
 					  "TestCreator/Parsers/CreateAlwaysReturnValueTest.cpp"
 					  "TestCreator/Structs/GeneratorParameterStoreSeed.cpp"
-					  "TestCreator/TestCreator.cpp")
+					  "TestCreator/TestCreator.cpp"
+						"TestCreator/Structs/Filepath.cpp")
 SET(UNMASKED_INCLUDE_DIRECTORIES "./")
 SET(EVERYWHERE_INCLUDED_SOURCE_CODE "StringOperations.cpp" "Logging.cpp" "SetOperations.cpp" "MapOperations.cpp")
 

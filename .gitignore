@@ -10,3 +10,4 @@ UnmaskedCreatedTestsBak/*
 Report.csv
 .cache/*
 *.log
+compile_commands.json

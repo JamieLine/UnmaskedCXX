@@ -1,19 +1,24 @@
-#pragma once
+#ifndef TESTCREATOR_STRUCTS_GENERATORPARAMETERSTORESEED_H
+#define TESTCREATOR_STRUCTS_GENERATORPARAMETERSTORESEED_H
 
-#include <vector>
 #include <string>
+#include <vector>
 
 struct GeneratorParameterStoreSeed {
-public:
-    std::vector<std::pair<std::string, std::string>> ParametersAndValues;
-    std::vector<std::pair<std::string, std::string>> TempParametersAndValues;
+ public:
+  std::vector<std::pair<std::string, std::string>> ParametersAndValues;
+  std::vector<std::pair<std::string, std::string>> TempParametersAndValues;
 
-    GeneratorParameterStoreSeed();
+  GeneratorParameterStoreSeed();
 
-    void ReadInParameterDeclaration(std::vector<std::string>::iterator& FirstToken);
-    void ReadInTempParameterDeclaration(std::vector<std::string>::iterator& FirstToken);
+  void ReadInParameterDeclaration(
+      std::vector<std::string>::iterator& FirstToken);
+  void ReadInTempParameterDeclaration(
+      std::vector<std::string>::iterator& FirstToken);
 
-    void ResetTempParameters();
+  void ResetTempParameters();
 
-    std::string CreateGeneratorParameterStoreDefinition();
+  auto CreateGeneratorParameterStoreDefinition() -> std::string;
 };
+
+#endif /* TESTCREATOR_STRUCTS_GENERATORPARAMETERSTORESEED_H */

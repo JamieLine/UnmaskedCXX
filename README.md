@@ -72,3 +72,21 @@ Contributing
 ------------
 
 At this time, UnmaskedCXX is not actively looking for contributors.
+
+Requirements
+------------
+
+To run UnmaskedCXX, you will require CMake (at least version 3.12), and a C++11 compiler.
+
+To develop UnmaskedCXX, you will also require pre-commit, clang-format, clang-tidy, and cppcheck.
+
+Installation
+------------
+
+As UnmaskedCXX currently only scans one file by name, there is no installation needed beyond downloading the source code and running CMake if the intent is just to use the software.
+
+For developers, there is a small process to undertake.
+
+1. Clone this git repository.
+2. Install the requirements listed above for both users and developers.
+3. In the UnmaskedCXX root directory, run `pre-commit install`.

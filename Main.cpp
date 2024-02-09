@@ -1,7 +1,9 @@
-#include "TestCreator/TestCreator.h"
 #include <iostream>
 
-int main(int argc, char** argv) {
-    TestCreationStatus T = CreateTestsFromFile("./SampleCXXProject/Calculations.h");
-    std::cout << T << std::endl;
+#include "TestCreator/TestCreator.h"
+
+auto main(int /*argc*/, char** /*argv*/) -> int {
+  Filepath TempTestPath("./SampleCXXProject/Calculations.h");
+  TestCreationStatus TempTest = CreateTestsFromFile(TempTestPath);
+  std::cout << TempTest << std::endl;
 }

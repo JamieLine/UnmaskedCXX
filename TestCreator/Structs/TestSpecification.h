@@ -1,18 +1,23 @@
-#pragma once
+#ifndef TESTCREATOR_STRUCTS_TESTSPECIFICATION_H
+#define TESTCREATOR_STRUCTS_TESTSPECIFICATION_H
 
 #include <string>
+#include <utility>
 
-// A POD struct whch describes a test which has not been run yet. 
+#include "TestCreator/Structs/Filepath.h"
+
+// A POD struct whch describes a test which has not been run yet.
 // This is expected to be used by a function which writes tests into
 // a file.
 // E.g. bool Test_ThisFunction() { ... }
 // NOT UnmaskedAlwaysReturnValueTest(...);
 struct TestSpecification {
-public:
-    std::string Filepath;
-	std::string Type;
+ public:
+  Filepath Path;
+  std::string Type;
 
-    TestSpecification(std::string const& InFilepath, std::string const& InType) : 
-		Filepath(InFilepath),
-		Type(InType) {} 
+  TestSpecification(Filepath InFilepath, std::string InType)
+      : Path(std::move(InFilepath)), Type(std::move(InType)) {}
 };
+
+#endif /* TESTCREATOR_STRUCTS_TESTSPECIFICATION_H */
