@@ -11,6 +11,8 @@ int LinearCombination(int A, int X, int B, int Y) { return A * X + B * Y; }
 
 int LinearCombinationWrong(int A, int X, int B, int Y) { return A + X + B * Y; }
 
+float AddFloats(float A, float B) { return A + B; }
+
 void TestSpecifications() {
   UnmaskedSetParameter(INT_LOWER_BOUND, 10);
   UnmaskedSetTempParameter(INT_UPPER_BOUND, 100);
@@ -30,6 +32,13 @@ void TestSpecifications() {
                                  0, 1, 0);
   UnmaskedAlwaysReturnsValueTest(std::function<int(int, int)>(&AddInts), 5, 0,
                                  0, 1, 0);
+
+  UnmaskedStabilisingSetTest(std::function<float(float, float)>(&AddFloats), 0,
+                             0.0f, 1, 0.0f);
+  UnmaskedAlwaysReturnsValueTest(std::function<float(float, float)>(&AddFloats),
+                                 5.0f, 0, 0.0f, 1, 5.0f);
+  UnmaskedAlwaysReturnsValueTest(std::function<float(float, float)>(&AddFloats),
+                                 5.0f, 0, 0.0f, 1, 2.0f);
 }
 
 #endif /* SAMPLECXXPROJECT_CALCULATIONS_H */
