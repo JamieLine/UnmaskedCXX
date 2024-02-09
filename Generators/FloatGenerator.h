@@ -22,10 +22,10 @@ class Generator_float {
     std::random_device Device;
     std::mt19937 RNG(Device());
 
-    Optional<int> FetchedLowerBound =
-        Parameters.GetIntegerParameter(FLOAT_LOWER_BOUND);
-    Optional<int> FetchedUpperBound =
-        Parameters.GetIntegerParameter(FLOAT_UPPER_BOUND);
+    Optional<float> FetchedLowerBound =
+        Parameters.GetFloatParameter(FLOAT_LOWER_BOUND);
+    Optional<float> FetchedUpperBound =
+        Parameters.GetFloatParameter(FLOAT_UPPER_BOUND);
 
     float LowerBound;
     float UpperBound;
@@ -44,12 +44,13 @@ class Generator_float {
       UpperBound = 1000.0f;
     }
 
+    Log(std::cout, LOG, "Float generator invoked.");
     Log(std::cout, LOG, "Upper and lower bounds are");
     Log(std::cout, VALUE_OUTPUT, std::to_string(UpperBound));
     Log(std::cout, VALUE_OUTPUT, std::to_string(LowerBound));
     std::uniform_real_distribution<float> Distribution(LowerBound, UpperBound);
 
-    int ToReturn = Distribution(RNG);
+    float ToReturn = Distribution(RNG);
     Log(std::cout, LOG, "Generated value was");
     Log(std::cout, VALUE_OUTPUT, std::to_string(ToReturn));
 

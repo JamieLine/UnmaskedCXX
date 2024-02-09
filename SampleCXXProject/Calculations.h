@@ -39,6 +39,17 @@ void TestSpecifications() {
                                  5.0f, 0, 0.0f, 1, 5.0f);
   UnmaskedAlwaysReturnsValueTest(std::function<float(float, float)>(&AddFloats),
                                  5.0f, 0, 0.0f, 1, 2.0f);
+  UnmaskedStabilisingSetTest(std::function<float(float, float)>(&AddFloats), 0,
+                             0.1f);
+
+  UnmaskedSetParameter(FLOAT_UPPER_BOUND, 10.0f);
+
+  UnmaskedSetTempParameter(FLOAT_LOWER_BOUND, -1.0f);
+  UnmaskedStabilisingSetTest(std::function<float(float, float)>(&AddFloats), 0,
+                             0.2f);
+
+  UnmaskedStabilisingSetTest(std::function<float(float, float)>(&AddFloats), 1,
+                             100.0f);
 }
 
 #endif /* SAMPLECXXPROJECT_CALCULATIONS_H */

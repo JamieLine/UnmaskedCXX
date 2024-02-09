@@ -42,6 +42,7 @@ class Generator_int {
       UpperBound = 1000;
     }
 
+    Log(std::cout, LOG, "Int generator invoked.");
     Log(std::cout, LOG, "Upper and lower bounds are");
     Log(std::cout, VALUE_OUTPUT, std::to_string(UpperBound));
     Log(std::cout, VALUE_OUTPUT, std::to_string(LowerBound));
