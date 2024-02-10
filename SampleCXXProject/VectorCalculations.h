@@ -1,0 +1,8 @@
+#ifndef SAMPLECXXPROJECT_VECTORCALCULATIONS_H
+#define SAMPLECXXPROJECT_VECTORCALCULATIONS_H
+
+auto Vec2DotProduct(float V1X, float V1Y, float V2X, float V2Y) -> float {
+  return V1X * V2X + V1Y * V2Y;
+}
+
+#endif /* SAMPLECXXPROJECT_VECTORCALCULATIONS_H */

@@ -15,6 +15,7 @@
 #include "Parsers/CreateStabilisingSetTest.h"
 #include "Structs/GeneratorParameterStoreSeed.h"
 #include "Structs/TestSpecification.h"
+#include "TestCreator/Parsers/CreateAdditionalIncludeLine.h"
 #include "TestCreator/Structs/Filepath.h"
 
 void FindNextOccurrences(
@@ -29,6 +30,8 @@ void FindNextOccurrences(
       std::find(Start, Tokens.end(), SET_PARAMETER_MARKER);
   Map[SET_TEMP_PARAMETER_MARKER] =
       std::find(Start, Tokens.end(), SET_TEMP_PARAMETER_MARKER);
+  Map[INCLUDE_FILE_MARKER] =
+      std::find(Start, Tokens.end(), INCLUDE_FILE_MARKER);
 }
 
 auto CreateTestsFromFile(Filepath Source) -> TestCreationStatus {
@@ -52,12 +55,14 @@ auto CreateTestsFromFile(Filepath Source) -> TestCreationStatus {
   // We wish to tokenize this file but some delimiters are important and some
   // can be discarded. Broadly, it is important if it carries specific meaning.
   const vector<string> KeptDelimiters = {"&", ",", ";", "(", ")", "{",
-                                         "}", "[", "]", "<", ">"};
+                                         "}", "[", "]", "<", ">", "\""};
   const vector<string> DiscardedDelimiters = {
       " ",
       "\n",
       "\t",
   };
+
+  vector<string> AdditionalIncludeLines;
 
   vector<string> Tokens =
       Tokenize(MaybeFileSource.Data, KeptDelimiters, DiscardedDelimiters);
@@ -96,9 +101,11 @@ auto CreateTestsFromFile(Filepath Source) -> TestCreationStatus {
 
     if (NextUsefulToken == Tokens.end()) {
       Log(std::cout, LOG, "Found final token in TestCreator");
-      break;
-    }
-    if (*NextUsefulToken == ALWAYS_RETURN_VALUE_TEST_MARKER) {
+    } else if (*NextUsefulToken == INCLUDE_FILE_MARKER) {
+      Log(std::cout, LOG, "Including additional file");
+      AdditionalIncludeLines.push_back(
+          CreateAdditionalIncludeLine(NextUsefulToken));
+    } else if (*NextUsefulToken == ALWAYS_RETURN_VALUE_TEST_MARKER) {
       Log(std::cout, LOG,
           "Found ALWAYS_RETURN_VALUE_TEST_MARKER in TestCreator");
 
@@ -109,7 +116,8 @@ auto CreateTestsFromFile(Filepath Source) -> TestCreationStatus {
 
       string TestSource = CreateAlwaysReturnValueTest(
           NextUsefulToken, CurrentGeneratorParameters, Source,
-          OutputFilepath.ToLegalIdentifier().ID, DEFAULT_NUM_TESTS_TO_RUN);
+          AdditionalIncludeLines, OutputFilepath.ToLegalIdentifier().ID,
+          DEFAULT_NUM_TESTS_TO_RUN);
 
       GeneratedTestSpecs.emplace_back(OutputFilepath,
                                       ALWAYS_RETURN_VALUE_TEST_MARKER);
@@ -138,7 +146,8 @@ auto CreateTestsFromFile(Filepath Source) -> TestCreationStatus {
 
       std::string TestSource = CreateStabilisingSetTest(
           NextUsefulToken, CurrentGeneratorParameters, Source,
-          OutputFilepath.ToLegalIdentifier().ID, DEFAULT_NUM_TESTS_TO_RUN);
+          AdditionalIncludeLines, OutputFilepath.ToLegalIdentifier().ID,
+          DEFAULT_NUM_TESTS_TO_RUN);
 
       std::string CurrentTestName = string(Source.ToLegalIdentifier()) + "_" +
                                     STABILISING_TEST_MARKER + "_" +
