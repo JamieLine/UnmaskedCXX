@@ -8,6 +8,7 @@ Output.txt
 Makefile
 UnmaskedCreatedTestsBak/*
 Report.csv
+UnmaskedReport.csv
 .cache/*
 *.log
 compile_commands.json

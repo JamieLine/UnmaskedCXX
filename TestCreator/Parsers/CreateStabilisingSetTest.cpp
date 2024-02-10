@@ -18,12 +18,8 @@
 #include "../Structs/TestSpecification.h"
 #include "TestCreator/Structs/Filepath.h"
 
-auto CreateStabilisingSetTest(
-    std::vector<std::string>::iterator& FirstToken,
-    GeneratorParameterStoreSeed Params, Filepath& TestDefinitionPath,
-    const std::vector<std::string>& AdditionalIncludes,
-    const std::string& GeneratedFunctionName, std::size_t NumTestsToRun)
-    -> std::string {
+auto CreateStabilisingSetTest(std::vector<std::string>::iterator& FirstToken,
+                              TestCreationContext Context) -> std::string {
   // Creates a test from Tokens extracted from input similar to the following:
   // `UnmaskedStabilisingSetTest(std::function<int(int, int)>(&AddInts), 0, 0);`
 
@@ -194,20 +190,20 @@ auto CreateStabilisingSetTest(
   // As the tests are sitting one level higher in the directory tree.
 
   // As the template has the ../, this is done by removing it.
-  if (TestDefinitionPath.Path.find("./", 0) == 0) {
-    TestDefinitionPath.Path.erase(0, 2);
+  if (Context.TestDefinitionPath.Path.find("./", 0) == 0) {
+    Context.TestDefinitionPath.Path.erase(0, 2);
   }
   TestSource = ReplaceAllInString(TestSource, "FILE_ADDRESS",
-                                  std::string(TestDefinitionPath));
+                                  std::string(Context.TestDefinitionPath));
 
   // Set the function name
-  TestSource =
-      ReplaceAllInString(TestSource, "TEST_FN_NAME", GeneratedFunctionName);
+  TestSource = ReplaceAllInString(TestSource, "TEST_FN_NAME",
+                                  Context.GeneratedFunctionName);
 
   // Add additional includes
   TestSource =
       ReplaceAllInString(TestSource, "ADDITIONAL_INCLUDES",
-                         JoinVectorOfStrings(AdditionalIncludes, "\n"));
+                         JoinVectorOfStrings(Context.AdditionalIncludes, "\n"));
 
   // Fix the return type and argument types
   TestSource = ReplaceAllInString(TestSource, "RETURN_TYPE", ReturnType);
@@ -236,7 +232,7 @@ auto CreateStabilisingSetTest(
 
   // Insert the final arguments to the functions signature
   TestSource = ReplaceAllInString(TestSource, "NUM_TESTS_TO_RUN",
-                                  to_string(NumTestsToRun));
+                                  to_string(Context.NumTestsToRun));
 
   // Create generators and generate values
   // We could use std::format from C++20 but Jamie wants this to compile under
@@ -260,9 +256,9 @@ auto CreateStabilisingSetTest(
   TestSource = ReplaceAllInString(TestSource, "GENERATOR_TYPES",
                                   JoinVectorOfStrings(GeneratorTypes, ","));
 
-  TestSource =
-      ReplaceAllInString(TestSource, "PUSH_PARAMETERS_TO_STORE",
-                         Params.CreateGeneratorParameterStoreDefinition());
+  TestSource = ReplaceAllInString(
+      TestSource, "PUSH_PARAMETERS_TO_STORE",
+      Context.Params.CreateGeneratorParameterStoreDefinition());
 
   // This would be a normal JoinVectorOfStrings and replace but the input data
   // needs some amount of transformation

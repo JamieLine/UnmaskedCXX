@@ -9,12 +9,17 @@
 struct TestResult {
  public:
   std::string Name;
+  std::string Category;
   std::string Type;
 
   bool Passed;
 
-  TestResult(std::string InName, std::string InType, bool InPassed)
-      : Name(std::move(InName)), Type(std::move(InType)), Passed(InPassed) {}
+  TestResult(std::string InName, std::string InCategory, std::string InType,
+             bool InPassed)
+      : Name(std::move(InName)),
+        Category(std::move(InCategory)),
+        Type(std::move(InType)),
+        Passed(InPassed) {}
 };
 
 #endif /* TESTCREATOR_STRUCTS_TESTRESULT_H */

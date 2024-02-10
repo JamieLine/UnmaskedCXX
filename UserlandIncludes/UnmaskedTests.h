@@ -6,6 +6,8 @@
 #ifndef USERLANDINCLUDES_UNMASKEDTESTS_H
 #define USERLANDINCLUDES_UNMASKEDTESTS_H
 
+#include <string>
+
 enum UnmaskedTestParameter {
   INT_LOWER_BOUND,
   INT_UPPER_BOUND,
@@ -35,6 +37,10 @@ void UnmaskedSetTempParameter(UnmaskedTestParameter, Ts...) {
 
 template <typename... Ts>
 void UnmaskedIncludeFile(Ts...) {
+  // Intentionally left empty.
+}
+
+inline void UnmaskedSetCategory(std::string /*unused*/) {
   // Intentionally left empty.
 }
 

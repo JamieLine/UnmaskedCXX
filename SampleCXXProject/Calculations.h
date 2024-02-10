@@ -21,6 +21,7 @@ void TestSpecifications() {
   UnmaskedAlwaysReturnsValueTest(std::function<int(int, int)>(&AddInts), 0);
 
   UnmaskedIncludeFile("SampleCXXProject/VectorCalculations.h");
+  UnmaskedSetCategory("Test Category A");
 
   UnmaskedStabilisingSetTest(std::function<int(int, int)>(&AddInts), 0, 0);
 
@@ -37,6 +38,8 @@ void TestSpecifications() {
                                  0, 1, 0);
   UnmaskedAlwaysReturnsValueTest(std::function<int(int, int)>(&AddInts), 5, 0,
                                  0, 1, 0);
+
+  UnmaskedSetCategory("Test Category B");
 
   UnmaskedStabilisingSetTest(std::function<float(float, float)>(&AddFloats), 0,
                              0.0f, 1, 0.0f);

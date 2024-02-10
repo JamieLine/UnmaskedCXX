@@ -21,6 +21,10 @@ auto ReplaceAllInString(std::string Destination, const std::string& OldContent,
 
 auto JoinVectorOfStrings(std::vector<std::string> Strings,
                          const std::string& Delimiter) -> std::string {
+  if (Strings.empty()) {
+    return "";
+  }
+
   return std::accumulate(std::next(Strings.begin()), Strings.end(), Strings[0],
                          [Delimiter](const std::string& Prefix,
                                      const std::string& Suffix) -> std::string {
