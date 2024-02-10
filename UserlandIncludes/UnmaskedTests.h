@@ -33,4 +33,9 @@ void UnmaskedSetTempParameter(UnmaskedTestParameter, Ts...) {
   // Intentionally left empty.
 }
 
+template <typename... Ts>
+void UnmaskedIncludeFile(Ts...) {
+  // Intentionally left empty.
+}
+
 #endif /* USERLANDINCLUDES_UNMASKEDTESTS_H */

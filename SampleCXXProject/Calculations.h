@@ -4,6 +4,7 @@
 #include <functional>
 
 #include "../UserlandIncludes/UnmaskedTests.h"
+#include "VectorCalculations.h"
 
 int AddInts(int A, int B) { return A + B; }
 
@@ -16,6 +17,8 @@ float AddFloats(float A, float B) { return A + B; }
 void TestSpecifications() {
   UnmaskedSetParameter(INT_LOWER_BOUND, 10);
   UnmaskedSetTempParameter(INT_UPPER_BOUND, 100);
+
+  UnmaskedIncludeFile("SampleCXXProject/VectorCalculations.h");
 
   UnmaskedStabilisingSetTest(std::function<int(int, int)>(&AddInts), 0, 0);
 
@@ -50,6 +53,10 @@ void TestSpecifications() {
 
   UnmaskedStabilisingSetTest(std::function<float(float, float)>(&AddFloats), 1,
                              100.0f);
+
+  UnmaskedAlwaysReturnsValueTest(
+      std::function<float(float, float, float, float)>(&Vec2DotProduct), 0, 0,
+      0.0f);
 }
 
 #endif /* SAMPLECXXPROJECT_CALCULATIONS_H */
