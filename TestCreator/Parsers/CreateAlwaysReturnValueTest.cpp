@@ -158,10 +158,6 @@ auto CreateAlwaysReturnValueTest(
     // Skip the comma between arguments to the "template" function
     CurrentToken += 2;
 
-    if (FunctionName == "Vec2DotProduct") {
-      int x = 0;
-    }
-
     string ThisPointValue = *CurrentToken;
 
     FixedArguments.emplace_back(ArgumentIndex(ThisPointIndex),
