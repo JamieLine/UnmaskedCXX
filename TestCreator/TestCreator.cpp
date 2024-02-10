@@ -261,6 +261,9 @@ auto CreateTestsFromFile(Filepath Source) -> TestCreationStatus {
       ReplaceAllInString(TestRunnerSource, "RUN_TESTS_AND_PUSH_RESULTS",
                          JoinVectorOfStrings(RunTestSource, "\n"));
 
+  TestRunnerSource =
+      ReplaceAllInString(TestRunnerSource, "REPORT_VERSION_NUMBER", "1");
+
   Log(std::cout, LOG, "Finished TestRunnerSource");
 
   Filepath TestRunnerOutputPath("./UnmaskedCreatedTests/TestRunner.cpp");

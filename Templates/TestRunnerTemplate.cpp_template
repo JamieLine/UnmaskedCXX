@@ -50,6 +50,9 @@ RUN_TESTS_AND_PUSH_RESULTS
   }
 
   else {
+    ReportFile << REPORT_VERSION_NUMBER;
+    ReportFile << "\n";
+
     for (auto const& Test : Tests) {
       ReportFile << Test.Name + "," + Test.Category + "," + Test.Type + "," +
                         BoolToString(Test.Passed) + "\n";
