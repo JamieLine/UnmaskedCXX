@@ -12,9 +12,11 @@ struct TestCreationContext {
   GeneratorParameterStoreSeed Params;
   Filepath& TestDefinitionPath;
   std::vector<std::string> AdditionalIncludes;
+  std::string Category;
+  // TODO(linej): Maybe this should have an empty checker?
+  // Other fields make sense when empty but these three don't.
   std::string GeneratedFunctionName;
   std::size_t NumTestsToRun;
-  std::string Category;
   int CurrentTestNumber;
 
   explicit TestCreationContext(Filepath& InTestDefinitionPath)
