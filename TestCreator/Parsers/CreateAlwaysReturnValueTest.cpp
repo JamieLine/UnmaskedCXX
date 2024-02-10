@@ -18,11 +18,12 @@
 #include "../Structs/FixedArgument.h"
 #include "../Structs/TestSpecification.h"
 
-auto CreateAlwaysReturnValueTest(std::vector<std::string>::iterator& FirstToken,
-                                 GeneratorParameterStoreSeed Params,
-                                 Filepath& TestDefinitionPath,
-                                 const std::string& GeneratedFunctionName,
-                                 std::size_t NumTestsToRun) -> std::string {
+auto CreateAlwaysReturnValueTest(
+    std::vector<std::string>::iterator& FirstToken,
+    GeneratorParameterStoreSeed Params, Filepath& TestDefinitionPath,
+    const std::vector<std::string>& AdditionalIncludes,
+    const std::string& GeneratedFunctionName, std::size_t NumTestsToRun)
+    -> std::string {
   // Creates a test from Tokens extracted from input similar to the following:
   // `UnmaskedAlwaysReturnsValueTest(std::function<int(int, int)>(&AddInts), 0,
   // 0, 0);`
@@ -208,6 +209,11 @@ auto CreateAlwaysReturnValueTest(std::vector<std::string>::iterator& FirstToken,
   // Set the function name
   TestSource =
       ReplaceAllInString(TestSource, "TEST_FN_NAME", GeneratedFunctionName);
+
+  // Add additional includes
+  TestSource =
+      ReplaceAllInString(TestSource, "ADDITIONAL_INCLUDES",
+                         JoinVectorOfStrings(AdditionalIncludes, "\n"));
 
   // Fix the return type and argument types
   TestSource = ReplaceAllInString(TestSource, "RETURN_TYPE", ReturnType);

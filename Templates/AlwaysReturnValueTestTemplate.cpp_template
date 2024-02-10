@@ -13,6 +13,8 @@
 #include "../Generators/AllGenerators.h"
 #include "../Generators/GeneratorParameterStore.h"
 
+ADDITIONAL_INCLUDES
+
 // Returns true if and only if the contained test passed.
 bool TEST_FN_NAME() {
   GeneratorParameterStore Parameters;

@@ -12,7 +12,8 @@ SET(TEST_AUTHOR_FILES "TestCreator/Parsers/CreateStabilisingSetTest.cpp"
 					  "TestCreator/Parsers/CreateAlwaysReturnValueTest.cpp"
 					  "TestCreator/Structs/GeneratorParameterStoreSeed.cpp"
 					  "TestCreator/TestCreator.cpp"
-						"TestCreator/Structs/Filepath.cpp")
+						"TestCreator/Structs/Filepath.cpp"
+						"TestCreator/Parsers/CreateAdditionalIncludeLine.cpp")
 SET(UNMASKED_INCLUDE_DIRECTORIES "./")
 SET(EVERYWHERE_INCLUDED_SOURCE_CODE "StringOperations.cpp" "Logging.cpp" "SetOperations.cpp" "MapOperations.cpp")
 
