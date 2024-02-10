@@ -232,10 +232,6 @@ auto CreateAlwaysReturnValueTest(std::vector<std::string>::iterator& FirstToken,
       std::back_inserter(ArgumentTypeStrings),
       [](const ArgumentType& ArgType) -> string { return string(ArgType); });
 
-  // for (auto const& ArgType : ArgumentTypes) {
-  //   ArgumentTypeStrings.emplace_back(ArgType);
-  // }
-
   string ArgumentTypesAsString = JoinVectorOfStrings(ArgumentTypeStrings, ",");
   TestSource =
       ReplaceAllInString(TestSource, "ARGUMENT_TYPES", ArgumentTypesAsString);
@@ -258,10 +254,6 @@ auto CreateAlwaysReturnValueTest(std::vector<std::string>::iterator& FirstToken,
                  [](const ArgumentType& ArgType) -> string {
                    return ArgType.GetGeneratorType();
                  });
-
-  // for (auto const& ArgType : ArgumentTypes) {
-  //   GeneratorTypes.push_back(ArgType.GetGeneratorType());
-  // }
 
   TestSource = ReplaceAllInString(TestSource, "GENERATOR_TYPES",
                                   JoinVectorOfStrings(GeneratorTypes, ","));
@@ -321,10 +313,6 @@ auto CreateAlwaysReturnValueTest(std::vector<std::string>::iterator& FirstToken,
                  [](const ArgumentType& ArgType) -> string {
                    return ArgType.GetGeneratorCall();
                  });
-
-  // for (auto const& ArgType : ArgumentTypes) {
-  //   GeneratorsSource.push_back(ArgType.GetGeneratorCall());
-  // }
 
   TestSource = ReplaceAllInString(TestSource, "GENERATORS",
                                   JoinVectorOfStrings(GeneratorsSource, ","));

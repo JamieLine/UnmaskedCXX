@@ -222,10 +222,6 @@ auto CreateStabilisingSetTest(std::vector<std::string>::iterator& FirstToken,
       std::back_inserter(ArgumentTypeStrings),
       [](const ArgumentType& Arg) -> std::string { return std::string(Arg); });
 
-  /*for (auto const& ArgType : ArgumentTypes) {
-    ArgumentTypeStrings.emplace_back(ArgType);
-  }*/
-
   string ArgumentTypesAsString = JoinVectorOfStrings(ArgumentTypeStrings, ",");
   TestSource =
       ReplaceAllInString(TestSource, "ARGUMENT_TYPES", ArgumentTypesAsString);

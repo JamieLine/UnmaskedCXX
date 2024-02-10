@@ -224,11 +224,6 @@ auto CreateTestsFromFile(Filepath Source) -> TestCreationStatus {
                    return "#include \"" + TestSpec.Path.Path + "\"";
                  });
 
-  // for (auto const& Test : GeneratedTestSpecs) {
-  //   GeneratedTestIncludeDirectives.push_back("#include \"" + Test.Path.Path +
-  //                                            "\"");
-  // }
-
   TestRunnerSource = ReplaceAllInString(
       TestRunnerSource, "INCLUDE_TESTS",
       JoinVectorOfStrings(GeneratedTestIncludeDirectives, "\n"));
@@ -260,11 +255,6 @@ auto CreateTestsFromFile(Filepath Source) -> TestCreationStatus {
     ToPushBack += "());";
 
     RunTestSource.push_back(ToPushBack);
-
-    // RunTestSource.push_back("\tTests.emplace_back(\"" +
-    //                         TestName +
-    //                         "\", \"" + Test.Type + "\", " +
-    //                         TestName + "());");
   }
 
   TestRunnerSource =

@@ -61,13 +61,6 @@ auto Tokenize(const std::string& ToTokenize,
   std::copy(DiscardedDelimiters.begin(), DiscardedDelimiters.end(),
             std::back_inserter(Delimiters));
 
-  /*for (const auto& Delim : KeptDelimiters) {
-    Delimiters.push_back(Delim);
-  }
-  for (const auto& Delim : DiscardedDelimiters) {
-    Delimiters.push_back(Delim);
-  }*/
-
   // DelimiterIndexes contains the index at which each type of delimiter is
   // found in the `ToTokenize" string.
 
