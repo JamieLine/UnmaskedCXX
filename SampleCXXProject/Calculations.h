@@ -17,6 +17,8 @@ void TestSpecifications() {
   UnmaskedSetParameter(INT_LOWER_BOUND, 10);
   UnmaskedSetTempParameter(INT_UPPER_BOUND, 100);
 
+  UnmaskedAlwaysReturnsValueTest(std::function<int(int, int)>(&AddInts), 0);
+
   UnmaskedStabilisingSetTest(std::function<int(int, int)>(&AddInts), 0, 0);
 
   UnmaskedSetTempParameter(INT_LOWER_BOUND, 990);

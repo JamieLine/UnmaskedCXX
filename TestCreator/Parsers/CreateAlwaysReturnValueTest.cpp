@@ -133,38 +133,42 @@ auto CreateAlwaysReturnValueTest(std::vector<std::string>::iterator& FirstToken,
 
   // Now we pick up the fixed points.
 
-  // Read in the target value, and then skip the comma after it.
+  // Read in the target value.
   string TargetValue = *CurrentToken;
-  CurrentToken += 2;
+  CurrentToken += 1;
 
   // The indexes should always neatly cast to `size_t` but this will be written
   // as a string into a FixedArgument instance. The conversion isn't valuable.
   vector<FixedArgument> FixedArguments;
 
-  // It's unknown (but knowable) how many fixed points we will define.
-  // We just know that the last one will be followed by a ")".
-  // And if there are no fixed points, we know that *CurrentToken == ")".
-  Log(std::cout, LOG, "Pulling Fixed Points");
-  while (*CurrentToken != ")") {
-    if (*CurrentToken == ",") {
+  // Now there is either a comma, in which case there are more than zero fixed
+  // arguments or a closing bracket, in which case there are zero
+
+  if (*CurrentToken != ")") {
+    // It's unknown (but knowable) how many fixed points we will define.
+    // We just know that the last one will be followed by a ")".
+    Log(std::cout, LOG, "Pulling Fixed Points");
+    while (*CurrentToken != ")") {
+      if (*CurrentToken == ",") {
+        CurrentToken++;
+      }
+
+      string ThisPointIndex = *CurrentToken;
+
+      Log(std::cout, LOG, "Pulled fixed point index");
+      Log(std::cout, VALUE_OUTPUT, *CurrentToken);
+      // Skip the comma between arguments to the "template" function
+      CurrentToken += 2;
+
+      string ThisPointValue = *CurrentToken;
+
+      FixedArguments.emplace_back(ArgumentIndex(ThisPointIndex),
+                                  ArgumentValue(ThisPointValue));
+
+      Log(std::cout, LOG, "Pulling fixed point argument value");
+      Log(std::cout, VALUE_OUTPUT, *CurrentToken);
       CurrentToken++;
     }
-
-    string ThisPointIndex = *CurrentToken;
-
-    Log(std::cout, LOG, "Pulled fixed point index");
-    Log(std::cout, VALUE_OUTPUT, *CurrentToken);
-    // Skip the comma between arguments to the "template" function
-    CurrentToken += 2;
-
-    string ThisPointValue = *CurrentToken;
-
-    FixedArguments.emplace_back(ArgumentIndex(ThisPointIndex),
-                                ArgumentValue(ThisPointValue));
-
-    Log(std::cout, LOG, "Pulling fixed point argument value");
-    Log(std::cout, VALUE_OUTPUT, *CurrentToken);
-    CurrentToken++;
   }
 
   Log(std::cout, LOG, "Extracted data from specification.");
