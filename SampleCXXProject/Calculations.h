@@ -18,6 +18,8 @@ void TestSpecifications() {
   UnmaskedSetParameter(INT_LOWER_BOUND, 10);
   UnmaskedSetTempParameter(INT_UPPER_BOUND, 100);
 
+  UnmaskedAlwaysReturnsValueTest(std::function<int(int, int)>(&AddInts), 0);
+
   UnmaskedIncludeFile("SampleCXXProject/VectorCalculations.h");
 
   UnmaskedStabilisingSetTest(std::function<int(int, int)>(&AddInts), 0, 0);
