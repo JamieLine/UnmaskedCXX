@@ -17,6 +17,7 @@
 #include "Structs/TestSpecification.h"
 #include "TestCreator/Parsers/CreateAdditionalIncludeLine.h"
 #include "TestCreator/Structs/Filepath.h"
+#include "TestCreator/Structs/TestCreationContext.h"
 
 void FindNextOccurrences(
     std::map<std::string, std::vector<std::string>::iterator>& Map,
@@ -32,6 +33,8 @@ void FindNextOccurrences(
       std::find(Start, Tokens.end(), SET_TEMP_PARAMETER_MARKER);
   Map[INCLUDE_FILE_MARKER] =
       std::find(Start, Tokens.end(), INCLUDE_FILE_MARKER);
+  Map[SET_CATEGORY_MARKER] =
+      std::find(Start, Tokens.end(), SET_CATEGORY_MARKER);
 }
 
 auto CreateTestsFromFile(Filepath Source) -> TestCreationStatus {
@@ -62,7 +65,7 @@ auto CreateTestsFromFile(Filepath Source) -> TestCreationStatus {
       "\t",
   };
 
-  vector<string> AdditionalIncludeLines;
+  TestCreationContext Context(Source);
 
   vector<string> Tokens =
       Tokenize(MaybeFileSource.Data, KeptDelimiters, DiscardedDelimiters);
@@ -70,10 +73,6 @@ auto CreateTestsFromFile(Filepath Source) -> TestCreationStatus {
 
   // This map will be used to find the nearest marker of interest
   std::map<string, TokensIterator> FoundMarkers;
-
-  int CurrentTestNumber = 0;
-
-  GeneratorParameterStoreSeed CurrentGeneratorParameters;
 
   while (NextUsefulToken != Tokens.end()) {
     FindNextOccurrences(FoundMarkers, Tokens, NextUsefulToken);
@@ -103,25 +102,36 @@ auto CreateTestsFromFile(Filepath Source) -> TestCreationStatus {
       Log(std::cout, LOG, "Found final token in TestCreator");
     } else if (*NextUsefulToken == INCLUDE_FILE_MARKER) {
       Log(std::cout, LOG, "Including additional file");
-      AdditionalIncludeLines.push_back(
+      Context.AdditionalIncludes.push_back(
           CreateAdditionalIncludeLine(NextUsefulToken));
+    } else if (*NextUsefulToken == SET_CATEGORY_MARKER) {
+      // Skip the marker and the open bracket
+      NextUsefulToken += 2;
+
+      std::vector<std::string> CategoryTokens;
+
+      while (*NextUsefulToken != ")") {
+        CategoryTokens.push_back(*NextUsefulToken);
+        NextUsefulToken++;
+      }
+
+      Context.Category = JoinVectorOfStrings(CategoryTokens, "");
     } else if (*NextUsefulToken == ALWAYS_RETURN_VALUE_TEST_MARKER) {
       Log(std::cout, LOG,
           "Found ALWAYS_RETURN_VALUE_TEST_MARKER in TestCreator");
 
-      Filepath OutputFilepath("./UnmaskedCreatedTests/" +
-                              string(Source.ToLegalIdentifier()) + "_" +
-                              ALWAYS_RETURN_VALUE_TEST_MARKER + "_" +
-                              std::to_string(CurrentTestNumber) + ".cpp");
+      Filepath OutputFilepath(
+          "./UnmaskedCreatedTests/" + string(Source.ToLegalIdentifier()) + "_" +
+          ALWAYS_RETURN_VALUE_TEST_MARKER + "_" +
+          std::to_string(Context.CurrentTestNumber) + ".cpp");
 
-      string TestSource = CreateAlwaysReturnValueTest(
-          NextUsefulToken, CurrentGeneratorParameters, Source,
-          AdditionalIncludeLines, OutputFilepath.ToLegalIdentifier().ID,
-          DEFAULT_NUM_TESTS_TO_RUN);
+      Context.GeneratedFunctionName = OutputFilepath.ToLegalIdentifier().ID;
 
-      GeneratedTestSpecs.emplace_back(OutputFilepath,
+      string TestSource = CreateAlwaysReturnValueTest(NextUsefulToken, Context);
+
+      GeneratedTestSpecs.emplace_back(OutputFilepath, Context.Category,
                                       ALWAYS_RETURN_VALUE_TEST_MARKER);
-      CurrentTestNumber++;
+      Context.CurrentTestNumber++;
       bool FileOutputWasSuccess =
           OutputFilepath.WriteStringIntoFileOverwriting(TestSource);
 
@@ -135,25 +145,26 @@ auto CreateTestsFromFile(Filepath Source) -> TestCreationStatus {
         CurrentStatus = COULD_NOT_OPEN_OUTPUT_FILE;
       }
 
-      CurrentGeneratorParameters.ResetTempParameters();
+      Context.Params.ResetTempParameters();
     } else if (*NextUsefulToken == STABILISING_TEST_MARKER) {
       Log(std::cout, LOG, "Found STABILISING_TEST_MARKER in TestCreator");
 
-      Filepath OutputFilepath("./UnmaskedCreatedTests/" +
-                              string(Source.ToLegalIdentifier()) + "_" +
-                              STABILISING_TEST_MARKER + "_" +
-                              std::to_string(CurrentTestNumber) + ".cpp");
+      Filepath OutputFilepath(
+          "./UnmaskedCreatedTests/" + string(Source.ToLegalIdentifier()) + "_" +
+          STABILISING_TEST_MARKER + "_" +
+          std::to_string(Context.CurrentTestNumber) + ".cpp");
 
-      std::string TestSource = CreateStabilisingSetTest(
-          NextUsefulToken, CurrentGeneratorParameters, Source,
-          AdditionalIncludeLines, OutputFilepath.ToLegalIdentifier().ID,
-          DEFAULT_NUM_TESTS_TO_RUN);
+      Context.GeneratedFunctionName = OutputFilepath.ToLegalIdentifier().ID;
+
+      std::string TestSource =
+          CreateStabilisingSetTest(NextUsefulToken, Context);
 
       std::string CurrentTestName = string(Source.ToLegalIdentifier()) + "_" +
                                     STABILISING_TEST_MARKER + "_" +
-                                    std::to_string(CurrentTestNumber);
-      GeneratedTestSpecs.emplace_back(OutputFilepath, STABILISING_TEST_MARKER);
-      CurrentTestNumber++;
+                                    std::to_string(Context.CurrentTestNumber);
+      GeneratedTestSpecs.emplace_back(OutputFilepath, Context.Category,
+                                      STABILISING_TEST_MARKER);
+      Context.CurrentTestNumber++;
       bool FileOutputWasSuccess =
           OutputFilepath.WriteStringIntoFileOverwriting(TestSource);
 
@@ -167,14 +178,13 @@ auto CreateTestsFromFile(Filepath Source) -> TestCreationStatus {
         CurrentStatus = COULD_NOT_OPEN_OUTPUT_FILE;
       }
 
-      CurrentGeneratorParameters.ResetTempParameters();
+      Context.Params.ResetTempParameters();
     } else if (*NextUsefulToken == SET_PARAMETER_MARKER) {
       Log(std::cout, LOG, "Found SET_PARAMETER_MARKER in TestCreator");
-      CurrentGeneratorParameters.ReadInParameterDeclaration(NextUsefulToken);
+      Context.Params.ReadInParameterDeclaration(NextUsefulToken);
     } else if (*NextUsefulToken == SET_TEMP_PARAMETER_MARKER) {
       Log(std::cout, LOG, "Found SET_TEMP_PARAMETER_MARKER in TestCreator");
-      CurrentGeneratorParameters.ReadInTempParameterDeclaration(
-          NextUsefulToken);
+      Context.Params.ReadInTempParameterDeclaration(NextUsefulToken);
     } else {
       CurrentStatus = FOUND_UNEXPECTED_TOKEN_FROM_MAP;
       Log(std::cout, LOG,
@@ -236,7 +246,13 @@ auto CreateTestsFromFile(Filepath Source) -> TestCreationStatus {
 
     std::string ToPushBack = "\tTests.emplace_back(\"";
     ToPushBack += TestName;
-    ToPushBack += "\", \"";
+    ToPushBack += "\", ";
+    if (Test.Category.empty()) {
+      ToPushBack += "\"\"";
+    } else {
+      ToPushBack += Test.Category;
+    }
+    ToPushBack += ", \"";
     ToPushBack += Test.Type;
     ToPushBack += "\", ";
     ToPushBack += TestName;

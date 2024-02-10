@@ -40,18 +40,18 @@ RUN_TESTS_AND_PUSH_RESULTS
   std::cout << "Writing to " + REPORT_FILE_NAME;
 
   std::ofstream ReportFile;
-  ReportFile.open("Report.csv",
+  ReportFile.open(REPORT_FILE_NAME,
                   std::fstream::in | std::fstream::out | std::fstream::trunc);
 
   if (!ReportFile.is_open()) {
-    std::cout << "Error, could not open Report.csv\n";
+    std::cout << "Error, could not open report file\n";
     std::cout << "Report contents are given above.\n";
     std::cout << "Exiting.\n";
   }
 
   else {
     for (auto const& Test : Tests) {
-      ReportFile << Test.Name + "," + Test.Type + "," +
+      ReportFile << Test.Name + "," + Test.Category + "," + Test.Type + "," +
                         BoolToString(Test.Passed) + "\n";
     }
 

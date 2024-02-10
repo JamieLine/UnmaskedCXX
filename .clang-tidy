@@ -7,10 +7,12 @@ Checks:          'clang-analyzer-*,
                   misc-*,
                   -misc-non-private-member-variables-in-classes,
                   modernize-*,
+                  -modernize-use-default-member-init,
                   performance-*,
                   portability-*,
                   readability-*,
-                  -readability-uppercase-literal-suffix'
+                  -readability-uppercase-literal-suffix,
+                  -readability-redundant-member-init'
 WarningsAsErrors: ''
 HeaderFilterRegex: ''
 AnalyzeTemporaryDtors: false

@@ -14,10 +14,14 @@
 struct TestSpecification {
  public:
   Filepath Path;
+  std::string Category;
   std::string Type;
 
-  TestSpecification(Filepath InFilepath, std::string InType)
-      : Path(std::move(InFilepath)), Type(std::move(InType)) {}
+  TestSpecification(Filepath InFilepath, std::string InCategory,
+                    std::string InType)
+      : Path(std::move(InFilepath)),
+        Category(std::move(InCategory)),
+        Type(std::move(InType)) {}
 };
 
 #endif /* TESTCREATOR_STRUCTS_TESTSPECIFICATION_H */
