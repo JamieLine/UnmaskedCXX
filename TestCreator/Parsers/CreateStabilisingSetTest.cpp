@@ -245,10 +245,6 @@ auto CreateStabilisingSetTest(std::vector<std::string>::iterator& FirstToken,
                    return Arg.GetGeneratorType();
                  });
 
-  /*for (auto const& ArgType : ArgumentTypes) {
-    GeneratorTypes.push_back(ArgType.GetGeneratorType());
-  }*/
-
   TestSource = ReplaceAllInString(TestSource, "GENERATOR_TYPES",
                                   JoinVectorOfStrings(GeneratorTypes, ","));
 
@@ -306,10 +302,6 @@ auto CreateStabilisingSetTest(std::vector<std::string>::iterator& FirstToken,
                  [](const ArgumentType& Arg) -> std::string {
                    return Arg.GetGeneratorCall();
                  });
-
-  /*for (auto const& ArgType : ArgumentTypes) {
-    GeneratorsSource.push_back(ArgType.GetGeneratorCall());
-  }*/
 
   TestSource = ReplaceAllInString(TestSource, "GENERATORS",
                                   JoinVectorOfStrings(GeneratorsSource, ","));
