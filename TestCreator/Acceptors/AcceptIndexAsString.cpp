@@ -5,7 +5,7 @@
 auto AcceptIndexAsString(TokenArray::iterator& FirstToken)
     -> ParsedResult<std::string> {
   // Its an index if its an integer at least 0
-  // which is equivalent every char being a digit
+  // which is equivalent to every char being a digit
 
   std::string& InputString = *FirstToken;
   FirstToken++;
