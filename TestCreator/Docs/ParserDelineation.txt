@@ -1,0 +1,11 @@
+Parser -> A class which takes in a file path, and outputs the useful test data somehow (this was written before Parser)
+MicroParsers -> A collection of functions which parse the data out of a meaningfully large segment (e.g. AcceptUnmaskedPredicateTest)
+Acceptors -> A collection of functions which parse the smallest fragments, which are in some sense devoid of meaning on their own (e.g AcceptNonSpecialCharToken, AcceptIndexValuePair)
+
+Parser-fragment is a generic term for a MicroParser or an Acceptor
+
+As a rough rule, a Parser does the whole job
+A MicroParser does some useful segment of a job which has a clear goal
+An Acceptor does some repeated or nameable segment which has no clear goal
+
+Each parser or parser-fragment is expected to move the iterator it gets as an argument by reference
