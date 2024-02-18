@@ -12,7 +12,8 @@ Checks:          'clang-analyzer-*,
                   portability-*,
                   readability-*,
                   -readability-uppercase-literal-suffix,
-                  -readability-redundant-member-init'
+                  -readability-redundant-member-init,
+                  -readability-convert-member-functions-to-static'
 WarningsAsErrors: ''
 HeaderFilterRegex: ''
 AnalyzeTemporaryDtors: false
