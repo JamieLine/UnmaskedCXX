@@ -5,9 +5,10 @@
 #include <vector>
 
 #include "TestCreator/Structs/ParsedResult.h"
+#include "TestCreator/Structs/ParsedUnmaskedPredicateTest.h"
 #include "TestCreator/Structs/TokenArray.h"
 
 auto AcceptUnmaskedPredicateTest(TokenArray::iterator& FirstToken)
-    -> ParsedResult<int>;
+    -> ParsedResult<ParsedUnmaskedPredicateTest>;
 
 #endif /* TESTCREATOR_MICROPARSERS_ACCEPTUNMASKEDPREDICATETEST_H */

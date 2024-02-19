@@ -2,47 +2,54 @@
 
 #include <algorithm>
 
+#include "AcceptGeneratorSettings.h"
+#include "AcceptSTDFunction.h"
 #include "TestCreator/Acceptors/AcceptAnyToken.h"
 #include "TestCreator/Acceptors/AcceptSpecificString.h"
+#include "TestCreator/MicroParsers/AcceptLambda.h"
 #include "TestCreator/MicroParsers/BracketAcceptor.h"
 #include "TestCreator/Structs/ParsedResult.h"
+#include "TestCreator/Structs/ParsedUnmaskedPredicateTest.h"
+#include "VectorOperations.h"
 
 auto AcceptUnmaskedPredicateTest(TokenArray::iterator& FirstToken)
-    -> ParsedResult<int> {
+    -> ParsedResult<ParsedUnmaskedPredicateTest> {
   bool WasLegallyTitled =
       AcceptSpecificString(FirstToken, "UnmaskedPredicateTest");
 
   BracketAcceptor::AcceptOpeningBracket(FirstToken, ROUNDED);
   std::vector<bool> HadLegalCommas;
-  std::vector<T> HadLegalGeneratorSettings;
+  std::vector<bool> HadLegalGeneratorSettings;
 
   // The types here are intentionally wrong for prototyping
   // This way they will cause compiler errors if they aren't fixed
   // This is a sketch
 
-  T HadFunction = AcceptFunction(FirstToken);
-  HadLegalCommas.push_back(AcceptSpecificString(FirstToken, ",");
-  T HadLambda = AcceptLambda(FirstToken);
-  HadLegalCommas.push_back(AcceptSpecificString(FirstToken, ",");
+  ParsedResult<ParsedFunction> TestedFunction = AcceptSTDFunction(FirstToken);
+  HadLegalCommas.push_back(AcceptSpecificString(FirstToken, ","));
+  ParsedResult<std::string> LambdaSource = AcceptLambda(FirstToken);
+  HadLegalCommas.push_back(AcceptSpecificString(FirstToken, ","));
 
   // Now we need zero or more generator settings
-  bool HadOpenBracket = BracketAcceptor::AcceptOpeningBracket(FirstToken, BRACE);
-  
-  while (*FirstToken == "(") {
-    HadLegalGeneratorSettings.push_back(AcceptGeneratorSettings(FirstToken));
-  }
+  bool HadOpenBracket =
+      BracketAcceptor::AcceptOpeningBracket(FirstToken, BRACE);
 
-  bool HadCloseBracket = BracketAcceptor::AcceptClosingBracket(FirstToken, BRACE);
+  ParsedResult<std::string> ParsedGeneratorSettings =
+      AcceptGeneratorSettings(FirstToken);
 
-  bool WasLegal = WasLegallyTitled &&
-    std::all_of(HadLegalCommas.begin(), HadLegalCommas.end(), [](bool B) {
-    return B; }) &&
-    std::all_of(HadLegalGeneratorSettings.begin(), HadLegalGeneratorSettings.end(), [](bool B) {
-    return B; }) &&
-    HadFunction &&
-    HadLambda &&
-    HadOpenBracket &&
-    HadCloseBracket;
+  bool HadCloseBracket =
+      BracketAcceptor::AcceptClosingBracket(FirstToken, BRACE);
 
-  return WasLegal;
+  bool WasLegal = WasLegallyTitled && AllOf(HadLegalCommas) &&
+                  AllOf(HadLegalGeneratorSettings) &&
+                  TestedFunction.WasLegalInput && LambdaSource.WasLegalInput &&
+                  HadOpenBracket && HadCloseBracket;
+
+  ParsedUnmaskedPredicateTest Result{
+      .TestedFunction = TestedFunction.Result,
+      .PredicateSource = LambdaSource.Result,
+      .GeneratorSource = ParsedGeneratorSettings.Result,
+  };
+
+  return {WasLegal, Result};
 }

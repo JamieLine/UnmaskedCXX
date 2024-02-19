@@ -28,6 +28,8 @@ auto GetCaptureAllLegalParametersSource() -> std::string {
   return ToReturn;
 }
 
+// This function returns the source of the lambda function AFTER
+// it has been translated to work in the generated test
 auto AcceptLambda(TokenArray::iterator& FirstToken)
     -> ParsedResult<std::string> {
   std::vector<bool> WereBracketsLegal;
