@@ -11,6 +11,8 @@ const std::set<std::pair<std::string, std::string>> LegalParameters = {
     {"int", "ReturnedValue"},
 };
 
+auto GetCaptureAllLegalParametersSource() -> std::string;
+
 auto AcceptLambda(TokenArray::iterator& FirstToken)
     -> ParsedResult<std::string>;
 

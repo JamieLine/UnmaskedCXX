@@ -17,7 +17,8 @@ auto AcceptUnmaskedPredicateTest(TokenArray::iterator& FirstToken)
   bool WasLegallyTitled =
       AcceptSpecificString(FirstToken, "UnmaskedPredicateTest");
 
-  BracketAcceptor::AcceptOpeningBracket(FirstToken, ROUNDED);
+  bool HadStartingBracket =
+      BracketAcceptor::AcceptOpeningBracket(FirstToken, ROUNDED);
   std::vector<bool> HadLegalCommas;
   std::vector<bool> HadLegalGeneratorSettings;
 
@@ -40,10 +41,14 @@ auto AcceptUnmaskedPredicateTest(TokenArray::iterator& FirstToken)
   bool HadCloseBracket =
       BracketAcceptor::AcceptClosingBracket(FirstToken, BRACE);
 
-  bool WasLegal = WasLegallyTitled && AllOf(HadLegalCommas) &&
-                  AllOf(HadLegalGeneratorSettings) &&
+  bool HadFinalBracket =
+      BracketAcceptor::AcceptClosingBracket(FirstToken, ROUNDED);
+  bool HadSemiColon = AcceptSpecificString(FirstToken, ";");
+
+  bool WasLegal = WasLegallyTitled && HadStartingBracket && HadFinalBracket &&
+                  AllOf(HadLegalCommas) && AllOf(HadLegalGeneratorSettings) &&
                   TestedFunction.WasLegalInput && LambdaSource.WasLegalInput &&
-                  HadOpenBracket && HadCloseBracket;
+                  HadOpenBracket && HadCloseBracket && HadSemiColon;
 
   ParsedUnmaskedPredicateTest Result{
       .TestedFunction = TestedFunction.Result,

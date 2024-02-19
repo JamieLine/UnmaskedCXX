@@ -1,7 +1,8 @@
+#include "AcceptSTDFunction.h"
+
 #include <algorithm>
 #include <iterator>
 
-#include "AcceptFunction.h"
 #include "TestCreator/Acceptors/AcceptAnyToken.h"
 #include "TestCreator/Acceptors/AcceptSpecificString.h"
 #include "TestCreator/MicroParsers/BracketAcceptor.h"
