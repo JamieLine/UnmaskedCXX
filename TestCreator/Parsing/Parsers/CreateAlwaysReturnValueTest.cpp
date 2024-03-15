@@ -11,12 +11,13 @@
 #include <utility>
 #include <vector>
 
-#include "../Consts/TestMarkers.h"
-#include "../Logging.h"
-#include "../StringOperations.h"
-#include "../Structs/ArgumentType.h"
-#include "../Structs/FixedArgument.h"
-#include "../Structs/TestSpecification.h"
+#include "../../Consts/TestMarkers.h"
+#include "../../Structs/ArgumentType.h"
+#include "../../Structs/FixedArgument.h"
+#include "Logging.h"
+#include "StringOperations.h"
+#include "TestCreator/Consts/TestMarkers.h"
+#include "TestCreator/Structs/ArgumentType.h"
 
 auto CreateAlwaysReturnValueTest(std::vector<std::string>::iterator& FirstToken,
                                  TestCreationContext Context) -> std::string {

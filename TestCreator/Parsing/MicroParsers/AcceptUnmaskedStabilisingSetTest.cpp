@@ -1,10 +1,11 @@
 #include "AcceptUnmaskedStabilisingSetTest.h"
 
-#include "TestCreator/Acceptors/AcceptSpecificString.h"
-#include "TestCreator/MicroParsers/AcceptGeneratorSettings.h"
-#include "TestCreator/MicroParsers/AcceptLambda.h"
-#include "TestCreator/MicroParsers/AcceptSTDFunction.h"
-#include "TestCreator/MicroParsers/BracketAcceptor.h"
+#include "TestCreator/Parsing/Acceptors/AcceptSpecificString.h"
+#include "TestCreator/Parsing/MicroParsers/AcceptGeneratorSettings.h"
+#include "TestCreator/Parsing/MicroParsers/AcceptLambda.h"
+#include "TestCreator/Parsing/MicroParsers/AcceptSTDFunction.h"
+#include "TestCreator/Parsing/MicroParsers/BracketAcceptor.h"
+#include "TestCreator/Structs/GeneratorSettingBunch.h"
 #include "TestCreator/Structs/ParsedFunction.h"
 #include "TestCreator/Structs/ParsedResult.h"
 #include "TestCreator/Structs/ParsedUnmaskedPredicateTest.h"
@@ -23,7 +24,7 @@ auto AcceptUnmaskedStabilisingSetTest(TokenArray::iterator& FirstToken)
   ParsedResult<ParsedFunction> TestedFunction = AcceptSTDFunction(FirstToken);
   HadLegalCommas.push_back(AcceptSpecificString(FirstToken, ","));
 
-  ParsedResult<std::string> ParsedGeneratorSettings =
+  ParsedResult<GeneratorSettingBunch> ParsedGeneratorSettings =
       AcceptGeneratorSettings(FirstToken);
 
   bool HadFinalBracket =
@@ -46,7 +47,7 @@ auto AcceptUnmaskedStabilisingSetTest(TokenArray::iterator& FirstToken)
       {
           .TestedFunction = TestedFunction.Result,
           .PredicateSource = Lambda,
-          .GeneratorSource = ParsedGeneratorSettings.Result,
+          .GeneratorSettings = ParsedGeneratorSettings.Result,
       }};
 
   return ToReturn;

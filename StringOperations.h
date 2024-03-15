@@ -15,4 +15,7 @@ auto Tokenize(const std::string& ToTokenize,
               std::vector<std::string> DiscardedDelimiters)
     -> std::vector<std::string>;
 
+auto IndentEveryLine(std::string Content, std::size_t AddedIndentLevel)
+    -> std::string;
+
 #endif /* STRINGOPERATIONS_H */

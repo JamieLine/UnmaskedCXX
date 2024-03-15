@@ -11,11 +11,11 @@
 #include "../Optional.h"
 #include "../StringOperations.h"
 #include "Consts/TestMarkers.h"
-#include "Parsers/CreateAlwaysReturnValueTest.h"
-#include "Parsers/CreateStabilisingSetTest.h"
 #include "Structs/GeneratorParameterStoreSeed.h"
 #include "Structs/TestSpecification.h"
-#include "TestCreator/Parsers/CreateAdditionalIncludeLine.h"
+#include "TestCreator/Parsing/Parsers/CreateAdditionalIncludeLine.h"
+#include "TestCreator/Parsing/Parsers/CreateAlwaysReturnValueTest.h"
+#include "TestCreator/Parsing/Parsers/CreateStabilisingSetTest.h"
 #include "TestCreator/Structs/Filepath.h"
 #include "TestCreator/Structs/TestCreationContext.h"
 
@@ -44,7 +44,7 @@ auto CreateTestsFromFile(Filepath Source) -> TestCreationStatus {
 
   using TokensIterator = vector<string>::iterator;
 
-  TestCreationStatus CurrentStatus = ALL_OK;
+  TestCreationStatus CurrentStatus = TestCreationStatus::ALL_OK;
 
   vector<TestSpecification> GeneratedTestSpecs;
 
@@ -52,7 +52,7 @@ auto CreateTestsFromFile(Filepath Source) -> TestCreationStatus {
   Optional<string> MaybeFileSource = Source.ReadContentsOfFile();
 
   if (!MaybeFileSource.DataExists) {
-    return COULD_NOT_READ_INPUT_FILE;
+    return TestCreationStatus::COULD_NOT_READ_INPUT_FILE;
   }
 
   // We wish to tokenize this file but some delimiters are important and some
@@ -142,7 +142,7 @@ auto CreateTestsFromFile(Filepath Source) -> TestCreationStatus {
         Log(std::cout, VALUE_OUTPUT, std::string(OutputFilepath));
         Log(std::cout, VALUE_OUTPUT, TestSource);
 
-        CurrentStatus = COULD_NOT_OPEN_OUTPUT_FILE;
+        CurrentStatus = TestCreationStatus::COULD_NOT_OPEN_OUTPUT_FILE;
       }
 
       Context.Params.ResetTempParameters();
@@ -175,7 +175,7 @@ auto CreateTestsFromFile(Filepath Source) -> TestCreationStatus {
         Log(std::cout, VALUE_OUTPUT, string(OutputFilepath));
         Log(std::cout, VALUE_OUTPUT, TestSource);
 
-        CurrentStatus = COULD_NOT_OPEN_OUTPUT_FILE;
+        CurrentStatus = TestCreationStatus::COULD_NOT_OPEN_OUTPUT_FILE;
       }
 
       Context.Params.ResetTempParameters();
@@ -186,7 +186,7 @@ auto CreateTestsFromFile(Filepath Source) -> TestCreationStatus {
       Log(std::cout, LOG, "Found SET_TEMP_PARAMETER_MARKER in TestCreator");
       Context.Params.ReadInTempParameterDeclaration(NextUsefulToken);
     } else {
-      CurrentStatus = FOUND_UNEXPECTED_TOKEN_FROM_MAP;
+      CurrentStatus = TestCreationStatus::FOUND_UNEXPECTED_TOKEN_FROM_MAP;
       Log(std::cout, LOG,
           "NextUsefulToken dereferenced into something not handled by the "
           "\"switch statement\"? Continuing as possible. NextUsefulToken "
@@ -204,7 +204,7 @@ auto CreateTestsFromFile(Filepath Source) -> TestCreationStatus {
 
   if (!MaybeTestRunnerTemplate.DataExists) {
     Log(std::cout, ERROR, "Could not open TestRunnerTemplate.cpp_template");
-    CurrentStatus = COULD_NOT_READ_INPUT_FILE;
+    CurrentStatus = TestCreationStatus::COULD_NOT_READ_INPUT_FILE;
     return CurrentStatus;
   }
 

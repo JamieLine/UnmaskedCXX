@@ -1,9 +1,9 @@
 #include "AcceptType.h"
 
 #include "StringOperations.h"
-#include "TestCreator/Acceptors/AcceptAnyToken.h"
-#include "TestCreator/Acceptors/AcceptSpecificString.h"
-#include "TestCreator/MicroParsers/BracketAcceptor.h"
+#include "TestCreator/Parsing/Acceptors/AcceptAnyToken.h"
+#include "TestCreator/Parsing/Acceptors/AcceptSpecificString.h"
+#include "TestCreator/Parsing/MicroParsers/BracketAcceptor.h"
 #include "TestCreator/Structs/ParsedResult.h"
 #include "VectorOperations.h"
 

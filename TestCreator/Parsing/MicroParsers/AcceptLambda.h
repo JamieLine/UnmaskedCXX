@@ -3,7 +3,7 @@
 
 #include <set>
 
-#include "TestCreator/MicroParsers/BracketAcceptor.h"
+#include "TestCreator/Parsing/MicroParsers/BracketAcceptor.h"
 #include "TestCreator/Structs/ParsedResult.h"
 #include "TestCreator/Structs/TokenArray.h"
 

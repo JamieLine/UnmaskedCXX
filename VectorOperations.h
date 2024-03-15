@@ -1,5 +1,5 @@
-#ifndef VECTOROPERATIONS_H
-#define VECTOROPERATIONS_H
+#ifndef VECTOROPERATIONS
+#define VECTOROPERATIONS
 
 #include <vector>
 
@@ -13,4 +13,4 @@ auto AllLegal(std::vector<ParsedResult<T>> Results) -> bool;
 template <typename T>
 auto ExtractResults(std::vector<ParsedResult<T>> Results) -> std::vector<T>;
 
-#endif /* VECTOROPERATIONS_H */
+#endif /* VECTOROPERATIONS */

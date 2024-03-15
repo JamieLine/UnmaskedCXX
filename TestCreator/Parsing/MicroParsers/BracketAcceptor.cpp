@@ -3,7 +3,9 @@
 #include <iostream>
 
 #include "Logging.h"
-#include "TestCreator/Acceptors/AcceptSpecificString.h"
+#include "TestCreator/Parsing/Acceptors/AcceptSpecificString.h"
+
+std::stack<BracketType> BracketAcceptor::CurrentlyOpenBrackets;
 
 auto BracketAcceptor::AcceptOpeningBracket(TokenArray::iterator& FirstToken,
                                            BracketType Type) -> bool {

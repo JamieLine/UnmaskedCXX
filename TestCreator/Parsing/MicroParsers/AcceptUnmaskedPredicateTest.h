@@ -1,7 +1,6 @@
 #ifndef TESTCREATOR_MICROPARSERS_ACCEPTUNMASKEDPREDICATETEST_H
 #define TESTCREATOR_MICROPARSERS_ACCEPTUNMASKEDPREDICATETEST_H
 
-#include <string>
 #include <vector>
 
 #include "TestCreator/Structs/ParsedResult.h"

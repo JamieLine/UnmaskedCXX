@@ -4,8 +4,8 @@
 #include <string>
 #include <utility>
 
-#include "../Structs/ParsedResult.h"
-#include "../Structs/TokenArray.h"
+#include "../../Structs/ParsedResult.h"
+#include "../../Structs/TokenArray.h"
 
 auto AcceptSpecificString(TokenArray::iterator& FirstToken,
                           std::string TargetString) -> bool;

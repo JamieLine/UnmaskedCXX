@@ -1,17 +1,19 @@
 #include "AcceptGeneratorSettings.h"
 
-#include "TestCreator/Acceptors/AcceptAnyToken.h"
-#include "TestCreator/Acceptors/AcceptSpecificString.h"
-#include "TestCreator/MicroParsers/BracketAcceptor.h"
+#include "TestCreator/Parsing/Acceptors/AcceptAnyToken.h"
+#include "TestCreator/Parsing/Acceptors/AcceptSpecificString.h"
+#include "TestCreator/Parsing/MicroParsers/BracketAcceptor.h"
+#include "TestCreator/Structs/GeneratorSettingBunch.h"
+#include "TestCreator/Structs/GeneratorSettingDescriptor.h"
 #include "TestCreator/Structs/ParsedResult.h"
 #include "TestCreator/Structs/TokenArray.h"
 #include "VectorOperations.h"
 
 auto AcceptSingleGeneratorSetting(TokenArray::iterator& FirstToken)
-    -> ParsedResult<std::string> {
+    -> ParsedResult<GeneratorSettingDescriptor> {
   std::vector<bool> PartsWereLegal;
 
-  std::string ToReturn = "";
+  GeneratorSettingDescriptor ToReturn;
 
   // Might have a (GeneratorSettings) cast
   // Need to generalise this
@@ -24,8 +26,6 @@ auto AcceptSingleGeneratorSetting(TokenArray::iterator& FirstToken)
     PartsWereLegal.push_back(
         BracketAcceptor::AcceptClosingBracket(FirstToken, ROUNDED));
   }
-
-  ToReturn += "(GeneratorSettings) {";
 
   PartsWereLegal.push_back(
       BracketAcceptor::AcceptOpeningBracket(FirstToken, BRACE));
@@ -51,28 +51,25 @@ auto AcceptSingleGeneratorSetting(TokenArray::iterator& FirstToken)
       PartsWereLegal.push_back(AcceptSpecificString(FirstToken, ","));
     }
 
-    ToReturn += "." + Identifier.Result + " = " + Value + ",";
+    ToReturn[Identifier.Result] = Value;
   }
-
-  ToReturn += "}";
 
   if (*FirstToken == ",") {
     PartsWereLegal.push_back(AcceptSpecificString(FirstToken, ","));
-    ToReturn += ",";
   }
 
   return {AllOf(PartsWereLegal), ToReturn};
 }
 
 auto AcceptGeneratorSettings(TokenArray::iterator& FirstToken)
-    -> ParsedResult<std::string> {
+    -> ParsedResult<GeneratorSettingBunch> {
   // We might be given no generator settings, in which case this is the end of
   // the test definiton
   if (*FirstToken == ")") {
-    return {true, ""};
+    return {true, GeneratorSettingBunch()};
   }
 
-  std::string ToReturn = "";
+  GeneratorSettingBunch ToReturn;
   std::vector<bool> PartsWereLegal;
 
   PartsWereLegal.push_back(
@@ -80,12 +77,12 @@ auto AcceptGeneratorSettings(TokenArray::iterator& FirstToken)
 
   while (*FirstToken != "}") {
     auto Setting = AcceptSingleGeneratorSetting(FirstToken);
-    ToReturn += Setting.Result + "\n";
+    ToReturn.Settings.push_back(Setting.Result);
     PartsWereLegal.push_back(Setting.WasLegalInput);
   }
 
   PartsWereLegal.push_back(
       BracketAcceptor::AcceptClosingBracket(FirstToken, BRACE));
 
-  return {AllOf(PartsWereLegal), "{" + ToReturn + "}"};
+  return {AllOf(PartsWereLegal), ToReturn};
 }

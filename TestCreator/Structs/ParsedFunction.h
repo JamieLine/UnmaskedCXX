@@ -10,7 +10,11 @@ struct ParsedFunction {
   std::string ReturnType;
   std::vector<std::string> ArgumentTypes;
 
-  ParsedFunction() = default;
+  ParsedFunction(std::string InName, std::string InReturnType,
+                 std::vector<std::string> InArgumentTypes)
+      : Name(InName),
+        ReturnType(InReturnType),
+        ArgumentTypes(InArgumentTypes) {}
 };
 
 #endif /* TESTCREATOR_STRUCTS_PARSEDFUNCTION_H */

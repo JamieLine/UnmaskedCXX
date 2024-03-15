@@ -4,8 +4,8 @@
 #include <string>
 #include <utility>
 
-#include "../Structs/ParsedResult.h"
-#include "../Structs/TokenArray.h"
+#include "TestCreator/Structs/ParsedResult.h"
+#include "TestCreator/Structs/TokenArray.h"
 
 auto AcceptIndexValuePair(TokenArray::iterator& FirstToken)
     -> ParsedResult<std::pair<std::string, std::string>>;

@@ -3,9 +3,10 @@
 #include <algorithm>
 #include <iterator>
 
-#include "TestCreator/Acceptors/AcceptAnyToken.h"
-#include "TestCreator/Acceptors/AcceptSpecificString.h"
-#include "TestCreator/MicroParsers/BracketAcceptor.h"
+#include "TestCreator/Parsing/Acceptors/AcceptAnyToken.h"
+#include "TestCreator/Parsing/Acceptors/AcceptSpecificString.h"
+#include "TestCreator/Parsing/MicroParsers/AcceptType.h"
+#include "TestCreator/Parsing/MicroParsers/BracketAcceptor.h"
 #include "TestCreator/Structs/ParsedFunction.h"
 #include "TestCreator/Structs/ParsedResult.h"
 #include "VectorOperations.h"
@@ -24,7 +25,7 @@ auto AcceptSTDFunction(TokenArray::iterator& FirstToken)
   HadLegalParameterPack.push_back(
       BracketAcceptor::AcceptOpeningBracket(FirstToken, ANGLED));
 
-  auto ReturnType = AcceptAnyToken(FirstToken);
+  auto ReturnType = AcceptType(FirstToken);
 
   std::vector<ParsedResult<std::string>> ArgumentTypes;
 
@@ -33,10 +34,10 @@ auto AcceptSTDFunction(TokenArray::iterator& FirstToken)
       true;  // The absence of such a bracket is entirely legal
   bool LegalClosingBracket = true;
   if (*FirstToken == "(") {
-    LegalClosingBracket =
+    LegalOpeningBracket =
         BracketAcceptor::AcceptOpeningBracket(FirstToken, ROUNDED);
     while (*FirstToken != ")") {
-      ArgumentTypes.push_back(AcceptAnyToken(FirstToken));
+      ArgumentTypes.push_back(AcceptType(FirstToken));
       if (*FirstToken == ",") {
         AcceptSpecificString(FirstToken, ",");
       }
@@ -57,13 +58,12 @@ auto AcceptSTDFunction(TokenArray::iterator& FirstToken)
   bool HadLegalNameEnd =
       BracketAcceptor::AcceptClosingBracket(FirstToken, ROUNDED);
 
-  ParsedFunction ToReturn = {
-      .Name = FunctionName.Result,
-      .ReturnType = ReturnType.Result,
-      .ArgumentTypes = ExtractResults(ArgumentTypes),
-  };
+  ParsedFunction ToReturn(FunctionName.Result, ReturnType.Result,
+                          ExtractResults(ArgumentTypes));
 
   bool WasLegalInput = HadNamespace && HadLegalNameEnd && HadLegalNameStart &&
                        HadAmpersand && HadColons && ReturnType.WasLegalInput &&
                        AllLegal(ArgumentTypes) && AllOf(HadLegalParameterPack);
+
+  return {WasLegalInput, ToReturn};
 }

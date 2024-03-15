@@ -7,16 +7,17 @@
 
 #include "Logging.h"
 
-auto ReplaceAllInString(std::string Destination, const std::string& OldContent,
+auto ReplaceAllInString(std::string ContainingString,
+                        const std::string& OldContent,
                         const std::string& NewContent) -> std::string {
-  auto Index = Destination.find(OldContent);
+  auto Index = ContainingString.find(OldContent);
 
   while (Index != std::string::npos) {
-    Destination.replace(Index, OldContent.size(), NewContent);
-    Index = Destination.find(OldContent);
+    ContainingString.replace(Index, OldContent.size(), NewContent);
+    Index = ContainingString.find(OldContent);
   }
 
-  return Destination;
+  return ContainingString;
 }
 
 auto JoinVectorOfStrings(std::vector<std::string> Strings,
@@ -143,4 +144,13 @@ auto Tokenize(const std::string& ToTokenize,
   }
 
   return ToReturn;
+}
+
+auto IndentEveryLine(const std::string& Content, std::size_t AddedIndentLevel)
+    -> std::string {
+  const std::string IndentMarker = std::string(AddedIndentLevel, '\t') + "\n";
+
+  return ReplaceAllInString(
+      Content, "\n",
+      IndentMarker);  // NOLINT(readability-suspicious-call-argument)
 }

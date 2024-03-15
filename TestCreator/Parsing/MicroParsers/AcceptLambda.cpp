@@ -6,8 +6,8 @@
 
 #include "Logging.h"
 #include "StringOperations.h"
-#include "TestCreator/Acceptors/AcceptAnyToken.h"
-#include "TestCreator/MicroParsers/BracketAcceptor.h"
+#include "TestCreator/Parsing/Acceptors/AcceptAnyToken.h"
+#include "TestCreator/Parsing/MicroParsers/BracketAcceptor.h"
 #include "VectorOperations.h"
 
 auto GetCaptureAllLegalParametersSource() -> std::string {

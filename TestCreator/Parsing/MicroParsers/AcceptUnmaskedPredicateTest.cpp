@@ -4,12 +4,10 @@
 
 #include "AcceptGeneratorSettings.h"
 #include "AcceptSTDFunction.h"
-#include "TestCreator/Acceptors/AcceptAnyToken.h"
-#include "TestCreator/Acceptors/AcceptSpecificString.h"
-#include "TestCreator/MicroParsers/AcceptLambda.h"
-#include "TestCreator/MicroParsers/BracketAcceptor.h"
-#include "TestCreator/Structs/ParsedResult.h"
-#include "TestCreator/Structs/ParsedUnmaskedPredicateTest.h"
+#include "TestCreator/Parsing/Acceptors/AcceptSpecificString.h"
+#include "TestCreator/Parsing/MicroParsers/AcceptLambda.h"
+#include "TestCreator/Parsing/MicroParsers/BracketAcceptor.h"
+#include "TestCreator/Structs/GeneratorSettingBunch.h"
 #include "VectorOperations.h"
 
 auto AcceptUnmaskedPredicateTest(TokenArray::iterator& FirstToken)
@@ -35,7 +33,7 @@ auto AcceptUnmaskedPredicateTest(TokenArray::iterator& FirstToken)
   bool HadOpenBracket =
       BracketAcceptor::AcceptOpeningBracket(FirstToken, BRACE);
 
-  ParsedResult<std::string> ParsedGeneratorSettings =
+  ParsedResult<GeneratorSettingBunch> ParsedGeneratorSettings =
       AcceptGeneratorSettings(FirstToken);
 
   bool HadCloseBracket =
@@ -53,7 +51,10 @@ auto AcceptUnmaskedPredicateTest(TokenArray::iterator& FirstToken)
   ParsedUnmaskedPredicateTest Result{
       .TestedFunction = TestedFunction.Result,
       .PredicateSource = LambdaSource.Result,
-      .GeneratorSource = ParsedGeneratorSettings.Result,
+      // TODO: Should these generator settings go here or into a context
+      // variable of type `TestCreationContext`?
+
+      .GeneratorSettings = ParsedGeneratorSettings.Result,
   };
 
   return {WasLegal, Result};

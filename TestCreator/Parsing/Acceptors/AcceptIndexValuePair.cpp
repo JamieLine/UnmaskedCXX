@@ -2,7 +2,7 @@
 
 #include "AcceptAnyToken.h"
 #include "AcceptIndexAsString.h"
-#include "TestCreator/Acceptors/AcceptSpecificString.h"
+#include "TestCreator/Parsing/Acceptors/AcceptSpecificString.h"
 
 auto AcceptIndexValuePair(TokenArray::iterator& FirstToken)
     -> ParsedResult<std::pair<std::string, std::string>> {

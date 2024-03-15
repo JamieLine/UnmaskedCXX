@@ -19,6 +19,12 @@ struct TestCreationContext {
   std::size_t NumTestsToRun;
   int CurrentTestNumber;
 
+  // TODO: THIS IS IN THE WRONG PLACE
+  // THIS STRUCT TALKS ABOUT THE CONTEXT THE TEST WE ARE CREATING WAS DEFINED IN
+  // WHEREAS THIS VARIABLE IS TALKING ABOUT THE CONTEXT OF SPECIFIC TEXT EDITS
+  // WITHIN A GENERATED TEST
+  std::size_t CurrentIndentationLevel;
+
   explicit TestCreationContext(Filepath& InTestDefinitionPath)
       : TestDefinitionPath(InTestDefinitionPath),
         Params(),

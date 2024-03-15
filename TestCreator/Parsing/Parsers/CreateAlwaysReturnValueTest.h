@@ -4,9 +4,9 @@
 #include <string>
 #include <vector>
 
-#include "../Consts/TestDefaults.h"
-#include "../Structs/Filepath.h"
-#include "../Structs/GeneratorParameterStoreSeed.h"
+#include "../../Consts/TestDefaults.h"
+#include "../../Structs/Filepath.h"
+#include "../../Structs/GeneratorParameterStoreSeed.h"
 #include "TestCreator/Structs/Filepath.h"
 #include "TestCreator/Structs/TestCreationContext.h"
 
