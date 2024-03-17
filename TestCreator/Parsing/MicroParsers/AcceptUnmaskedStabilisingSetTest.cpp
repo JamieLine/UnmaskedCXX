@@ -1,5 +1,8 @@
 #include "AcceptUnmaskedStabilisingSetTest.h"
 
+#include <iostream>
+
+#include "Logging.h"
 #include "TestCreator/Parsing/Acceptors/AcceptSpecificString.h"
 #include "TestCreator/Parsing/MicroParsers/AcceptGeneratorSettings.h"
 #include "TestCreator/Parsing/MicroParsers/AcceptLambda.h"
@@ -18,14 +21,23 @@ auto AcceptUnmaskedStabilisingSetTest(TokenArray::iterator& FirstToken)
   bool WasLegallyTitled =
       AcceptSpecificString(FirstToken, "UnmaskedStabilisingSetTest");
 
+  ParsingLogging::Log(std::cout, WasLegallyTitled, "Parsed title");
+
   bool HadStartingBracket =
       BracketAcceptor::AcceptOpeningBracket(FirstToken, ROUNDED);
 
-  ParsedResult<ParsedFunction> TestedFunction = AcceptSTDFunction(FirstToken);
-  HadLegalCommas.push_back(AcceptSpecificString(FirstToken, ","));
+  ParsingLogging::Log(std::cout, HadStartingBracket, "Parsed starting bracket");
 
-  ParsedResult<GeneratorSettingBunch> ParsedGeneratorSettings =
-      AcceptGeneratorSettings(FirstToken);
+  ParsedResult<ParsedFunction> TestedFunction =
+      ParsingLogging::IndentForSubTask(std::cout, "Parsing STD function",
+                                       AcceptSTDFunction, FirstToken);
+
+  HadLegalCommas.push_back(AcceptSpecificString(FirstToken, ","));
+  ParsingLogging::Log(std::cout, HadLegalCommas.back(), "Parsed comma");
+
+  ParsingLogging::Log("Beginning to parse Generator Settings");
+  ParsingLogging::IncreaseIndentationLevel() ParsedResult<GeneratorSettingBunch>
+      ParsedGeneratorSettings = AcceptGeneratorSettings(FirstToken);
 
   bool HadFinalBracket =
       BracketAcceptor::AcceptClosingBracket(FirstToken, ROUNDED);
