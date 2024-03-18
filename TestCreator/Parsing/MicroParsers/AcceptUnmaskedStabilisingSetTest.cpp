@@ -16,6 +16,10 @@
 
 auto AcceptUnmaskedStabilisingSetTest(TokenArray::iterator& FirstToken)
     -> ParsedResult<ParsedUnmaskedPredicateTest> {
+  ParsingLogging::Log(std::cout, true,
+                      "Beginning to parse UnmaskedStabilisingSetTest");
+  ParsingLogging::IncreaseIndentationLevel();
+
   std::vector<bool> HadLegalCommas;
 
   bool WasLegallyTitled =
@@ -35,9 +39,9 @@ auto AcceptUnmaskedStabilisingSetTest(TokenArray::iterator& FirstToken)
   HadLegalCommas.push_back(AcceptSpecificString(FirstToken, ","));
   ParsingLogging::Log(std::cout, HadLegalCommas.back(), "Parsed comma");
 
-  ParsingLogging::Log("Beginning to parse Generator Settings");
-  ParsingLogging::IncreaseIndentationLevel() ParsedResult<GeneratorSettingBunch>
-      ParsedGeneratorSettings = AcceptGeneratorSettings(FirstToken);
+  ParsedResult<GeneratorSettingBunch> ParsedGeneratorSettings =
+      ParsingLogging::IndentForSubTask(std::cout, "Parsing Generator Settings",
+                                       AcceptGeneratorSettings, FirstToken);
 
   bool HadFinalBracket =
       BracketAcceptor::AcceptClosingBracket(FirstToken, ROUNDED);
@@ -61,6 +65,10 @@ auto AcceptUnmaskedStabilisingSetTest(TokenArray::iterator& FirstToken)
           .PredicateSource = Lambda,
           .GeneratorSettings = ParsedGeneratorSettings.Result,
       }};
+
+  ParsingLogging::DecreaseIndentationLevel();
+  ParsingLogging::Log(std::cout, ToReturn.WasLegalInput,
+                      "Finished parsing UnmaskedStabilisingSetTest");
 
   return ToReturn;
 }

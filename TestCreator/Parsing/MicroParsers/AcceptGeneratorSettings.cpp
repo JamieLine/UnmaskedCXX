@@ -1,5 +1,6 @@
 #include "AcceptGeneratorSettings.h"
 
+#include "Logging.h"
 #include "TestCreator/Parsing/Acceptors/AcceptAnyToken.h"
 #include "TestCreator/Parsing/Acceptors/AcceptSpecificString.h"
 #include "TestCreator/Parsing/MicroParsers/BracketAcceptor.h"
@@ -65,15 +66,28 @@ auto AcceptGeneratorSettings(TokenArray::iterator& FirstToken)
     -> ParsedResult<GeneratorSettingBunch> {
   // We might be given no generator settings, in which case this is the end of
   // the test definiton
-  if (*FirstToken == ")") {
-    return {true, GeneratorSettingBunch()};
-  }
+
+  ParsingLogging::IncreaseIndentationLevel();
+  ParsingLogging::Log(std::cout, true,
+                      "Beginning to accept Generator Settings");
+  ParsingLogging::OutputValue(std::cout, *FirstToken);
 
   GeneratorSettingBunch ToReturn;
   std::vector<bool> PartsWereLegal;
 
   PartsWereLegal.push_back(
       BracketAcceptor::AcceptOpeningBracket(FirstToken, BRACE));
+
+  if (*FirstToken == ")" || *FirstToken == "}") {
+    ParsingLogging::Log(std::cout, true, "No Generator Settings found");
+
+    if (*FirstToken == "}") {
+      AcceptSpecificString(FirstToken, "}");
+    }
+
+    ParsingLogging::DecreaseIndentationLevel();
+    return {true, GeneratorSettingBunch()};
+  }
 
   while (*FirstToken != "}") {
     auto Setting = AcceptSingleGeneratorSetting(FirstToken);
@@ -83,6 +97,13 @@ auto AcceptGeneratorSettings(TokenArray::iterator& FirstToken)
 
   PartsWereLegal.push_back(
       BracketAcceptor::AcceptClosingBracket(FirstToken, BRACE));
+  if (ToReturn.Settings.size() > 0)
+    PartsWereLegal.push_back(
+        BracketAcceptor::AcceptClosingBracket(FirstToken, BRACE));
 
-  return {AllOf(PartsWereLegal), ToReturn};
+  bool WasLegal = AllOf(PartsWereLegal);
+  ParsingLogging::Log(std::cout, WasLegal,
+                      "Finished accepting Generator Settings");
+  ParsingLogging::DecreaseIndentationLevel();
+  return {WasLegal, ToReturn};
 }

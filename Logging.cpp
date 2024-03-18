@@ -1,5 +1,9 @@
 #include "Logging.h"
 
+#include <iostream>
+
+#include "TestCreator/Parsing/MicroParsers/BracketAcceptor.h"
+
 void Log(std::ostream& Output, const std::string& Level,
          const std::string& Message) {
   Output << "<";
@@ -18,23 +22,38 @@ void ParsingLogging::Log(std::ostream& Output, bool IsOkay,
   Output << "<PARSER> ";
   if (!IsOkay) {
     Output << "!";
-    Output << std::string('-',
-                          WidthOfIndent * ParsingLogging::IndentationLevel - 2);
+
+    int PaddingCharacterCount =
+        (WidthOfIndent * ParsingLogging::IndentationLevel) - 2;
+    if (PaddingCharacterCount < 0) {
+      PaddingCharacterCount = 0;
+    }
+    Output << std::string(PaddingCharacterCount, '-');
 
     Output << "!";
   } else {
-    Output << std::string('-',
-                          WidthOfIndent * ParsingLogging::IndentationLevel);
+    Output << std::string(WidthOfIndent * ParsingLogging::IndentationLevel,
+                          '-');
   }
 
   Output << Message;
   Output << std::endl;
 }
 
+void ParsingLogging::OutputBracketAcceptorStack(std::ostream& Output) {
+  // The stack can only contain open brackets
+  for (auto& Bracket : BracketAcceptor::CurrentlyOpenBrackets) {
+    Output << BracketAcceptor::GetOpeningBrackets(Bracket);
+    Output << " ";
+  }
+
+  Output << std::endl;
+}
+
 void ParsingLogging::OutputValue(std::ostream& Output,
                                  const std::string& Value) {
   Output << "<PARSER> ";
-  Output << std::string('-', WidthOfIndent * ParsingLogging::IndentationLevel);
+  Output << std::string(WidthOfIndent * ParsingLogging::IndentationLevel, '-');
   Output << " <VALUE_OUTPUT> ";
   Output << Value;
   Output << std::endl;

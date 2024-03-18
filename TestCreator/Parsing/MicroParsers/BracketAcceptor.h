@@ -34,10 +34,9 @@ class BracketAcceptor {
 
   static auto GetBracketDepth() -> std::size_t;
 
-  BracketAcceptor() = default;
+  BracketAcceptor() = delete;
 
- private:
-  static std::stack<BracketType> CurrentlyOpenBrackets;
+  static std::vector<BracketType> CurrentlyOpenBrackets;
 
   static auto GetClosingBrackets(BracketType Type) -> std::string;
   static auto GetOpeningBrackets(BracketType Type) -> std::string;

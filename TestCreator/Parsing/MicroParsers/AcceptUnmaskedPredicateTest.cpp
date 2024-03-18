@@ -4,6 +4,7 @@
 
 #include "AcceptGeneratorSettings.h"
 #include "AcceptSTDFunction.h"
+#include "Logging.h"
 #include "TestCreator/Parsing/Acceptors/AcceptSpecificString.h"
 #include "TestCreator/Parsing/MicroParsers/AcceptLambda.h"
 #include "TestCreator/Parsing/MicroParsers/BracketAcceptor.h"
@@ -12,6 +13,10 @@
 
 auto AcceptUnmaskedPredicateTest(TokenArray::iterator& FirstToken)
     -> ParsedResult<ParsedUnmaskedPredicateTest> {
+  ParsingLogging::Log(std::cout, true,
+                      "Beginning to parse UnmaskedPredicateTest");
+  ParsingLogging::IncreaseIndentationLevel();
+
   bool WasLegallyTitled =
       AcceptSpecificString(FirstToken, "UnmaskedPredicateTest");
 
@@ -30,14 +35,14 @@ auto AcceptUnmaskedPredicateTest(TokenArray::iterator& FirstToken)
   HadLegalCommas.push_back(AcceptSpecificString(FirstToken, ","));
 
   // Now we need zero or more generator settings
-  bool HadOpenBracket =
-      BracketAcceptor::AcceptOpeningBracket(FirstToken, BRACE);
+  // bool HadOpenBracket =
+  //    BracketAcceptor::AcceptOpeningBracket(FirstToken, BRACE);
 
   ParsedResult<GeneratorSettingBunch> ParsedGeneratorSettings =
       AcceptGeneratorSettings(FirstToken);
 
-  bool HadCloseBracket =
-      BracketAcceptor::AcceptClosingBracket(FirstToken, BRACE);
+  // bool HadCloseBracket =
+  //     BracketAcceptor::AcceptClosingBracket(FirstToken, BRACE);
 
   bool HadFinalBracket =
       BracketAcceptor::AcceptClosingBracket(FirstToken, ROUNDED);
@@ -45,8 +50,10 @@ auto AcceptUnmaskedPredicateTest(TokenArray::iterator& FirstToken)
 
   bool WasLegal = WasLegallyTitled && HadStartingBracket && HadFinalBracket &&
                   AllOf(HadLegalCommas) && AllOf(HadLegalGeneratorSettings) &&
-                  TestedFunction.WasLegalInput && LambdaSource.WasLegalInput &&
-                  HadOpenBracket && HadCloseBracket && HadSemiColon;
+                  TestedFunction.WasLegalInput &&
+                  LambdaSource.WasLegalInput
+                  /*HadOpenBracket && HadCloseBracket */
+                  && HadSemiColon;
 
   ParsedUnmaskedPredicateTest Result{
       .TestedFunction = TestedFunction.Result,
@@ -56,6 +63,10 @@ auto AcceptUnmaskedPredicateTest(TokenArray::iterator& FirstToken)
 
       .GeneratorSettings = ParsedGeneratorSettings.Result,
   };
+
+  ParsingLogging::DecreaseIndentationLevel();
+  ParsingLogging::Log(std::cout, WasLegal,
+                      "Finished parsing UnmaskedPredicateTest");
 
   return {WasLegal, Result};
 }

@@ -14,6 +14,7 @@
 #include "TestCreator/Structs/TestCreationStatus.h"
 #include "TestCreator/Structs/TokenArray.h"
 #include "TestCreator/Writing/TestWriters/WriteUnmaskedPredicateTest.h"
+#include "VectorOperations.h"
 
 std::vector<std::pair<TestCreationContext, ParsedUnmaskedPredicateTest>>
     Driver::StoredPredicateTests;
@@ -39,7 +40,7 @@ auto Driver::ParseInputFile(Filepath FileAddress) -> TestCreationStatus {
   // We wish to tokenize this file but some delimiters are important and some
   // can be discarded. Broadly, it is important if it carries specific meaning.
   const std::vector<std::string> KeptDelimiters = {
-      "&", ",", ";", "(", ")", "{", "}", "[", "]", "<", ">", "\""};
+      "&", ".", ",", ";", "(", ")", "{", "}", "[", "]", "<", ">", "\""};
   const std::vector<std::string> DiscardedDelimiters = {
       " ",
       "\n",
@@ -67,7 +68,6 @@ auto Driver::ParseInputFile(Filepath FileAddress) -> TestCreationStatus {
       }
 
       StoredPredicateTests.emplace_back(CurrentContext, ParsedTest.Result);
-
       CurrentContext.CurrentTestNumber++;
     }
 
@@ -77,6 +77,8 @@ auto Driver::ParseInputFile(Filepath FileAddress) -> TestCreationStatus {
         Log(std::cout, ERROR,
             "Attempted to parse UnmaskedStabilisingSetTest, but it was "
             "illegal.");
+
+        PrintAround(CurrentToken, Tokens);
         return TestCreationStatus::ATTEMPTED_ILLEGAL_PARSE;
       }
 
