@@ -31,7 +31,8 @@ struct TestCreationContext {
         AdditionalIncludes(),
         GeneratedFunctionName(),
         NumTestsToRun(DEFAULT_NUM_TESTS_TO_RUN),
-        CurrentTestNumber(0) {}
+        CurrentTestNumber(0),
+        CurrentIndentationLevel(0) {}
 };
 
 #endif /* TESTCREATOR_STRUCTS_TESTCREATIONCONTEXT_H */

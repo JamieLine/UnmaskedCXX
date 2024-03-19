@@ -10,8 +10,8 @@ struct ParsedFunction {
   std::string ReturnType;
   std::vector<std::string> ArgumentTypes;
 
-  ParsedFunction(std::string InName, std::string InReturnType,
-                 std::vector<std::string> InArgumentTypes)
+  ParsedFunction(const std::string& InName, const std::string& InReturnType,
+                 const std::vector<std::string>& InArgumentTypes)
       : Name(InName),
         ReturnType(InReturnType),
         ArgumentTypes(InArgumentTypes) {}

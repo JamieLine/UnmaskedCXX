@@ -23,14 +23,14 @@ void TestSpecifications() {
 
   UnmaskedStabilisingSetTest(
       std::function<int(int, int)>(&AddInts),
-      {(GeneratorSettings){.Index = 1, .Fixed = true, .Value = "10"}});
+      {(GeneratorSettings){.Index = 1, .Fixed = true, .Value = "1"}});
   UnmaskedAlwaysReturnsValueTest(
       std::function<int(int, int)>(&AddInts), 0,
-      {(GeneratorSettings){.Index = 0, .Fixed = true, .Value = "0"}});
+      {(GeneratorSettings){.Index = 0, .Fixed = true, .Value = "2"}});
   UnmaskedAlwaysReturnsValueTest(
       std::function<int(int, int)>(&AddInts), 0,
-      {(GeneratorSettings){.Index = 0, .Fixed = true, .Value = "0"},
-       (GeneratorSettings){.Index = 1, .Fixed = true, .Value = "0"}});
+      {(GeneratorSettings){.Index = 0, .Fixed = true, .Value = "3"},
+       (GeneratorSettings){.Index = 1, .Fixed = true, .Value = "4"}});
 
   UnmaskedSetCategory("Category A");
   UnmaskedSetSeverity(LIGHT);
@@ -45,10 +45,10 @@ void TestSpecifications() {
   UnmaskedPredicateTest(
       std::function<int(int, int, int, int)>(&LinearCombination),
       [](int ReturnedValue) { return ReturnedValue != 0; },
-      {(GeneratorSettings){.Index = 1, .Fixed = true, .Value = "10"},
+      {(GeneratorSettings){.Index = 1, .Fixed = true, .Value = "5"},
        (GeneratorSettings){
            .Index = 2,
-           .GeneratorScript = "[]() { return -GeneratedValues[0] }"},
+           .GeneratorScript = "[]() { return -GeneratedValues[0]; }"},
        (GeneratorSettings){.Index = 3, .GeneratorType = "Generator_int_2"}});
 }
 

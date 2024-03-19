@@ -73,26 +73,15 @@ auto AcceptSTDFunction(TokenArray::iterator &FirstToken)
     return {false, ToReturn};
   }
 
-  if (ToParse.find("&") == std::string::npos) {
+  /*if (ToParse.find("&") == std::string::npos) {
     ParsingLogging::DecreaseIndentationLevel();
     ParsingLogging::Log(std::cout, false, "Parsed function didn't contain &");
 
     ParsedFunction ToReturn("", "", {});
     return {false, ToReturn};
-  }
+  }*/
 
   std::vector<char> Delimiters = {',', '{', '}', '[', ']', '<', '>', '&'};
-
-  std::string FunctionName;
-
-  int NameIndex = ToParse.find("&");
-  NameIndex++;
-
-  while (std::find(Delimiters.begin(), Delimiters.end(), ToParse[NameIndex]) !=
-         Delimiters.end()) {
-    FunctionName += ToParse[NameIndex];
-    NameIndex++;
-  }
 
   std::string ReturnType;
 
@@ -119,13 +108,26 @@ auto AcceptSTDFunction(TokenArray::iterator &FirstToken)
     ArgumentTypesIndex++;
   }
 
-  ParsedFunction ToReturn(FunctionName, ReturnType, ArgumentTypes);
+  std::vector<bool> PartsWereLegal;
+
+  PartsWereLegal.push_back(
+      BracketAcceptor::AcceptOpeningBracket(FirstToken, ROUNDED));
+  PartsWereLegal.push_back(AcceptSpecificString(FirstToken, "&"));
+
+  ParsedResult<std::string> FunctionName = AcceptAnyToken(FirstToken);
+  ParsingLogging::Log(std::cout, true, "Found function name");
+  ParsingLogging::OutputValue(std::cout, FunctionName.Result);
+
+  PartsWereLegal.push_back(
+      BracketAcceptor::AcceptClosingBracket(FirstToken, ROUNDED));
+
+  ParsedFunction ToReturn(FunctionName.Result, ReturnType, ArgumentTypes);
 
   ParsingLogging::DecreaseIndentationLevel();
   ParsingLogging::Log(std::cout, true,
                       "Finished parsing std::function with following name, "
                       "return type, and argument types");
-  ParsingLogging::OutputValue(std::cout, FunctionName);
+  ParsingLogging::OutputValue(std::cout, FunctionName.Result);
   ParsingLogging::OutputValue(std::cout, ReturnType);
   ParsingLogging::OutputValue(std::cout,
                               JoinVectorOfStrings(ArgumentTypes, ","));

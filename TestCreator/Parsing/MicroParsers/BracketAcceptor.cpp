@@ -58,6 +58,8 @@ auto BracketAcceptor::AcceptClosingBracket(TokenArray::iterator& FirstToken,
       std::cout, GetOpeningBrackets(Type) + GetClosingBrackets(Type));
   CurrentlyOpenBrackets.pop_back();
 
+  ParsingLogging::OutputBracketAcceptorStack(std::cout);
+
   return true;
 }
 
