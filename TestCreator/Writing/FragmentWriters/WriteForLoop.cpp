@@ -3,6 +3,7 @@
 #include "StringOperations.h"
 #include "TestCreator/Structs/LegalIdentifier.h"
 
+// cppcheck-suppress-begin passedByValue
 auto WriteForLoop(TestCreationContext& Context, std::size_t NumberOfIterations,
                   std::string LoopBody) -> std::string {
   return WriteForLoop(Context, NumberOfIterations, LegalIdentifier("i"),
@@ -24,7 +25,10 @@ auto WriteForLoop(TestCreationContext& Context, std::size_t NumberOfIterations,
 
   Context.CurrentIndentationLevel -= 1;
 
+  ToReturn += LoopBody;
+
   ToReturn += "}\n";
 
   return ToReturn;
 }
+// cppcheck-suppress-end passedByValue

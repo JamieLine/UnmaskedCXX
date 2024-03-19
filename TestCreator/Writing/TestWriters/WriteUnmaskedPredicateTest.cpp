@@ -83,7 +83,12 @@ auto WriteUnmaskedPredicateTest(const TestCreationContext& Context,
       if (Index < 0 || Index >= GeneratorTypes.size()) {
         Log(std::cout, ERROR,
             "WriteUnmaskedPredicateTest was given an index which was a valid "
-            "integer but outside of the bounds of the GeneratorTypes vector.");
+            "integer but outside of the bounds of the GeneratorTypes vector. "
+            "Index first, GeneratorTypes size second.");
+        Log(std::cout, VALUE_OUTPUT, std::to_string(Index));
+        Log(std::cout, VALUE_OUTPUT, std::to_string(GeneratorTypes.size()));
+        Log(std::cout, VALUE_OUTPUT,
+            std::to_string(ToWrite.TestedFunction.ArgumentTypes.size()));
         return {"", TestCreationStatus::GIVEN_INVALID_PARSED_RESULT};
       }
 

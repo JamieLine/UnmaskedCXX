@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <iostream>
+#include <iterator>
 #include <utility>
 
 #include "Logging.h"
@@ -13,9 +14,11 @@
 auto GetCaptureAllLegalParametersSource() -> std::string {
   std::vector<std::string> Parameters;
 
-  for (const auto& Parameter : LegalParameters) {
-    Parameters.push_back(Parameter.first + " " + Parameter.second);
-  }
+  std::transform(LegalParameters.begin(), LegalParameters.end(),
+                 std::back_inserter(Parameters),
+                 [](const std::pair<std::string, std::string>& Item) {
+                   return Item.first + "" + Item.second;
+                 });
 
   std::string ToReturn = "[" + JoinVectorOfStrings(Parameters, ", ");
 

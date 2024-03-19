@@ -9,8 +9,8 @@
 #include "TestCreator/Structs/ParsedResult.h"
 #include "TestCreator/Structs/TokenArray.h"
 
-inline auto PrintAround(TokenArray::iterator& Token, TokenArray& Array,
-                        std::size_t Range) -> void {
+inline auto PrintAround(const TokenArray::iterator& Token,
+                        const TokenArray& Array, std::size_t Range) -> void {
   TokenArray::iterator Start = Token;
 
   int StartDecrements = 0;
@@ -31,19 +31,20 @@ inline auto PrintAround(TokenArray::iterator& Token, TokenArray& Array,
 
   TokenArray PrintedTokens = TokenArray(Start, End);
 
-  for (auto Token : PrintedTokens) {
-    ParsingLogging::OutputValue(std::cout, Token);
+  for (auto ThisToken : PrintedTokens) {
+    ParsingLogging::OutputValue(std::cout, ThisToken);
   }
 }
 
-inline auto PrintAround(TokenArray::iterator& Token, TokenArray& Array)
-    -> void {
+inline auto PrintAround(const TokenArray::iterator& Token,
+                        const TokenArray& Array) -> void {
   const std::size_t DEFAULT_RANGE = 25;
   PrintAround(Token, Array, DEFAULT_RANGE);
 }
 
 template <typename T>
-inline auto PrintVector(std::ostream& Output, std::vector<T> Vec) -> void {
+inline auto PrintVector(std::ostream& Output, const std::vector<T>& Vec)
+    -> void {
   for (T Item : Vec) {
     Output << Item;
     Output << ",";

@@ -1,6 +1,8 @@
 #include "Driver.h"
 
 #include <iostream>
+#include <iterator>
+#include <numeric>
 #include <vector>
 
 #include "Logging.h"
@@ -150,6 +152,8 @@ auto Driver::WriteAllStoredInputs() -> TestCreationStatus {
     OutputPath.WriteStringIntoFileOverwriting(Result.Item);
   }
 
+  WriteMainDriverProgram();
+
   return TestCreationStatus::ALL_OK;
 }
 
@@ -167,11 +171,18 @@ auto Driver::WriteMainDriverProgram() -> TestCreationStatus {
 
   std::string TestRunner = MaybeTestRunner.Data;
 
-  std::string IncludeDirectives = "";
+  std::string IncludeDirectives;
 
-  for (const auto& GeneratedSourceFile : GeneratedSourceFilepaths) {
-    IncludeDirectives += "#include \"" + GeneratedSourceFile.Path + "\"\n";
-  }
+  std::vector<std::string> AllIncludeDirectives;
+
+  std::transform(
+      GeneratedSourceFilepaths.begin(), GeneratedSourceFilepaths.end(),
+      std::back_inserter(AllIncludeDirectives),
+      [](Filepath S) { return std::string("#include \"" + S.Path + "\"\n"); });
+
+  IncludeDirectives =
+      std::accumulate(AllIncludeDirectives.begin(), AllIncludeDirectives.end(),
+                      std::string(""));
 
   TestRunner =
       ReplaceAllInString(TestRunner, "INCLUDE_TESTS", IncludeDirectives);

@@ -17,7 +17,7 @@ struct WithStatus {
   T Item;
   TestCreationStatus Status;
 
-  WithStatus(T InItem, TestCreationStatus InStatus)
+  WithStatus(const T& InItem, TestCreationStatus InStatus)
       : Item(InItem), Status(InStatus) {}
 };
 

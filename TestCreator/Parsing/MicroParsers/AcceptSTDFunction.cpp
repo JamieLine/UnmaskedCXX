@@ -81,8 +81,6 @@ auto AcceptSTDFunction(TokenArray::iterator &FirstToken)
     return {false, ToReturn};
   }*/
 
-  std::vector<char> Delimiters = {',', '{', '}', '[', ']', '<', '>', '&'};
-
   std::string ReturnType;
 
   int ReturnTypeIndex = ToParse.find("<");
@@ -106,6 +104,11 @@ auto AcceptSTDFunction(TokenArray::iterator &FirstToken)
       CurrentArgumentType += ToParse[ArgumentTypesIndex];
     }
     ArgumentTypesIndex++;
+  }
+
+  // We now have to dump the last argument into our list if it exists
+  if (CurrentArgumentType != "") {
+    ArgumentTypes.push_back(CurrentArgumentType);
   }
 
   std::vector<bool> PartsWereLegal;
