@@ -43,7 +43,7 @@ SET(TEST_DRIVER "TestCreator/Driver/Driver.cpp")
 #					  "TestCreator/Structs/Filepath.cpp"
 #					  "TestCreator/Parsing/Parsers/CreateAdditionalIncludeLine.cpp")
 SET(UNMASKED_INCLUDE_DIRECTORIES "./")
-SET(EVERYWHERE_INCLUDED_SOURCE_CODE "Logging.cpp" "SetOperations.cpp")
+SET(EVERYWHERE_INCLUDED_SOURCE_CODE "ParsingLogging.cpp" "SetOperations.cpp" "WritingLogging.cpp" "Logging.cpp")
 
 # CMake complains if it is asked to create build information for non-existent files.
 if(EXISTS "UnmaskedCreatedTests/TestRunner.cpp")

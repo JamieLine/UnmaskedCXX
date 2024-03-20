@@ -26,7 +26,7 @@ std::vector<std::pair<TestCreationContext, ParsedUnmaskedPredicateTest>>
 
 std::vector<Filepath> Driver::GeneratedSourceFilepaths;
 
-auto Driver::ParseInputFile(Filepath FileAddress) -> TestCreationStatus {
+auto Driver::ParseInputFile(const Filepath& FileAddress) -> TestCreationStatus {
   Log(std::cout, LOG, "Called ParseInputFile on");
   Log(std::cout, VALUE_OUTPUT, FileAddress.Path);
 
@@ -50,6 +50,10 @@ auto Driver::ParseInputFile(Filepath FileAddress) -> TestCreationStatus {
   };
 
   TestCreationContext CurrentContext(FileAddress);
+  std::cout << "THIS IS THE CURRENT CONTEXT FILE ADDRESS";
+  std::cout << FileAddress.Path + "\n";
+  std::cout << CurrentContext.TestDefinitionPath.Path;
+  std::cout << std::endl;
 
   TokenArray Tokens = Tokenize(InputFile, KeptDelimiters, DiscardedDelimiters);
 
@@ -117,6 +121,10 @@ auto Driver::WriteAllStoredInputs() -> TestCreationStatus {
   for (auto& PredicateTestPair : StoredPredicateTests) {
     TestCreationContext& Context = PredicateTestPair.first;
     ParsedUnmaskedPredicateTest& Test = PredicateTestPair.second;
+
+    std::cout << "WHEN WRITING, THIS IS THE CONTEXT PATH\n";
+    std::cout << Context.TestDefinitionPath.Path;
+    std::cout << std::endl;
 
     WithStatus<std::string> Result = WriteUnmaskedPredicateTest(Context, Test);
 

@@ -8,7 +8,7 @@
 
 class Driver {
  public:
-  static auto ParseInputFile(Filepath FileAddress) -> TestCreationStatus;
+  static auto ParseInputFile(const Filepath& FileAddress) -> TestCreationStatus;
   static auto WriteAllStoredInputs() -> TestCreationStatus;
 
  private:

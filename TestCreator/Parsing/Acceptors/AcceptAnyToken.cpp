@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "Logging.h"
+#include "ParsingLogging.h"
 #include "TestCreator/Parsing/MicroParsers/BracketAcceptor.h"
 auto AcceptAnyToken(TokenArray::iterator& FirstToken)
     -> ParsedResult<std::string> {

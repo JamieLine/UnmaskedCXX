@@ -5,7 +5,7 @@
 #include <iostream>
 #include <vector>
 
-#include "Logging.h"
+#include "ParsingLogging.h"
 #include "TestCreator/Structs/ParsedResult.h"
 #include "TestCreator/Structs/TokenArray.h"
 

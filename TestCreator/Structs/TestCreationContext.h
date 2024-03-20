@@ -10,7 +10,7 @@
 // POD struct
 struct TestCreationContext {
   GeneratorParameterStoreSeed Params;
-  Filepath& TestDefinitionPath;
+  Filepath TestDefinitionPath;
   std::vector<std::string> AdditionalIncludes;
   std::string Category;
   // TODO(linej): Maybe this should have an empty checker?
@@ -25,7 +25,7 @@ struct TestCreationContext {
   // WITHIN A GENERATED TEST
   std::size_t CurrentIndentationLevel;
 
-  explicit TestCreationContext(Filepath& InTestDefinitionPath)
+  explicit TestCreationContext(const Filepath& InTestDefinitionPath)
       : TestDefinitionPath(InTestDefinitionPath),
         Params(),
         AdditionalIncludes(),

@@ -5,7 +5,7 @@
 #include <iterator>
 #include <utility>
 
-#include "Logging.h"
+#include "ParsingLogging.h"
 #include "StringOperations.h"
 #include "TestCreator/Parsing/Acceptors/AcceptAnyToken.h"
 #include "TestCreator/Parsing/MicroParsers/BracketAcceptor.h"

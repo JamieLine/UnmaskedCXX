@@ -1,7 +1,6 @@
 #include "AcceptType.h"
 
-#include "Logging.h"
-#include "StringOperations.h"
+#include "ParsingLogging.h"
 #include "TestCreator/Parsing/Acceptors/AcceptAnyToken.h"
 #include "TestCreator/Parsing/Acceptors/AcceptSpecificString.h"
 #include "TestCreator/Parsing/MicroParsers/BracketAcceptor.h"

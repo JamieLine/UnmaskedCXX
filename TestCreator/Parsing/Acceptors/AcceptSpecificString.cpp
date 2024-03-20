@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "Logging.h"
+#include "ParsingLogging.h"
 
 auto AcceptSpecificString(TokenArray::iterator& FirstToken,
                           std::string TargetString) -> bool {
