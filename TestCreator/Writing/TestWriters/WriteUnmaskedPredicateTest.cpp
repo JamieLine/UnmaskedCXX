@@ -7,7 +7,9 @@
 
 #include "Logging.h"
 #include "MapOperations.h"
+#include "ParsingLogging.h"
 #include "StringOperations.h"
+#include "TestCreator/Structs/GeneratorSettingDescriptor.h"
 #include "TestCreator/Structs/ParsedUnmaskedPredicateTest.h"
 #include "TestCreator/Structs/TestCreationStatus.h"
 #include "TestCreator/Writing/ReplaceSymbolAndLog.h"
@@ -128,6 +130,53 @@ auto WriteUnmaskedPredicateTest(const TestCreationContext& Context,
 
   ToReturn = ReplaceSymbolAndLog(std::cout, ToReturn, "GENERATOR_TYPES",
                                  JoinVectorOfStrings(GeneratorTypes, ", "));
+
+  ToReturn = ReplaceSymbolAndLog(std::cout, ToReturn, "RETURN_TYPE",
+                                 ToWrite.TestedFunction.ReturnType);
+
+  ToReturn = ReplaceSymbolAndLog(
+      std::cout, ToReturn, "PUSH_PARAMETERS_TO_STORE",
+      Context.Params.CreateGeneratorParameterStoreDefinition());
+
+  // Here we write source code to get the values from the generators
+  std::vector<std::string> GeneratorGetValues;
+
+  const auto& ArgumentTypes = ToWrite.TestedFunction.ArgumentTypes;
+  GeneratorGetValues.reserve(ArgumentTypes.size());
+
+  for (int i = 0; i < ArgumentTypes.size(); i++) {
+    const auto& GenSettings = ToWrite.GeneratorSettings.Settings;
+    bool IsUsed =
+        std::find_if(
+            GenSettings.begin(), GenSettings.end(),
+            [i](const GeneratorSettingDescriptor& Setting) -> bool {
+              if (!MapContainsKey(Setting, std::string("Index"))) {
+                ParsingLogging::Log(
+                    std::cout, false,
+                    "Found GeneratorSettingsDescriptor without an index");
+                return false;
+              }
+
+              // TODO: THIS IS PROBABLY DUMB? SHOULD WE CONVERT THE SETTING TO
+              // INT?
+              if (Setting.at("Index") != std::to_string(i)) {
+                return false;
+              }
+
+              if (!MapContainsKey(Setting, std::string("Fixed"))) {
+                return false;
+              }
+
+              return Setting.at("Fixed") == "true";
+            }) == GenSettings.end();
+
+    GeneratorGetValues.push_back("std::get<" + std::to_string(i) +
+                                 ">(Generators).GenerateValue(Parameters, " +
+                                 std::to_string(IsUsed) + ")");
+  }
+
+  ToReturn = ReplaceSymbolAndLog(std::cout, ToReturn, "GENERATORS_GET_VALUES",
+                                 JoinVectorOfStrings(GeneratorGetValues, ","));
 
   // TODO: FINISH THIS
 

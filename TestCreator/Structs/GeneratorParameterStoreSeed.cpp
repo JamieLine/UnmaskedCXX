@@ -52,7 +52,7 @@ void GeneratorParameterStoreSeed::ResetTempParameters() {
 }
 
 auto GeneratorParameterStoreSeed::CreateGeneratorParameterStoreDefinition()
-    -> std::string {
+    const -> std::string {
   // Cppcheck tells us to std::accumulate here.
   // In C++20 this is fine, but in C++11 its extremely slow
   // Because accumulate doesn't acknowledge std::move exists.

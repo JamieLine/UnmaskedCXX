@@ -73,6 +73,11 @@ auto Driver::ParseInputFile(const Filepath& FileAddress) -> TestCreationStatus {
         return TestCreationStatus::ATTEMPTED_ILLEGAL_PARSE;
       }
 
+      CurrentContext.GeneratedFunctionName =
+          "UnmaskedCreatedTests_PredicateTest_" +
+          std::to_string(CurrentContext.CurrentTestNumber) + "_" +
+          ParsedTest.Result.TestedFunction.Name;
+
       StoredPredicateTests.emplace_back(CurrentContext, ParsedTest.Result);
       CurrentContext.CurrentTestNumber++;
     }
@@ -87,6 +92,11 @@ auto Driver::ParseInputFile(const Filepath& FileAddress) -> TestCreationStatus {
         PrintAround(CurrentToken, Tokens);
         return TestCreationStatus::ATTEMPTED_ILLEGAL_PARSE;
       }
+
+      CurrentContext.GeneratedFunctionName =
+          "UnmaskedCreatedTests_StabilisingSetTest_" +
+          std::to_string(CurrentContext.CurrentTestNumber) + "_" +
+          ParsedTest.Result.TestedFunction.Name;
 
       StoredStabilisingSetTests.emplace_back(CurrentContext, ParsedTest.Result);
 
@@ -154,8 +164,7 @@ auto Driver::WriteAllStoredInputs() -> TestCreationStatus {
       return Result.Status;
     }
 
-    Filepath OutputPath(RootDir + Context.GeneratedFunctionName + "_" +
-                        std::to_string(Context.CurrentTestNumber) + ".cpp");
+    Filepath OutputPath(RootDir + Context.GeneratedFunctionName + "_" + ".cpp");
 
     OutputPath.WriteStringIntoFileOverwriting(Result.Item);
   }

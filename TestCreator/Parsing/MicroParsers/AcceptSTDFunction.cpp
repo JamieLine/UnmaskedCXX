@@ -95,6 +95,7 @@ auto AcceptSTDFunction(TokenArray::iterator &FirstToken)
   std::string CurrentArgumentType = "";
 
   int ArgumentTypesIndex = ToParse.find("(");
+  ArgumentTypesIndex++;
 
   while (ToParse[ArgumentTypesIndex] != ')') {
     if (ToParse[ArgumentTypesIndex] == ',') {
