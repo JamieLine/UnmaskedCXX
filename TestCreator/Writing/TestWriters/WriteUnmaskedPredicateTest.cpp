@@ -178,6 +178,21 @@ auto WriteUnmaskedPredicateTest(const TestCreationContext& Context,
   ToReturn = ReplaceSymbolAndLog(std::cout, ToReturn, "GENERATORS_GET_VALUES",
                                  JoinVectorOfStrings(GeneratorGetValues, ","));
 
+  ToReturn = ReplaceSymbolAndLog(std::cout, ToReturn, "FN_NAME",
+                                 ToWrite.TestedFunction.Name);
+
+  std::vector<std::string> GeneratedArguments;
+
+  for (int i = 0; i < ArgumentTypes.size(); i++) {
+    GeneratedArguments.push_back("std::get<" + std::to_string(i) +
+                                 ">(GeneratedArguments[i])");
+  }
+  ToReturn = ReplaceSymbolAndLog(std::cout, ToReturn, "GENERATED_ARGUMENTS",
+                                 JoinVectorOfStrings(GeneratedArguments, ", "));
+
+  ToReturn = ReplaceSymbolAndLog(std::cout, ToReturn, "TEST_CONDITION",
+                                 ToWrite.PredicateSource);
+
   // TODO: FINISH THIS
 
   WritingLogging::DecreaseIndentationLevel();

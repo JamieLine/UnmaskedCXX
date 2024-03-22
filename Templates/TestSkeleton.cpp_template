@@ -38,12 +38,14 @@ PUSH_PARAMETERS_TO_STORE
 
     Parameters.ClearEverything();
   }
+  
+  for (int i = 0; i < NUM_TESTS_TO_RUN; i++) {
+    if (TEST_CONDITION) {
+      TEST_BODY_PASS
+    }
 
-  if (TEST_CONDITION) {
-    TEST_BODY_PASS
-  }
-
-  else {
-    TEST_BODY_FAIL
+    else {
+      TEST_BODY_FAIL
+    }
   }
 }

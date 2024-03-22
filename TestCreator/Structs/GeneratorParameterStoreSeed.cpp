@@ -63,13 +63,13 @@ auto GeneratorParameterStoreSeed::CreateGeneratorParameterStoreDefinition()
     // that pull the values out.
 
     // cppcheck-suppress useStlAlgorithm
-    ToReturn += "\t\tParameters.PushParameter(" + ParameterAndValue.first +
-                "," + ParameterAndValue.second + ");\n";
+    ToReturn += "\tParameters.PushParameter(" + ParameterAndValue.first + "," +
+                ParameterAndValue.second + ");\n";
   }
 
   for (const auto& TempParameterAndValue : TempParametersAndValues) {
     // cppcheck-suppress useStlAlgorithm
-    ToReturn += "\t\tParameters.PushTempParameter(" +
+    ToReturn += "\tParameters.PushTempParameter(" +
                 TempParameterAndValue.first + "," +
                 TempParameterAndValue.second + ");\n";
   }
