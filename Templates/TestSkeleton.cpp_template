@@ -38,9 +38,13 @@ PUSH_PARAMETERS_TO_STORE
 
     Parameters.ClearEverything();
   }
+
+  bool EverythingPassed = true;
   
   for (int i = 0; i < NUM_TESTS_TO_RUN; i++) {
-    if (TEST_CONDITION) {
+    RETURN_TYPE& ReturnedValue = ReturnedValues[i];
+    auto TestPredicate = TEST_CONDITION;
+    if (TestPredicate()) {
       TEST_BODY_PASS
     }
 
@@ -48,4 +52,6 @@ PUSH_PARAMETERS_TO_STORE
       TEST_BODY_FAIL
     }
   }
+
+  return EverythingPassed;
 }

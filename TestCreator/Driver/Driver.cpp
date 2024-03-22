@@ -148,6 +148,8 @@ auto Driver::WriteAllStoredInputs() -> TestCreationStatus {
     Filepath OutputPath(RootDir + Context.GeneratedFunctionName + "_" +
                         std::to_string(Context.CurrentTestNumber) + ".cpp");
 
+    GeneratedSourceFilepaths.push_back(OutputPath);
+
     OutputPath.WriteStringIntoFileOverwriting(Result.Item);
   }
 
@@ -164,7 +166,8 @@ auto Driver::WriteAllStoredInputs() -> TestCreationStatus {
       return Result.Status;
     }
 
-    Filepath OutputPath(RootDir + Context.GeneratedFunctionName + "_" + ".cpp");
+    Filepath OutputPath(RootDir + Context.GeneratedFunctionName + "_" +
+                        std::to_string(Context.CurrentTestNumber) + ".cpp");
 
     OutputPath.WriteStringIntoFileOverwriting(Result.Item);
   }
@@ -206,14 +209,17 @@ auto Driver::WriteMainDriverProgram() -> TestCreationStatus {
 
   std::string TestRunningStatements = "";
 
-  for (const auto& PredicateTest : StoredPredicateTests) {
+  for (auto& PredicateTest : StoredPredicateTests) {
     auto& Context = PredicateTest.first;
     auto& Test = PredicateTest.second;
-    TestRunningStatements += "TestResults.emplace_back(\"" +
+    if (Context.Category == "") {
+      Context.Category = "Uncategorised";
+    }
+    TestRunningStatements += "Tests.emplace_back(\"" +
                              Context.GeneratedFunctionName + "_" +
-                             "PredicateTest" + "\", " + Context.Category +
-                             ", \"UnmaskedPredicateTest\", " +
-                             Context.GeneratedFunctionName + "());";
+                             "PredicateTest" + "\", \"" + Context.Category +
+                             "\", \"UnmaskedPredicateTest\", " +
+                             Context.GeneratedFunctionName + "());\n";
   }
 
   TestRunner = ReplaceAllInString(TestRunner, "RUN_TESTS_AND_PUSH_RESULTS",

@@ -12,21 +12,22 @@
 #include "VectorOperations.h"
 
 auto GetCaptureAllLegalParametersSource() -> std::string {
-  std::vector<std::string> Parameters;
+  // std::vector<std::string> Parameters;
 
-  std::transform(LegalParameters.begin(), LegalParameters.end(),
-                 std::back_inserter(Parameters),
-                 [](const std::pair<std::string, std::string>& Item) {
-                   return Item.first + "" + Item.second;
-                 });
+  /*  std::transform(LegalParameters.begin(), LegalParameters.end(),
+                   std::back_inserter(Parameters),
+                   [](const std::pair<std::string, std::string>& Item) {
+                     // return Item.first + " " + Item.second;
+                     // Lambda captures don't need a type.
+                     //return Item.second;
+                   });*/
 
-  std::string ToReturn = "[" + JoinVectorOfStrings(Parameters, ", ");
-
-  // Remove the final ", "
-  ToReturn = ToReturn.substr(0, ToReturn.size() - 2);
+  //  std::string ToReturn = "[" + JoinVectorOfStrings(Parameters, ", ");
 
   // Close the opening bracket
-  ToReturn += "]";
+  // ToReturn += "]";
+
+  std::string ToReturn = "[&]";
 
   return ToReturn;
 }
@@ -56,6 +57,10 @@ auto AcceptLambda(TokenArray::iterator& FirstToken)
       BracketAcceptor::AcceptOpeningBracket(FirstToken, ROUNDED));
 
   while (*FirstToken != ")") {
+    // Note, we're just doing this as a validation step. It doesn't matter which
+    // parameters are specified as all will be given to the final program.
+    // Therefore, we don't need to push anything we read here out of this
+    // function.
     std::string Type = AcceptAnyToken(FirstToken).Result;
     std::string Identifier = AcceptAnyToken(FirstToken).Result;
 
@@ -152,7 +157,7 @@ auto AcceptLambda(TokenArray::iterator& FirstToken)
 
   std::string FinalLambdaSource =
       GetCaptureAllLegalParametersSource() + "(){\n" +
-      JoinVectorOfStrings(InternalLambdaSource, "\n");
+      JoinVectorOfStrings(InternalLambdaSource, "\n") + "}";
 
   bool WasLegal = AllOf(WereBracketsLegal);
 

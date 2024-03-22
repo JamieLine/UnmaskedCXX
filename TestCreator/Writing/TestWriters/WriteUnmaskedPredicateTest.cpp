@@ -124,7 +124,8 @@ auto WriteUnmaskedPredicateTest(const TestCreationContext& Context,
         return {"", TestCreationStatus::GIVEN_INVALID_PARSED_RESULT};
       }
 
-      GeneratorTypes[Index] = GeneratorSettingMap["GeneratorType"];
+      GeneratorTypes[Index] =
+          ReplaceAllInString(GeneratorSettingMap["GeneratorType"], "\"", "");
     }
   }
 
@@ -192,6 +193,16 @@ auto WriteUnmaskedPredicateTest(const TestCreationContext& Context,
 
   ToReturn = ReplaceSymbolAndLog(std::cout, ToReturn, "TEST_CONDITION",
                                  ToWrite.PredicateSource);
+
+  // TODO: These messages should be much clearer and more informative,
+  // especially if they're going to sit in a log file thats 10M long
+  ToReturn = ReplaceSymbolAndLog(
+      std::cout, ToReturn, "TEST_BODY_PASS",
+      "std::cout << \"Test iteration passed\" << std::endl;\n");
+
+  ToReturn = ReplaceSymbolAndLog(std::cout, ToReturn, "TEST_BODY_FAIL",
+                                 "EverythingPassed = false;\n\tstd::cout << \" "
+                                 "Test iteration failed\" << std::endl;\n");
 
   // TODO: FINISH THIS
 
