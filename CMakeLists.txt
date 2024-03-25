@@ -21,7 +21,8 @@ SET(TEST_CREATOR_PARSING_MICROPARSERS "TestCreator/Parsing/MicroParsers/AcceptGe
            "TestCreator/Parsing/MicroParsers/AcceptUnmaskedPredicateTest.cpp"
            "TestCreator/Parsing/MicroParsers/AcceptUnmaskedSetParameter.cpp"
            "TestCreator/Parsing/MicroParsers/AcceptUnmaskedStabilisingSetTest.cpp"
-           "TestCreator/Parsing/MicroParsers/BracketAcceptor.cpp")
+           "TestCreator/Parsing/MicroParsers/BracketAcceptor.cpp"
+           "TestCreator/Parsing/MicroParsers/AcceptUnmaskedIncludeFile.cpp")
 
 # Intentionally do not include TestCreator/Parsing/Parsers as that is old code and probably going to be removed entirely
 
@@ -33,7 +34,7 @@ SET(TEST_CREATOR_STRUCTS "TestCreator/Structs/Filepath.cpp"
 SET(TEST_CREATOR_WRITING_FRAGMENT_WRITERS "TestCreator/Writing/FragmentWriters/WriteForLoop.cpp")
 SET(TEST_CREATOR_WRITING_TEST_WRITERS "TestCreator/Writing/TestWriters/WriteUnmaskedPredicateTest.cpp")
 
-SET(TEST_DRIVER "TestCreator/Driver/Driver.cpp")
+SET(TEST_DRIVER "TestCreator/Driver/Driver.cpp" "ParsingLogging.cpp" "WritingLogging.cpp")
 
 #SET(TEST_AUTHOR_FILES "TestCreator/Parsing/Parsers/CreateStabilisingSetTest.cpp"
 #					  "TestCreator/Parsing/Parsers/CreateAlwaysReturnValueTest.cpp"
@@ -43,7 +44,7 @@ SET(TEST_DRIVER "TestCreator/Driver/Driver.cpp")
 #					  "TestCreator/Structs/Filepath.cpp"
 #					  "TestCreator/Parsing/Parsers/CreateAdditionalIncludeLine.cpp")
 SET(UNMASKED_INCLUDE_DIRECTORIES "./")
-SET(EVERYWHERE_INCLUDED_SOURCE_CODE "ParsingLogging.cpp" "SetOperations.cpp" "WritingLogging.cpp" "Logging.cpp")
+SET(EVERYWHERE_INCLUDED_SOURCE_CODE "SetOperations.cpp" "Logging.cpp")
 
 # CMake complains if it is asked to create build information for non-existent files.
 if(EXISTS "UnmaskedCreatedTests/TestRunner.cpp")

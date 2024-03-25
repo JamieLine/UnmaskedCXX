@@ -18,9 +18,7 @@ void TestSpecifications() {
   UnmaskedSetParameter(INT_LOWER_BOUND, 10);
   UnmaskedSetParameter(INT_UPPER_BOUND, 100);
 
-  // TODO: Make this include a real file for testing.
-  // UnmaskedIncludeFile("SampleCXXProject/Calculations.cpp");
-
+  // TODO: Make the parser ignore comments.
   UnmaskedStabilisingSetTest(
       std::function<int(int, int)>(&AddInts),
       {(GeneratorSettings){.Index = 1, .Fixed = true, .Value = "1"}});
@@ -42,6 +40,7 @@ void TestSpecifications() {
   UnmaskedSetCategory("Category B");
   UnmaskedSetSeverity(SERIOUS);
 
+  UnmaskedIncludeFile("SampleCXXProject/Generators/Generator_int_2.h");
   UnmaskedPredicateTest(
       std::function<int(int, int, int, int)>(&LinearCombination),
       [](int ReturnedValue) { return ReturnedValue != 0; },

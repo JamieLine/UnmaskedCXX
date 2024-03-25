@@ -7,6 +7,7 @@
 
 #include "Logging.h"
 #include "StringOperations.h"
+#include "TestCreator/Parsing/MicroParsers/AcceptUnmaskedIncludeFile.h"
 #include "TestCreator/Parsing/MicroParsers/AcceptUnmaskedPredicateTest.h"
 #include "TestCreator/Parsing/MicroParsers/AcceptUnmaskedSetParameter.h"
 #include "TestCreator/Parsing/MicroParsers/AcceptUnmaskedStabilisingSetTest.h"
@@ -113,6 +114,18 @@ auto Driver::ParseInputFile(const Filepath& FileAddress) -> TestCreationStatus {
 
       CurrentContext.Params.ParametersAndValues.emplace_back(
           ParsedParameter.Result);
+    }
+
+    else if (*CurrentToken == "UnmaskedIncludeFile") {
+      auto ParsedFile = AcceptUnmaskedIncludeFile(CurrentToken);
+
+      if (!ParsedFile.WasLegalInput) {
+        Log(std::cout, ERROR,
+            "Attempted to parse UnmaskedIncludeFile, but it was illegal.");
+        return TestCreationStatus::ATTEMPTED_ILLEGAL_PARSE;
+      }
+
+      CurrentContext.AdditionalIncludes.push_back(ParsedFile.Result);
     }
 
     // TODO: THERES A FEW Unmasked*** THAT CANT BE ACCEPTED YET
