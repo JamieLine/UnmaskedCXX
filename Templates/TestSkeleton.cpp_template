@@ -22,6 +22,7 @@ bool TEST_FN_NAME() {
   RETURN_TYPE ReturnedValues[NUM_TESTS_TO_RUN]{};
 
   std::vector<std::tuple<ARGUMENT_TYPES>> GeneratedArguments;
+  std::vector<std::tuple<ARGUMENT_TYPES>> PassedArguments;
 
   for (int i = 0; i < NUM_TESTS_TO_RUN; i++) {
     // Generate a value for every argument
@@ -31,6 +32,11 @@ bool TEST_FN_NAME() {
 PUSH_PARAMETERS_TO_STORE
 
     GeneratedArguments.push_back(std::make_tuple(GENERATORS_GET_VALUES));
+    std::tuple<ARGUMENT_TYPES> GeneratedValues = GeneratedArguments.back();
+
+    GENERATOR_SCRIPT_LAMBDAS
+
+    PassedArguments.push_back(std::make_tuple(DETERMINE_PASSED_FROM_GENERATED));
 
     // Replace the named arguments when we call the function.
 

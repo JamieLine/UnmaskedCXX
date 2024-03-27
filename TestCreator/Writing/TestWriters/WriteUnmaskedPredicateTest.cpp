@@ -63,6 +63,8 @@ auto WriteUnmaskedPredicateTest(const TestCreationContext& Context,
       std::back_inserter(GeneratorTypes),
       [](std::string const& S) -> std::string { return "Generator_" + S; });
 
+  // TODO: This geneator setting handler should be its own section.
+
   if (!ToWrite.GeneratorSettings.Settings.empty()) {
     auto& AllGeneratorSettings = ToWrite.GeneratorSettings.Settings;
 
@@ -124,6 +126,7 @@ auto WriteUnmaskedPredicateTest(const TestCreationContext& Context,
         return {"", TestCreationStatus::GIVEN_INVALID_PARSED_RESULT};
       }
 
+      // Clean off any ""
       GeneratorTypes[Index] =
           ReplaceAllInString(GeneratorSettingMap["GeneratorType"], "\"", "");
     }
@@ -190,6 +193,56 @@ auto WriteUnmaskedPredicateTest(const TestCreationContext& Context,
   }
   ToReturn = ReplaceSymbolAndLog(std::cout, ToReturn, "GENERATED_ARGUMENTS",
                                  JoinVectorOfStrings(GeneratedArguments, ", "));
+
+  std::vector<std::string> PassedArguments;
+
+  for (auto _ : GeneratedArguments) {
+    PassedArguments.push_back("");
+  }
+
+  std::vector<std::string> GeneratorScriptLambdas;
+  std::size_t CurrentLambdaCounter = 0;
+
+  for (auto& Setting : ToWrite.GeneratorSettings.Settings) {
+    // We've already checked that it has an index.
+
+    if (MapContainsKey(Setting, std::string("GeneratorScript"))) {
+      // TODO: Check that this doesn't cause a crash
+      int Index = std::stoi(Setting.at("Index"));
+
+      // TODO: The parser should have probably already removed the quotes we're
+      // targetting.
+      //
+
+      std::string CleanedGeneratorScript = Setting.at("GeneratorScript");
+      CleanedGeneratorScript =
+          CleanedGeneratorScript.substr(1, CleanedGeneratorScript.size() - 2);
+
+      GeneratorScriptLambdas.push_back("auto GeneratorScript_" +
+                                       std::to_string(CurrentLambdaCounter) +
+                                       " = " + CleanedGeneratorScript + ";");
+
+      PassedArguments[Index] =
+          "GeneratorScript_" + std::to_string(CurrentLambdaCounter) + "()";
+      CurrentLambdaCounter++;
+    }
+  }
+
+  // If we didn't get a script, just take the generated value.
+  for (int i = 0; i < PassedArguments.size(); i++) {
+    if (PassedArguments[i] == "") {
+      PassedArguments[i] =
+          "std::get<" + std::to_string(i) + ">(GeneratedValues)";
+    }
+  }
+
+  ToReturn =
+      ReplaceSymbolAndLog(std::cout, ToReturn, "GENERATOR_SCRIPT_LAMBDAS",
+                          JoinVectorOfStrings(GeneratorScriptLambdas, ";\n"));
+
+  ToReturn = ReplaceSymbolAndLog(std::cout, ToReturn,
+                                 "DETERMINE_PASSED_FROM_GENERATED",
+                                 JoinVectorOfStrings(PassedArguments, ", "));
 
   ToReturn = ReplaceSymbolAndLog(std::cout, ToReturn, "TEST_CONDITION",
                                  ToWrite.PredicateSource);

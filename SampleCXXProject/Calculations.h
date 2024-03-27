@@ -47,7 +47,8 @@ void TestSpecifications() {
       {(GeneratorSettings){.Index = 1, .Fixed = true, .Value = "5"},
        (GeneratorSettings){
            .Index = 2,
-           .GeneratorScript = "[]() { return -GeneratedValues[0]; }"},
+           .GeneratorScript =
+               "[&]() { return -std::get<0>(GeneratedValues); }"},
        (GeneratorSettings){.Index = 3, .GeneratorType = "Generator_int_2"}});
 }
 
