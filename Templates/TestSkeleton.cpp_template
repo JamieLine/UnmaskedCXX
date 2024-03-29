@@ -8,6 +8,7 @@
 
 #include <iostream>
 #include <tuple>
+#include <vector>
 
 #include "../FILE_ADDRESS"
 #include "../Generators/AllGenerators.h"
@@ -19,7 +20,9 @@ ADDITIONAL_INCLUDES
 bool TEST_FN_NAME() {
   GeneratorParameterStore Parameters;
 
-  RETURN_TYPE ReturnedValues[NUM_TESTS_TO_RUN]{};
+  std::vector<RETURN_TYPE> ReturnedValues;
+  ReturnedValues.reserve(NUM_TESTS_TO_RUN);
+//  RETURN_TYPE ReturnedValues[NUM_TESTS_TO_RUN]{};
 
   std::vector<std::tuple<ARGUMENT_TYPES>> GeneratedArguments;
   std::vector<std::tuple<ARGUMENT_TYPES>> PassedArguments;

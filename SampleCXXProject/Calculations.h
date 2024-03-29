@@ -52,4 +52,6 @@ void TestSpecifications() {
        (GeneratorSettings){.Index = 3, .GeneratorType = "Generator_int_2"}});
 }
 
-#endif /* SAMPLECXXPROJECT_CALCULATIONS_H */
+#endif /* SAMPLECXXPROJECT_CALC    auto TestPredicate = [&]() -> bool { return \
+          std::all_of(ReturnedValues.begin(), ReturnedValues.end(), [&] (int   \
+          V) { return V == ReturnedValues[0]; });};ULATIONS_H */

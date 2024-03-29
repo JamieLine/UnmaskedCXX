@@ -167,10 +167,25 @@ auto Driver::WriteAllStoredInputs() -> TestCreationStatus {
   }
 
   for (auto& StabilisingTestPair : StoredStabilisingSetTests) {
+    std::cout << "MAKING STABILISING SET TEST" << std::endl;
     TestCreationContext& Context = StabilisingTestPair.first;
     ParsedUnmaskedPredicateTest& Test = StabilisingTestPair.second;
 
+    bool AddedAlgorithm = false;
+
+    if (!VectorContainsString(Context.AdditionalIncludes,
+                              "#include <algorithm>")) {
+      AddedAlgorithm = true;
+      Context.AdditionalIncludes.push_back("#include <algorithm>");
+    }
+
     WithStatus<std::string> Result = WriteUnmaskedPredicateTest(Context, Test);
+
+    if (AddedAlgorithm) {
+      // We pushed the header include to the back so we don't need to search for
+      // it here This will always be "#include <algorithm>"
+      Context.AdditionalIncludes.pop_back();
+    }
 
     if (Result.Status != TestCreationStatus::ALL_OK) {
       Log(std::cout, ERROR,
@@ -181,6 +196,8 @@ auto Driver::WriteAllStoredInputs() -> TestCreationStatus {
 
     Filepath OutputPath(RootDir + Context.GeneratedFunctionName + "_" +
                         std::to_string(Context.CurrentTestNumber) + ".cpp");
+
+    GeneratedSourceFilepaths.push_back(OutputPath);
 
     OutputPath.WriteStringIntoFileOverwriting(Result.Item);
   }
@@ -233,6 +250,19 @@ auto Driver::WriteMainDriverProgram() -> TestCreationStatus {
                              "PredicateTest" + "\", \"" + Context.Category +
                              "\", \"UnmaskedPredicateTest\", " +
                              Context.GeneratedFunctionName + "());\n";
+  }
+
+  for (auto& StabilisingTest : StoredStabilisingSetTests) {
+    auto& Context = StabilisingTest.first;
+    auto& Test = StabilisingTest.second;
+    if (Context.Category == "") {
+      Context.Category = "Uncategorised";
+    }
+    TestRunningStatements +=
+        "Tests.emplace_back(\"" + Context.GeneratedFunctionName + "_" +
+        "StabilisingSetTestTest" + "\", \"" + Context.Category +
+        "\", \"UnmaskedStabilisingSetTest\", " + Context.GeneratedFunctionName +
+        "());\n";
   }
 
   TestRunner = ReplaceAllInString(TestRunner, "RUN_TESTS_AND_PUSH_RESULTS",

@@ -50,11 +50,10 @@ auto AcceptUnmaskedStabilisingSetTest(TokenArray::iterator& FirstToken)
   const std::string& TestedReturnType = TestedFunction.Result.ReturnType;
 
   // This is the shortcut we gain with this type of test
-  std::string Lambda = "() [" + GetCaptureAllLegalParametersSource() + "] { " +
-                       "std::all_of(ReturnedValues.begin(), " +
-                       "ReturnedValues.end(), " + "(" + TestedReturnType +
-                       " V)[std::vector<" + TestedReturnType +
-                       "> ReturnedValues]{ return V == ReturnedValues[0]; }})";
+  std::string Lambda = GetCaptureAllLegalParametersSource() + "() -> bool { " +
+                       "return std::all_of(ReturnedValues.begin(), " +
+                       "ReturnedValues.end(), " + "[&] (" + TestedReturnType +
+                       " V) { return V == ReturnedValues[0]; });}";
 
   ParsedResult<ParsedUnmaskedPredicateTest> ToReturn = {
       AllOf(HadLegalCommas) && WasLegallyTitled && HadStartingBracket &&

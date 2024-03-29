@@ -83,4 +83,9 @@ auto ExtractResults(std::vector<ParsedResult<T>> Results) -> std::vector<T> {
   return ToReturn;
 }
 
+inline auto VectorContainsString(const std::vector<std::string>& Vec,
+                                 std::string Target) -> bool {
+  return std::find(Vec.begin(), Vec.end(), Target) != Vec.end();
+}
+
 #endif /* VECTOROPERATIONS_H */
