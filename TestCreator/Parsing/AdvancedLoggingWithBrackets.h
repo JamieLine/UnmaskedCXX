@@ -1,21 +1,15 @@
-#ifndef PARSINGLOGGING_H
-#define PARSINGLOGGING_H
+#ifndef TESTCREATOR_PARSING_ADVANCEDLOGGINGWITHBRACKETS
+#define TESTCREATOR_PARSING_ADVANCEDLOGGINGWITHBRACKETS
 
-#include <ostream>
-
+#include "AdvancedLogging.h"
 #include "TestCreator/Structs/ParsedResult.h"
 
-class ParsingLogging {
+class AdvancedLoggingWithBrackets : public AdvancedLogging {
  public:
-  static void Log(std::ostream& Output, bool IsOkay,
-                  const std::string& Message);
-  static void OutputValue(std::ostream& Output, const std::string& Value);
-
-  static void IncreaseIndentationLevel();
-  static void DecreaseIndentationLevel();
+  AdvancedLoggingWithBrackets(std::string Title) : AdvancedLogging(Title) {}
 
   template <typename ReturnType, typename... ArgumentTypes>
-  static ParsedResult<ReturnType> IndentForSubTask(
+  ParsedResult<ReturnType> IndentForSubTask(
       std::ostream& Output, const std::string& Message,
       ParsedResult<ReturnType> (*Task)(
           ArgumentTypes&...),  // NOTE: THIS ISN'T A STD::FUNCTION BECAUSE THE
@@ -30,10 +24,9 @@ class ParsingLogging {
     return ToReturn;
   }
 
-  static void OutputBracketAcceptorStack(std::ostream& Output);
-
- private:
-  static std::size_t IndentationLevel;
+  void OutputBracketAcceptorStack(std::ostream& Output);
 };
 
-#endif /* PARSINGLOGGING_H */
+static AdvancedLoggingWithBrackets ParsingLogging("PARSER");
+
+#endif /* TESTCREATOR_PARSING_ADVANCEDLOGGINGWITHBRACKETS */

@@ -5,7 +5,7 @@
 #include <iostream>
 #include <vector>
 
-#include "ParsingLogging.h"
+#include "TestCreator/Parsing/AdvancedLoggingWithBrackets.h"
 #include "TestCreator/Structs/ParsedResult.h"
 #include "TestCreator/Structs/TokenArray.h"
 
@@ -32,7 +32,7 @@ inline auto PrintAround(const TokenArray::iterator& Token,
   TokenArray PrintedTokens = TokenArray(Start, End);
 
   for (auto ThisToken : PrintedTokens) {
-    ParsingLogging::OutputValue(std::cout, ThisToken);
+    ParsingLogging.OutputValue(std::cout, ThisToken);
   }
 }
 

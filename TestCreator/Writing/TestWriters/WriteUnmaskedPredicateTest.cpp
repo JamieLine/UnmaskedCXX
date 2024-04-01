@@ -5,29 +5,28 @@
 #include <iterator>
 #include <stdexcept>
 
-#include "Logging.h"
+#include "AdvancedLogging.h"
 #include "MapOperations.h"
-#include "ParsingLogging.h"
 #include "StringOperations.h"
+#include "TestCreator/Parsing/AdvancedLoggingWithBrackets.h"
 #include "TestCreator/Structs/GeneratorSettingDescriptor.h"
 #include "TestCreator/Structs/ParsedUnmaskedPredicateTest.h"
 #include "TestCreator/Structs/TestCreationStatus.h"
 #include "TestCreator/Writing/ReplaceSymbolAndLog.h"
 #include "TestCreator/Writing/Templates.h"
-#include "WritingLogging.h"
 
 auto WriteUnmaskedPredicateTest(const TestCreationContext& Context,
                                 const ParsedUnmaskedPredicateTest& ToWrite)
     -> WithStatus<std::string> {
-  WritingLogging::Log(std::cout, true,
-                      "Beginning to write UnmaskedPredicateTest");
-  WritingLogging::IncreaseIndentationLevel();
+  WritingLogging.Log(std::cout, true,
+                     "Beginning to write UnmaskedPredicateTest");
+  WritingLogging.IncreaseIndentationLevel();
 
   auto SkeletonContent = TestSkeleton.ReadContentsOfFile();
   if (!SkeletonContent.DataExists) {
-    WritingLogging::DecreaseIndentationLevel();
-    WritingLogging::Log(std::cout, false, "Could not read TestSkeleton");
-    WritingLogging::OutputValue(std::cout, TestSkeleton.Path);
+    WritingLogging.DecreaseIndentationLevel();
+    WritingLogging.Log(std::cout, false, "Could not read TestSkeleton");
+    WritingLogging.OutputValue(std::cout, TestSkeleton.Path);
     return {"", TestCreationStatus::COULD_NOT_READ_INPUT_FILE};
   }
 
@@ -72,8 +71,8 @@ auto WriteUnmaskedPredicateTest(const TestCreationContext& Context,
       // Every Generator Setting must have an
       // index
       if (!MapContainsKey(GeneratorSettingMap, std::string("Index"))) {
-        WritingLogging::DecreaseIndentationLevel();
-        WritingLogging::Log(
+        WritingLogging.DecreaseIndentationLevel();
+        WritingLogging.Log(
             std::cout, false,
             "Tried to read GeneratorSettings, but found one without an index.");
         return {"", TestCreationStatus::GIVEN_INVALID_PARSED_RESULT};
@@ -97,30 +96,30 @@ auto WriteUnmaskedPredicateTest(const TestCreationContext& Context,
       try {
         Index = std::stoi(GeneratorSettingMap["Index"]);
       } catch (std::invalid_argument const& Exception) {
-        WritingLogging::Log(std::cout, false,
-                            "WriteUnmaskedPredicateTest found a "
-                            "non-integer index.");
+        WritingLogging.Log(std::cout, false,
+                           "WriteUnmaskedPredicateTest found a "
+                           "non-integer index.");
         return {"", TestCreationStatus::GIVEN_INVALID_PARSED_RESULT};
       } catch (std::out_of_range const& Exception) {
-        WritingLogging::Log(std::cout, false,
-                            "WriteUnmaskedPredicateTest found an "
-                            "integer but it was out of "
-                            "range to fit in an int.");
+        WritingLogging.Log(std::cout, false,
+                           "WriteUnmaskedPredicateTest found an "
+                           "integer but it was out of "
+                           "range to fit in an int.");
         return {"", TestCreationStatus::GIVEN_INVALID_PARSED_RESULT};
       }
 
       if (Index < 0 || Index >= GeneratorTypes.size()) {
-        WritingLogging::Log(std::cout, false,
-                            "WriteUnmaskedPredicateTest was "
-                            "given an index which was a valid "
-                            "integer but outside of the bounds "
-                            "of the GeneratorTypes vector. "
-                            "Index first, GeneratorTypes size "
-                            "second.");
-        WritingLogging::OutputValue(std::cout, std::to_string(Index));
-        WritingLogging::OutputValue(std::cout,
-                                    std::to_string(GeneratorTypes.size()));
-        WritingLogging::OutputValue(
+        WritingLogging.Log(std::cout, false,
+                           "WriteUnmaskedPredicateTest was "
+                           "given an index which was a valid "
+                           "integer but outside of the bounds "
+                           "of the GeneratorTypes vector. "
+                           "Index first, GeneratorTypes size "
+                           "second.");
+        WritingLogging.OutputValue(std::cout, std::to_string(Index));
+        WritingLogging.OutputValue(std::cout,
+                                   std::to_string(GeneratorTypes.size()));
+        WritingLogging.OutputValue(
             std::cout,
             std::to_string(ToWrite.TestedFunction.ArgumentTypes.size()));
         return {"", TestCreationStatus::GIVEN_INVALID_PARSED_RESULT};
@@ -155,7 +154,7 @@ auto WriteUnmaskedPredicateTest(const TestCreationContext& Context,
             GenSettings.begin(), GenSettings.end(),
             [i](const GeneratorSettingDescriptor& Setting) -> bool {
               if (!MapContainsKey(Setting, std::string("Index"))) {
-                ParsingLogging::Log(
+                ParsingLogging.Log(
                     std::cout, false,
                     "Found GeneratorSettingsDescriptor without an index");
                 return false;
@@ -200,6 +199,18 @@ auto WriteUnmaskedPredicateTest(const TestCreationContext& Context,
     PassedArguments.push_back("");
   }
 
+  std::vector<std::string> LoggingArgumentsParts;
+
+  for (int i = 0; i < GeneratedArguments.size(); i++) {
+    LoggingArgumentsParts.push_back("std::to_string(std::get<" +
+                                    std::to_string(i) +
+                                    ">(PassedArguments[i]))");
+  }
+
+  ToReturn = ReplaceSymbolAndLog(
+      std::cout, ToReturn, "LOGGING_ARGUMENTS",
+      JoinVectorOfStrings(LoggingArgumentsParts, " + \", \" + "));
+
   std::vector<std::string> GeneratorScriptLambdas;
   std::size_t CurrentLambdaCounter = 0;
 
@@ -225,6 +236,15 @@ auto WriteUnmaskedPredicateTest(const TestCreationContext& Context,
       PassedArguments[Index] =
           "GeneratorScript_" + std::to_string(CurrentLambdaCounter) + "()";
       CurrentLambdaCounter++;
+    }
+
+    if (MapContainsKey(Setting, std::string("Value"))) {
+      int Index = std::stoi(Setting.at("Index"));
+      // We need to clean some quotes off of the input
+      //
+      std::string Value = Setting.at("Value");
+      Value = Value.substr(1, Value.size() - 2);
+      PassedArguments[Index] = Value;
     }
   }
 
@@ -259,9 +279,8 @@ auto WriteUnmaskedPredicateTest(const TestCreationContext& Context,
 
   // TODO: FINISH THIS
 
-  WritingLogging::DecreaseIndentationLevel();
-  WritingLogging::Log(std::cout, true,
-                      "Finished writing UnmaskedPredicateTest");
+  WritingLogging.DecreaseIndentationLevel();
+  WritingLogging.Log(std::cout, true, "Finished writing UnmaskedPredicateTest");
   return {ToReturn, TestCreationStatus::ALL_OK};
 
   // ToReturn = ReplaceAllInString(ToReturn,

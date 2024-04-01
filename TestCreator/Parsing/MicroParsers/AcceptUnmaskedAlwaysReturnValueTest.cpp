@@ -1,8 +1,8 @@
 #include <iostream>
 
 #include "AcceptUnmaskedStabilisingSetTest.h"
+#include "AdvancedLogging.h"
 #include "Logging.h"
-#include "ParsingLogging.h"
 #include "TestCreator/Parsing/Acceptors/AcceptAnyToken.h"
 #include "TestCreator/Parsing/Acceptors/AcceptSpecificString.h"
 #include "TestCreator/Parsing/MicroParsers/AcceptGeneratorSettings.h"
@@ -17,28 +17,27 @@
 
 auto AcceptUnmaskedAlwaysReturnValueTest(TokenArray::iterator& FirstToken)
     -> ParsedResult<ParsedUnmaskedPredicateTest> {
-  ParsingLogging::Log(std::cout, true,
-                      "Beginning to parse UnmaskedAlwaysReturnValueTest");
-  ParsingLogging::IncreaseIndentationLevel();
+  ParsingLogging.Log(std::cout, true,
+                     "Beginning to parse UnmaskedAlwaysReturnValueTest");
+  ParsingLogging.IncreaseIndentationLevel();
 
   std::vector<bool> HadLegalCommas;
 
   bool WasLegallyTitled =
       AcceptSpecificString(FirstToken, "UnmaskedAlwaysReturnValueTest");
 
-  ParsingLogging::Log(std::cout, WasLegallyTitled, "Parsed title");
+  ParsingLogging.Log(std::cout, WasLegallyTitled, "Parsed title");
 
   bool HadStartingBracket =
       BracketAcceptor::AcceptOpeningBracket(FirstToken, ROUNDED);
 
-  ParsingLogging::Log(std::cout, HadStartingBracket, "Parsed starting bracket");
+  ParsingLogging.Log(std::cout, HadStartingBracket, "Parsed starting bracket");
 
-  ParsedResult<ParsedFunction> TestedFunction =
-      ParsingLogging::IndentForSubTask(std::cout, "Parsing STD function",
-                                       AcceptSTDFunction, FirstToken);
+  ParsedResult<ParsedFunction> TestedFunction = ParsingLogging.IndentForSubTask(
+      std::cout, "Parsing STD function", AcceptSTDFunction, FirstToken);
 
   HadLegalCommas.push_back(AcceptSpecificString(FirstToken, ","));
-  ParsingLogging::Log(std::cout, HadLegalCommas.back(), "Parsed comma");
+  ParsingLogging.Log(std::cout, HadLegalCommas.back(), "Parsed comma");
 
   std::string TargetValue;
   std::vector<bool> TargetValuePartsWereLegal;
@@ -50,29 +49,29 @@ auto AcceptUnmaskedAlwaysReturnValueTest(TokenArray::iterator& FirstToken)
   }
 
   else {
-    ParsingLogging::Log(std::cout, true, "Beginning to parse target value");
-    ParsingLogging::IncreaseIndentationLevel();
+    ParsingLogging.Log(std::cout, true, "Beginning to parse target value");
+    ParsingLogging.IncreaseIndentationLevel();
 
     auto StartingDepth = BracketAcceptor::GetBracketDepth();
     while (!(*FirstToken == ",") &&
            (BracketAcceptor::GetBracketDepth() == StartingDepth)) {
       auto NextPart = AcceptAnyToken(FirstToken);
       TargetValue += NextPart.Result;
-      ParsingLogging::Log(std::cout, NextPart.WasLegalInput,
-                          "Parsed " + NextPart.Result);
+      ParsingLogging.Log(std::cout, NextPart.WasLegalInput,
+                         "Parsed " + NextPart.Result);
       TargetValuePartsWereLegal.push_back(NextPart.WasLegalInput);
     }
 
-    ParsingLogging::DecreaseIndentationLevel();
-    ParsingLogging::Log(std::cout, true, "Finished parsing target value");
+    ParsingLogging.DecreaseIndentationLevel();
+    ParsingLogging.Log(std::cout, true, "Finished parsing target value");
   }
 
   HadLegalCommas.push_back(AcceptSpecificString(FirstToken, ","));
-  ParsingLogging::Log(std::cout, HadLegalCommas.back(), "Parsed comma");
+  ParsingLogging.Log(std::cout, HadLegalCommas.back(), "Parsed comma");
 
   ParsedResult<GeneratorSettingBunch> ParsedGeneratorSettings =
-      ParsingLogging::IndentForSubTask(std::cout, "Parsing Generator Settings",
-                                       AcceptGeneratorSettings, FirstToken);
+      ParsingLogging.IndentForSubTask(std::cout, "Parsing Generator Settings",
+                                      AcceptGeneratorSettings, FirstToken);
 
   bool HadFinalBracket =
       BracketAcceptor::AcceptClosingBracket(FirstToken, ROUNDED);
@@ -96,9 +95,9 @@ auto AcceptUnmaskedAlwaysReturnValueTest(TokenArray::iterator& FirstToken)
           .GeneratorSettings = ParsedGeneratorSettings.Result,
       }};
 
-  ParsingLogging::DecreaseIndentationLevel();
-  ParsingLogging::Log(std::cout, ToReturn.WasLegalInput,
-                      "Finished parsing UnmaskedAlwaysReturnValueTest");
+  ParsingLogging.DecreaseIndentationLevel();
+  ParsingLogging.Log(std::cout, ToReturn.WasLegalInput,
+                     "Finished parsing UnmaskedAlwaysReturnValueTest");
 
   return ToReturn;
 }

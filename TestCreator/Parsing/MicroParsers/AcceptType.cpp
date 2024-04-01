@@ -1,6 +1,6 @@
 #include "AcceptType.h"
 
-#include "ParsingLogging.h"
+#include "AdvancedLogging.h"
 #include "TestCreator/Parsing/Acceptors/AcceptAnyToken.h"
 #include "TestCreator/Parsing/Acceptors/AcceptSpecificString.h"
 #include "TestCreator/Parsing/MicroParsers/BracketAcceptor.h"
@@ -9,30 +9,30 @@
 #include "VectorOperations.h"
 
 auto AcceptType(TokenArray::iterator& FirstToken) -> ParsedResult<std::string> {
-  ParsingLogging::Log(std::cout, true, "Beginning to accept type");
-  ParsingLogging::IncreaseIndentationLevel();
+  ParsingLogging.Log(std::cout, true, "Beginning to accept type");
+  ParsingLogging.IncreaseIndentationLevel();
 
   ParsedResult<std::string> Name = AcceptAnyToken(FirstToken);
-  ParsingLogging::Log(std::cout, true, "Pulled first identifier in type");
-  ParsingLogging::OutputValue(std::cout, Name.Result);
+  ParsingLogging.Log(std::cout, true, "Pulled first identifier in type");
+  ParsingLogging.OutputValue(std::cout, Name.Result);
 
   std::vector<bool> PartsWereLegal;
 
   while (*FirstToken == ":") {
-    ParsingLogging::Log(std::cout, true, "Trying to accept :: in type name");
+    ParsingLogging.Log(std::cout, true, "Trying to accept :: in type name");
     PartsWereLegal.push_back(AcceptSpecificString(FirstToken, ":"));
     PartsWereLegal.push_back(AcceptSpecificString(FirstToken, ":"));
 
     ParsedResult<std::string> NextPart = AcceptAnyToken(FirstToken);
-    ParsingLogging::Log(std::cout, true, "Pulling next part of type name");
-    ParsingLogging::OutputValue(std::cout, NextPart.Result);
+    ParsingLogging.Log(std::cout, true, "Pulling next part of type name");
+    ParsingLogging.OutputValue(std::cout, NextPart.Result);
     Name.Result += "::" + NextPart.Result;
     Name.WasLegalInput = Name.WasLegalInput && NextPart.WasLegalInput;
   }
 
   if (*FirstToken == "<") {
-    ParsingLogging::Log(std::cout, true,
-                        "Beginning to read first template type");
+    ParsingLogging.Log(std::cout, true,
+                       "Beginning to read first template type");
     PartsWereLegal.push_back(
         BracketAcceptor::AcceptOpeningBracket(FirstToken, ANGLED));
     ParsedResult<std::string> FirstTemplateType = AcceptType(FirstToken);
@@ -45,15 +45,15 @@ auto AcceptType(TokenArray::iterator& FirstToken) -> ParsedResult<std::string> {
     while (*FirstToken != ">") {
       // If we are about to hit std::function argument types or similar
       if (*FirstToken == "(") {
-        ParsingLogging::Log(std::cout, true,
-                            "Beginning to accept template types after (");
+        ParsingLogging.Log(std::cout, true,
+                           "Beginning to accept template types after (");
         PartsWereLegal.push_back(
             BracketAcceptor::AcceptOpeningBracket(FirstToken, ROUNDED));
         ParsedResult<std::string> NextTemplateType = AcceptType(FirstToken);
 
-        ParsingLogging::Log(std::cout, NextTemplateType.WasLegalInput,
-                            "Pulled in template type after (");
-        ParsingLogging::OutputValue(std::cout, NextTemplateType.Result);
+        ParsingLogging.Log(std::cout, NextTemplateType.WasLegalInput,
+                           "Pulled in template type after (");
+        ParsingLogging.OutputValue(std::cout, NextTemplateType.Result);
 
         Name.Result += "(" + NextTemplateType.Result;
         Name.WasLegalInput =
@@ -61,23 +61,23 @@ auto AcceptType(TokenArray::iterator& FirstToken) -> ParsedResult<std::string> {
       }
 
       if (*FirstToken == ")") {
-        ParsingLogging::Log(std::cout, true,
-                            "Ending the template types after ), not expecting "
-                            "more types in this template pack");
+        ParsingLogging.Log(std::cout, true,
+                           "Ending the template types after ), not expecting "
+                           "more types in this template pack");
         PartsWereLegal.push_back(
             BracketAcceptor::AcceptClosingBracket(FirstToken, ROUNDED));
         Name.Result += ")";
       }
 
       if (*FirstToken == ",") {
-        ParsingLogging::Log(std::cout, true,
-                            "Beginning to accept another type in the template");
+        ParsingLogging.Log(std::cout, true,
+                           "Beginning to accept another type in the template");
         PartsWereLegal.push_back(AcceptSpecificString(FirstToken, ","));
 
         ParsedResult<std::string> NextTemplateType = AcceptType(FirstToken);
-        ParsingLogging::Log(std::cout, NextTemplateType.WasLegalInput,
-                            "Pulled in template type after ,");
-        ParsingLogging::OutputValue(std::cout, NextTemplateType.Result);
+        ParsingLogging.Log(std::cout, NextTemplateType.WasLegalInput,
+                           "Pulled in template type after ,");
+        ParsingLogging.OutputValue(std::cout, NextTemplateType.Result);
 
         Name.Result += "," + NextTemplateType.Result;
         Name.WasLegalInput =
@@ -87,16 +87,16 @@ auto AcceptType(TokenArray::iterator& FirstToken) -> ParsedResult<std::string> {
 
     PartsWereLegal.push_back(
         BracketAcceptor::AcceptClosingBracket(FirstToken, ANGLED));
-    ParsingLogging::Log(std::cout, PartsWereLegal.back(),
-                        "Looked for > to end template specification");
+    ParsingLogging.Log(std::cout, PartsWereLegal.back(),
+                       "Looked for > to end template specification");
     Name.Result += ">";
   }
 
   bool WasLegal = Name.WasLegalInput && AllOf(PartsWereLegal);
 
-  ParsingLogging::DecreaseIndentationLevel();
-  ParsingLogging::Log(std::cout, WasLegal, "Finished accepting type");
-  ParsingLogging::OutputValue(std::cout, Name.Result);
+  ParsingLogging.DecreaseIndentationLevel();
+  ParsingLogging.Log(std::cout, WasLegal, "Finished accepting type");
+  ParsingLogging.OutputValue(std::cout, Name.Result);
 
   return {WasLegal, Name.Result};
 }
@@ -165,14 +165,14 @@ auto AcceptType(TokenArray::iterator& FirstToken) -> ParsedResult<std::string> {
     Name.Result += "<" + JoinVectorOfStrings(TemplateTypeNames, ",") + ">";
   }
 
-  ParsingLogging::Log(std::cout, true, "Found type with name");
-  ParsingLogging::OutputValue(std::cout, Name.Result);
+  ParsingLogging.Log(std::cout, true, "Found type with name");
+  ParsingLogging.OutputValue(std::cout, Name.Result);
 
   bool WasLegal = Name.WasLegalInput && AllOf(OptionalPartLegality);
-  ParsingLogging::Log(
+  ParsingLogging.Log(
       std::cout, WasLegal,
       "Accepting type name legality and optional part legality vector");
-  ParsingLogging::OutputValue(std::cout, std::to_string(Name.WasLegalInput));
+  ParsingLogging.OutputValue(std::cout, std::to_string(Name.WasLegalInput));
   PrintVector(std::cout, OptionalPartLegality);
 
   Name.WasLegalInput = Name.WasLegalInput && AllOf(OptionalPartLegality);

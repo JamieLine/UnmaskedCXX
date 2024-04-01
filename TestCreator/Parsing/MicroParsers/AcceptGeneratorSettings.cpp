@@ -28,8 +28,8 @@ auto AcceptSingleGeneratorSetting(TokenArray::iterator& FirstToken)
         AcceptSpecificString(FirstToken, "GeneratorSettings"));
     PartsWereLegal.push_back(
         BracketAcceptor::AcceptClosingBracket(FirstToken, ROUNDED));
-    ParsingLogging::Log(std::cout, true,
-                        "Finished parsing GeneratorSettings cast");
+    ParsingLogging.Log(std::cout, true,
+                       "Finished parsing GeneratorSettings cast");
     PrintVector(std::cout, PartsWereLegal);
   }
 
@@ -41,9 +41,9 @@ auto AcceptSingleGeneratorSetting(TokenArray::iterator& FirstToken)
     PartsWereLegal.push_back(AcceptSpecificString(FirstToken, "."));
 
     auto Identifier = AcceptAnyToken(FirstToken);
-    ParsingLogging::Log(std::cout, Identifier.WasLegalInput,
-                        "Pulled identifier");
-    ParsingLogging::OutputValue(std::cout, Identifier.Result);
+    ParsingLogging.Log(std::cout, Identifier.WasLegalInput,
+                       "Pulled identifier");
+    ParsingLogging.OutputValue(std::cout, Identifier.Result);
     PartsWereLegal.push_back(Identifier.WasLegalInput);
 
     PartsWereLegal.push_back(AcceptSpecificString(FirstToken, "="));
@@ -65,12 +65,11 @@ auto AcceptSingleGeneratorSetting(TokenArray::iterator& FirstToken)
       PartsWereLegal.push_back(Token.WasLegalInput);
 
       if (Token.Result == "\"") {
-        ParsingLogging::Log(std::cout, true, "WE HAVE A QUOTE");
+        ParsingLogging.Log(std::cout, true, "WE HAVE A QUOTE");
       }
 
-      ParsingLogging::Log(std::cout, Token.WasLegalInput,
-                          "Added part to Value");
-      ParsingLogging::OutputValue(std::cout, Token.Result);
+      ParsingLogging.Log(std::cout, Token.WasLegalInput, "Added part to Value");
+      ParsingLogging.OutputValue(std::cout, Token.Result);
     }
 
     // if (*FirstToken == "}") {
@@ -83,8 +82,8 @@ auto AcceptSingleGeneratorSetting(TokenArray::iterator& FirstToken)
     }
 
     ToReturn[Identifier.Result] = Value;
-    ParsingLogging::Log(std::cout, true, "Pulled new value");
-    ParsingLogging::OutputValue(std::cout, Value);
+    ParsingLogging.Log(std::cout, true, "Pulled new value");
+    ParsingLogging.OutputValue(std::cout, Value);
   }
 
   PartsWereLegal.push_back(
@@ -102,10 +101,9 @@ auto AcceptGeneratorSettings(TokenArray::iterator& FirstToken)
   // We might be given no generator settings, in which case this is the end of
   // the test definiton
 
-  ParsingLogging::IncreaseIndentationLevel();
-  ParsingLogging::Log(std::cout, true,
-                      "Beginning to accept Generator Settings");
-  ParsingLogging::OutputValue(std::cout, *FirstToken);
+  ParsingLogging.IncreaseIndentationLevel();
+  ParsingLogging.Log(std::cout, true, "Beginning to accept Generator Settings");
+  ParsingLogging.OutputValue(std::cout, *FirstToken);
 
   GeneratorSettingBunch ToReturn;
   std::vector<bool> PartsWereLegal;
@@ -114,14 +112,14 @@ auto AcceptGeneratorSettings(TokenArray::iterator& FirstToken)
       BracketAcceptor::AcceptOpeningBracket(FirstToken, BRACE));
 
   if (*FirstToken == ")" || *FirstToken == "}") {
-    ParsingLogging::Log(std::cout, true, "No Generator Settings found");
+    ParsingLogging.Log(std::cout, true, "No Generator Settings found");
 
     if (*FirstToken == "}") {
       // AcceptSpecificString(FirstToken, "}");
       BracketAcceptor::AcceptClosingBracket(FirstToken, BRACE);
     }
 
-    ParsingLogging::DecreaseIndentationLevel();
+    ParsingLogging.DecreaseIndentationLevel();
     return {true, GeneratorSettingBunch()};
   }
 
@@ -144,8 +142,8 @@ auto AcceptGeneratorSettings(TokenArray::iterator& FirstToken)
   }
 
   bool WasLegal = AllOf(PartsWereLegal);
-  ParsingLogging::Log(std::cout, WasLegal,
-                      "Finished accepting Generator Settings");
-  ParsingLogging::DecreaseIndentationLevel();
+  ParsingLogging.Log(std::cout, WasLegal,
+                     "Finished accepting Generator Settings");
+  ParsingLogging.DecreaseIndentationLevel();
   return {WasLegal, ToReturn};
 }

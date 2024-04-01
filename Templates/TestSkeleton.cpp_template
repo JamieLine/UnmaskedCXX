@@ -13,11 +13,18 @@
 #include "../FILE_ADDRESS"
 #include "../Generators/AllGenerators.h"
 #include "../Generators/GeneratorParameterStore.h"
+#include "../TestIncludes/AdvancedLogging.h"
+#include "../TestIncludes/BoolToString.h"
 
 ADDITIONAL_INCLUDES
 
+
 // Returns true if and only if the contained test passed.
 bool TEST_FN_NAME() {
+  // TODO: PARAMETERISE THE STREAM
+  TestLogging.Log(std::cout, true, "Beginning to run TEST_FN_NAME");
+  TestLogging.IncreaseIndentationLevel();
+
   GeneratorParameterStore Parameters;
 
   std::vector<RETURN_TYPE> ReturnedValues;
@@ -49,11 +56,19 @@ PUSH_PARAMETERS_TO_STORE
   }
 
   bool EverythingPassed = true;
-  
+
   for (int i = 0; i < NUM_TESTS_TO_RUN; i++) {
     RETURN_TYPE& ReturnedValue = ReturnedValues[i];
     auto TestPredicate = TEST_CONDITION;
-    if (TestPredicate()) {
+
+    bool Passed = TestPredicate();
+
+    // TODO: Clean this up and make the output prettier
+    // TODO: Make this work for types for which there exists no std::to_string(T) method
+    //
+    TestLogging.Log(std::cout, Passed, std::to_string(i) + " | " + LOGGING_ARGUMENTS + " | " + std::to_string(ReturnedValue) + " | " + BoolToString(Passed));
+
+    if (Passed) {
       TEST_BODY_PASS
     }
 
@@ -62,5 +77,6 @@ PUSH_PARAMETERS_TO_STORE
     }
   }
 
+  TestLogging.Log(std::cout, EverythingPassed, "Finished running TEST_FN_NAME.");
   return EverythingPassed;
 }

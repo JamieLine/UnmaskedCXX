@@ -4,8 +4,8 @@
 
 #include "AcceptGeneratorSettings.h"
 #include "AcceptSTDFunction.h"
-#include "Logging.h"
 #include "TestCreator/Parsing/Acceptors/AcceptSpecificString.h"
+#include "TestCreator/Parsing/AdvancedLoggingWithBrackets.h"
 #include "TestCreator/Parsing/MicroParsers/AcceptLambda.h"
 #include "TestCreator/Parsing/MicroParsers/BracketAcceptor.h"
 #include "TestCreator/Structs/GeneratorSettingBunch.h"
@@ -13,9 +13,9 @@
 
 auto AcceptUnmaskedPredicateTest(TokenArray::iterator& FirstToken)
     -> ParsedResult<ParsedUnmaskedPredicateTest> {
-  ParsingLogging::Log(std::cout, true,
-                      "Beginning to parse UnmaskedPredicateTest");
-  ParsingLogging::IncreaseIndentationLevel();
+  ParsingLogging.Log(std::cout, true,
+                     "Beginning to parse UnmaskedPredicateTest");
+  ParsingLogging.IncreaseIndentationLevel();
 
   bool WasLegallyTitled =
       AcceptSpecificString(FirstToken, "UnmaskedPredicateTest");
@@ -64,9 +64,9 @@ auto AcceptUnmaskedPredicateTest(TokenArray::iterator& FirstToken)
       .GeneratorSettings = ParsedGeneratorSettings.Result,
   };
 
-  ParsingLogging::DecreaseIndentationLevel();
-  ParsingLogging::Log(std::cout, WasLegal,
-                      "Finished parsing UnmaskedPredicateTest");
+  ParsingLogging.DecreaseIndentationLevel();
+  ParsingLogging.Log(std::cout, WasLegal,
+                     "Finished parsing UnmaskedPredicateTest");
 
   return {WasLegal, Result};
 }

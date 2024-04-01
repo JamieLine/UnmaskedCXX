@@ -5,9 +5,9 @@
 #include <iterator>
 #include <utility>
 
-#include "ParsingLogging.h"
 #include "StringOperations.h"
 #include "TestCreator/Parsing/Acceptors/AcceptAnyToken.h"
+#include "TestCreator/Parsing/AdvancedLoggingWithBrackets.h"
 #include "TestCreator/Parsing/MicroParsers/BracketAcceptor.h"
 #include "VectorOperations.h"
 
@@ -36,8 +36,8 @@ auto GetCaptureAllLegalParametersSource() -> std::string {
 // it has been translated to work in the generated test
 auto AcceptLambda(TokenArray::iterator& FirstToken)
     -> ParsedResult<std::string> {
-  ParsingLogging::Log(std::cout, true, "Beginning to accept lambda");
-  ParsingLogging::IncreaseIndentationLevel();
+  ParsingLogging.Log(std::cout, true, "Beginning to accept lambda");
+  ParsingLogging.IncreaseIndentationLevel();
 
   std::vector<bool> WereBracketsLegal;
 
@@ -64,10 +64,10 @@ auto AcceptLambda(TokenArray::iterator& FirstToken)
     std::string Type = AcceptAnyToken(FirstToken).Result;
     std::string Identifier = AcceptAnyToken(FirstToken).Result;
 
-    ParsingLogging::Log(std::cout, true,
-                        "Found Type and Indentifier of parameter");
-    ParsingLogging::OutputValue(std::cout, Type);
-    ParsingLogging::OutputValue(std::cout, Identifier);
+    ParsingLogging.Log(std::cout, true,
+                       "Found Type and Indentifier of parameter");
+    ParsingLogging.OutputValue(std::cout, Type);
+    ParsingLogging.OutputValue(std::cout, Identifier);
 
     // If this is NOT a legal pair
     if (LegalParameters.find(std::make_pair(Type, Identifier)) ==
@@ -89,11 +89,11 @@ auto AcceptLambda(TokenArray::iterator& FirstToken)
         Log(std::cout, LOG, "Identifier " + Identifier + " is not legal.");
       }
 
-      ParsingLogging::Log(
+      ParsingLogging.Log(
           std::cout, false,
           "Lambda has a parameter which is not within the specified legal "
           "parameters. Check the names and types of the parameters.");
-      ParsingLogging::DecreaseIndentationLevel();
+      ParsingLogging.DecreaseIndentationLevel();
       return {false, ""};
     }
 
@@ -117,10 +117,10 @@ auto AcceptLambda(TokenArray::iterator& FirstToken)
 
   while (!(*FirstToken == "}" &&
            BracketAcceptor::GetBracketDepth() == InitialBracketDepth)) {
-    ParsingLogging::Log(std::cout, true, "Reading in value to parse lambda");
-    ParsingLogging::OutputValue(std::cout, *FirstToken);
-    ParsingLogging::Log(std::cout, true, "BracketAcceptor stack is");
-    ParsingLogging::OutputBracketAcceptorStack(std::cout);
+    ParsingLogging.Log(std::cout, true, "Reading in value to parse lambda");
+    ParsingLogging.OutputValue(std::cout, *FirstToken);
+    ParsingLogging.Log(std::cout, true, "BracketAcceptor stack is");
+    ParsingLogging.OutputBracketAcceptorStack(std::cout);
     InternalLambdaSource.push_back(*FirstToken);
 
     // We're ignoring the angled brackets as they could be a template or
@@ -148,8 +148,8 @@ auto AcceptLambda(TokenArray::iterator& FirstToken)
       FirstToken++;
     }
 
-    ParsingLogging::Log(std::cout, true, "Pulled a token for lambda.");
-    ParsingLogging::OutputBracketAcceptorStack(std::cout);
+    ParsingLogging.Log(std::cout, true, "Pulled a token for lambda.");
+    ParsingLogging.OutputBracketAcceptorStack(std::cout);
   }
 
   WereBracketsLegal.push_back(
@@ -163,8 +163,8 @@ auto AcceptLambda(TokenArray::iterator& FirstToken)
 
   PrintVector(std::cout, WereBracketsLegal);
 
-  ParsingLogging::DecreaseIndentationLevel();
-  ParsingLogging::Log(std::cout, WasLegal, "Finished parsing lambda");
+  ParsingLogging.DecreaseIndentationLevel();
+  ParsingLogging.Log(std::cout, WasLegal, "Finished parsing lambda");
 
   return {AllOf(WereBracketsLegal), FinalLambdaSource};
 }
