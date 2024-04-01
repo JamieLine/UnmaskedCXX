@@ -24,6 +24,10 @@ class Driver {
   static std::vector<
       std::pair<TestCreationContext, ParsedUnmaskedPredicateTest>>
       StoredStabilisingSetTests;
+
+  static std::vector<
+      std::pair<TestCreationContext, ParsedUnmaskedPredicateTest>>
+      StoredAlwaysReturnValueTests;
 };
 
 #endif /* TESTCREATOR_DRIVER */

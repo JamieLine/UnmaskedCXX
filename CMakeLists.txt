@@ -22,7 +22,8 @@ SET(TEST_CREATOR_PARSING_MICROPARSERS "TestCreator/Parsing/MicroParsers/AcceptGe
            "TestCreator/Parsing/MicroParsers/AcceptUnmaskedSetParameter.cpp"
            "TestCreator/Parsing/MicroParsers/AcceptUnmaskedStabilisingSetTest.cpp"
            "TestCreator/Parsing/MicroParsers/BracketAcceptor.cpp"
-           "TestCreator/Parsing/MicroParsers/AcceptUnmaskedIncludeFile.cpp")
+           "TestCreator/Parsing/MicroParsers/AcceptUnmaskedIncludeFile.cpp"
+           "TestCreator/Parsing/MicroParsers/AcceptUnmaskedAlwaysReturnValueTest.cpp")
 
 # Intentionally do not include TestCreator/Parsing/Parsers as that is old code and probably going to be removed entirely
 

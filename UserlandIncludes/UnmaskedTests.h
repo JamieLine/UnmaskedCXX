@@ -50,7 +50,7 @@ void UnmaskedStabilisingSetTest(
 }
 
 template <typename ReturnType, typename... TestedArgumentTypes>
-void UnmaskedAlwaysReturnsValueTest(
+void UnmaskedAlwaysReturnValueTest(
     std::function<ReturnType(TestedArgumentTypes...)> TestedFunction,
     ReturnType FixedValue,
     const std::vector<GeneratorSettings>& SuppliedSettings) {

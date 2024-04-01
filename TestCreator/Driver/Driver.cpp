@@ -7,6 +7,7 @@
 
 #include "Logging.h"
 #include "StringOperations.h"
+#include "TestCreator/Parsing/MicroParsers/AcceptUnmaskedAlwaysReturnValueTest.h"
 #include "TestCreator/Parsing/MicroParsers/AcceptUnmaskedIncludeFile.h"
 #include "TestCreator/Parsing/MicroParsers/AcceptUnmaskedPredicateTest.h"
 #include "TestCreator/Parsing/MicroParsers/AcceptUnmaskedSetParameter.h"
@@ -24,6 +25,9 @@ std::vector<std::pair<TestCreationContext, ParsedUnmaskedPredicateTest>>
 
 std::vector<std::pair<TestCreationContext, ParsedUnmaskedPredicateTest>>
     Driver::StoredStabilisingSetTests;
+
+std::vector<std::pair<TestCreationContext, ParsedUnmaskedPredicateTest>>
+    Driver::StoredAlwaysReturnValueTests;
 
 std::vector<Filepath> Driver::GeneratedSourceFilepaths;
 
@@ -104,6 +108,29 @@ auto Driver::ParseInputFile(const Filepath& FileAddress) -> TestCreationStatus {
       CurrentContext.CurrentTestNumber++;
     }
 
+    else if (*CurrentToken == "UnmaskedAlwaysReturnValueTest") {
+      Log(std::cout, LOG, "Found UnmaskedAlwaysReturnValueTest");
+      auto ParsedTest = AcceptUnmaskedAlwaysReturnValueTest(CurrentToken);
+      if (!ParsedTest.WasLegalInput) {
+        Log(std::cout, ERROR,
+            "Attempted to parse UnmaskedAlwaysReturnValueTest, but it was "
+            "illegal.");
+
+        PrintAround(CurrentToken, Tokens);
+        return TestCreationStatus::ATTEMPTED_ILLEGAL_PARSE;
+      }
+
+      CurrentContext.GeneratedFunctionName =
+          "UnmaskedCreatedTests_AlwaysReturnValueTest_" +
+          std::to_string(CurrentContext.CurrentTestNumber) + "_" +
+          ParsedTest.Result.TestedFunction.Name;
+
+      StoredAlwaysReturnValueTests.emplace_back(CurrentContext,
+                                                ParsedTest.Result);
+
+      CurrentContext.CurrentTestNumber++;
+    }
+
     else if (*CurrentToken == "UnmaskedSetParameter") {
       auto ParsedParameter = AcceptUnmaskedSetParameter(CurrentToken);
       if (!ParsedParameter.WasLegalInput) {
@@ -154,6 +181,32 @@ auto Driver::WriteAllStoredInputs() -> TestCreationStatus {
     if (Result.Status != TestCreationStatus::ALL_OK) {
       Log(std::cout, ERROR,
           "Attempted to write UnmaskedPredicateTest, but it was illegal.");
+      Log(std::cout, VALUE_OUTPUT, std::to_string(int(Result.Status)));
+      return Result.Status;
+    }
+
+    Filepath OutputPath(RootDir + Context.GeneratedFunctionName + "_" +
+                        std::to_string(Context.CurrentTestNumber) + ".cpp");
+
+    GeneratedSourceFilepaths.push_back(OutputPath);
+
+    OutputPath.WriteStringIntoFileOverwriting(Result.Item);
+  }
+
+  for (auto& AlwaysReturnValueTestPair : StoredAlwaysReturnValueTests) {
+    TestCreationContext& Context = AlwaysReturnValueTestPair.first;
+    ParsedUnmaskedPredicateTest& Test = AlwaysReturnValueTestPair.second;
+
+    std::cout << "WHEN WRITING, THIS IS THE CONTEXT PATH\n";
+    std::cout << Context.TestDefinitionPath.Path;
+    std::cout << std::endl;
+
+    WithStatus<std::string> Result = WriteUnmaskedPredicateTest(Context, Test);
+
+    if (Result.Status != TestCreationStatus::ALL_OK) {
+      Log(std::cout, ERROR,
+          "Attempted to write UnmaskedAlwaysReturnValueTest, but it was "
+          "illegal.");
       Log(std::cout, VALUE_OUTPUT, std::to_string(int(Result.Status)));
       return Result.Status;
     }
@@ -260,9 +313,22 @@ auto Driver::WriteMainDriverProgram() -> TestCreationStatus {
     }
     TestRunningStatements +=
         "Tests.emplace_back(\"" + Context.GeneratedFunctionName + "_" +
-        "StabilisingSetTestTest" + "\", \"" + Context.Category +
+        "StabilisingSetTest" + "\", \"" + Context.Category +
         "\", \"UnmaskedStabilisingSetTest\", " + Context.GeneratedFunctionName +
         "());\n";
+  }
+
+  for (auto& AlwaysReturnValueTest : StoredAlwaysReturnValueTests) {
+    auto& Context = AlwaysReturnValueTest.first;
+    auto& Test = AlwaysReturnValueTest.second;
+    if (Context.Category == "") {
+      Context.Category = "Uncategorised";
+    }
+    TestRunningStatements +=
+        "Tests.emplace_back(\"" + Context.GeneratedFunctionName + "_" +
+        "AlwaysReturnValueTest" + "\", \"" + Context.Category +
+        "\", \"UnmaskedAlwaysReturnValueTest\", " +
+        Context.GeneratedFunctionName + "());\n";
   }
 
   TestRunner = ReplaceAllInString(TestRunner, "RUN_TESTS_AND_PUSH_RESULTS",

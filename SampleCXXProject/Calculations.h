@@ -22,10 +22,10 @@ void TestSpecifications() {
   UnmaskedStabilisingSetTest(
       std::function<int(int, int)>(&AddInts),
       {(GeneratorSettings){.Index = 1, .Fixed = true, .Value = "1"}});
-  UnmaskedAlwaysReturnsValueTest(
+  UnmaskedAlwaysReturnValueTest(
       std::function<int(int, int)>(&AddInts), 0,
       {(GeneratorSettings){.Index = 0, .Fixed = true, .Value = "2"}});
-  UnmaskedAlwaysReturnsValueTest(
+  UnmaskedAlwaysReturnValueTest(
       std::function<int(int, int)>(&AddInts), 0,
       {(GeneratorSettings){.Index = 0, .Fixed = true, .Value = "3"},
        (GeneratorSettings){.Index = 1, .Fixed = true, .Value = "4"}});
@@ -52,6 +52,4 @@ void TestSpecifications() {
        (GeneratorSettings){.Index = 3, .GeneratorType = "Generator_int_2"}});
 }
 
-#endif /* SAMPLECXXPROJECT_CALC    auto TestPredicate = [&]() -> bool { return \
-          std::all_of(ReturnedValues.begin(), ReturnedValues.end(), [&] (int   \
-          V) { return V == ReturnedValues[0]; });};ULATIONS_H */
+#endif /* SAMPLECXXPROJECT_CALCULATIONS_H */
