@@ -8,9 +8,6 @@ struct GeneratorSettingBunch {
  public:
   std::vector<GeneratorSettingDescriptor> Settings;
 
-  // TODO: THIS BOOL NEEDS TO BECOME A PREDICATE
-  // bool IsValid;
-
   explicit GeneratorSettingBunch();
 };
 

@@ -19,6 +19,10 @@ void TestSpecifications() {
   UnmaskedSetParameter(INT_UPPER_BOUND, 100);
 
   // TODO: Make the parser ignore comments.
+  // This shouldn't come up
+  //
+  // UnmaskedPredicateTest()
+  /* UnmaskedPredicateTest() */
   UnmaskedStabilisingSetTest(
       std::function<int(int, int)>(&AddInts),
       {(GeneratorSettings){.Index = 1, .Fixed = true, .Value = "1"}});

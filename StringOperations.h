@@ -54,10 +54,11 @@ inline auto Tokenize(const std::string& ToTokenize,
 
   // We're merging these because the difference between Kept and Discarded is
   // minimal
-  vector<string> Delimiters;
+  vector<string> Delimiters = {"//", "/*"};  // Intentionally missing */
   // This could become std::merge?
   // But its expected that the delimiter strings are "small"
-  Delimiters.reserve(KeptDelimiters.size());
+  Delimiters.reserve(KeptDelimiters.size() + DiscardedDelimiters.size() +
+                     Delimiters.size());
 
   std::copy(KeptDelimiters.begin(), KeptDelimiters.end(),
             std::back_inserter(Delimiters));

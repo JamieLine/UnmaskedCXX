@@ -62,7 +62,7 @@ auto WriteUnmaskedPredicateTest(const TestCreationContext& Context,
       std::back_inserter(GeneratorTypes),
       [](std::string const& S) -> std::string { return "Generator_" + S; });
 
-  // TODO: This geneator setting handler should be its own section.
+  // TODO: This generator setting handler should be its own section.
 
   if (!ToWrite.GeneratorSettings.Settings.empty()) {
     auto& AllGeneratorSettings = ToWrite.GeneratorSettings.Settings;
@@ -277,12 +277,7 @@ auto WriteUnmaskedPredicateTest(const TestCreationContext& Context,
                                  "EverythingPassed = false;\n\tstd::cout << \" "
                                  "Test iteration failed\" << std::endl;\n");
 
-  // TODO: FINISH THIS
-
   WritingLogging.DecreaseIndentationLevel();
   WritingLogging.Log(std::cout, true, "Finished writing UnmaskedPredicateTest");
   return {ToReturn, TestCreationStatus::ALL_OK};
-
-  // ToReturn = ReplaceAllInString(ToReturn,
-  // "GENERATOR_TYPES", )
 }
