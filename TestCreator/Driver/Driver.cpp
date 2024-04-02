@@ -155,8 +155,6 @@ auto Driver::ParseInputFile(const Filepath& FileAddress) -> TestCreationStatus {
       CurrentContext.AdditionalIncludes.push_back(ParsedFile.Result);
     }
 
-    // TODO: THERES A FEW Unmasked*** THAT CANT BE ACCEPTED YET
-
     else {
       CurrentToken++;
     }

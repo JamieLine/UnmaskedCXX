@@ -8,7 +8,7 @@ const int WidthOfIndent = 4;
 
 void AdvancedLogging::Log(std::ostream& Output, bool IsOkay,
                           const std::string& Message) {
-  Output << "<PARSER> ";
+  Output << Title;
   if (!IsOkay) {
     Output << "!";
 
@@ -29,7 +29,7 @@ void AdvancedLogging::Log(std::ostream& Output, bool IsOkay,
 
 void AdvancedLogging::OutputValue(std::ostream& Output,
                                   const std::string& Value) {
-  Output << "<PARSER> ";
+  Output << Title;
   Output << std::string(WidthOfIndent * IndentationLevel, '-');
   Output << " <VALUE_OUTPUT> ";
   Output << Value;

@@ -5,7 +5,8 @@
 
 class AdvancedLogging {
  public:
-  AdvancedLogging(std::string Title) : Title(Title), IndentationLevel(0) {}
+  AdvancedLogging(std::string Title)
+      : Title("<" + Title + "> "), IndentationLevel(0) {}
 
   void Log(std::ostream& Output, bool IsOkay, const std::string& Message);
   void OutputValue(std::ostream& Output, const std::string& Value);

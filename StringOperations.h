@@ -34,6 +34,7 @@ inline auto JoinVectorOfStrings(std::vector<std::string> Strings,
                          });
 }
 
+// TODO: This probably shouldn't be inline?
 inline auto Tokenize(const std::string& ToTokenize,
                      std::vector<std::string> KeptDelimiters,
                      std::vector<std::string> DiscardedDelimiters)
@@ -104,22 +105,29 @@ inline auto Tokenize(const std::string& ToTokenize,
     string NextDelimiter =
         Delimiters[distance(DelimiterIndexes.begin(), NextDelimiterIterator)];
 
-    // We already know the next delimiter exists in `ToTokenize`
-    // It's implied by the condition to enter this loop
+    if (NextDelimiter == "//") {
+      StartIndex = ToTokenize.find("\n", StartIndex);
+    } else if (NextDelimiter == "/*") {
+      StartIndex = ToTokenize.find("*/", StartIndex);
+    } else {
+      // We already know the next delimiter exists in `ToTokenize`
+      // It's implied by the condition to enter this loop
 
-    ToReturn.push_back(
-        ToTokenize.substr(StartIndex, (*NextDelimiterIterator) - StartIndex));
-    // Some delimiters are kept, some are discarded.
-    // Where a delimiter is kept, it becomes its own token in the token stream.
+      ToReturn.push_back(
+          ToTokenize.substr(StartIndex, (*NextDelimiterIterator) - StartIndex));
+      // Some delimiters are kept, some are discarded.
+      // Where a delimiter is kept, it becomes its own token in the token
+      // stream.
 
-    // This is shorthand to make the next line easier to read.
-    // No additional code should be generated here.
-    vector<string> const& Kepts = KeptDelimiters;
+      // This is shorthand to make the next line easier to read.
+      // No additional code should be generated here.
+      vector<string> const& Kepts = KeptDelimiters;
 
-    if (std::find(Kepts.begin(), Kepts.end(), NextDelimiter) != Kepts.end()) {
-      ToReturn.push_back(NextDelimiter);
-    }  // We wish to keep the delimiters in the final result.
-    StartIndex = (*NextDelimiterIterator) + NextDelimiter.length();
+      if (std::find(Kepts.begin(), Kepts.end(), NextDelimiter) != Kepts.end()) {
+        ToReturn.push_back(NextDelimiter);
+      }  // We wish to keep the delimiters in the final result.
+      StartIndex = (*NextDelimiterIterator) + NextDelimiter.length();
+    }
 
     // Update DelimiterIndexes now that another delimiter has been processed.
     for (size_t Index = 0; Index < Delimiters.size(); Index++) {
