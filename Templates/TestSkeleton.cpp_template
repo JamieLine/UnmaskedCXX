@@ -50,7 +50,7 @@ PUSH_PARAMETERS_TO_STORE
 
     // Replace the named arguments when we call the function.
 
-    ReturnedValues[i] = FN_NAME(GENERATED_ARGUMENTS);
+    ReturnedValues.push_back(FN_NAME(GENERATED_ARGUMENTS));
 
     Parameters.ClearEverything();
   }
