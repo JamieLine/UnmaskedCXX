@@ -1,6 +1,5 @@
 #include "AcceptType.h"
 
-#include "AdvancedLogging.h"
 #include "TestCreator/Parsing/Acceptors/AcceptAnyToken.h"
 #include "TestCreator/Parsing/Acceptors/AcceptSpecificString.h"
 #include "TestCreator/Parsing/MicroParsers/BracketAcceptor.h"
@@ -100,81 +99,3 @@ auto AcceptType(TokenArray::iterator& FirstToken) -> ParsedResult<std::string> {
 
   return {WasLegal, Name.Result};
 }
-
-/*
-auto AcceptType(TokenArray::iterator& FirstToken) -> ParsedResult<std::string> {
-  // The type could be either a single token
-  // E.g. int
-  // Or an identifier after a namespace
-  // E.g. std::vector
-  // Or a template
-  // E.g. List<T>
-  // where T is yet another type subject to all of these rules
-  // or a list of types
-  // E.g. std::pair<T1, T2>
-  // Or a combination
-  // E.g. std::vector<int>
-
-  // The worst ones will be something like
-  // std::vector<std::pair<std::string, std::string>>
-
-  // This pulls the first fragment, then we check if others are needed
-  //
-  // TODO: Just rewrite this, it needs to become recursive because the original
-  // language spec should be recursive
-  auto Name = AcceptAnyToken(FirstToken);
-
-  std::vector<bool> OptionalPartLegality;
-
-  // If the first part was a namespace
-  // and it may be one of many.
-  while (*FirstToken == ":") {
-    // double colon operator
-    OptionalPartLegality.push_back(AcceptSpecificString(FirstToken, ":"));
-    OptionalPartLegality.push_back(AcceptSpecificString(FirstToken, ":"));
-
-    auto NamespacePart = AcceptAnyToken(FirstToken);
-
-    Name.Result += "::" + NamespacePart.Result;
-    Name.WasLegalInput = Name.WasLegalInput && NamespacePart.WasLegalInput;
-  }
-
-  // If the next part is a template argument
-  if (*FirstToken == "<") {
-    OptionalPartLegality.push_back(
-        BracketAcceptor::AcceptOpeningBracket(FirstToken, ANGLED));
-
-    std::vector<ParsedResult<std::string>> TemplateTypes;
-
-    // TODO: WHAT ABOUT TEMPLATE TYPES WITH ROUND BRACKETS LIKE
-    // std::function<int(int, int)>
-
-    // A template always has at least one type, but may have many
-    bool IsFirstType = true;
-    while (IsFirstType || *FirstToken == ",") {
-      TemplateTypes.push_back(AcceptType(FirstToken));
-    }
-
-    OptionalPartLegality.push_back(
-        BracketAcceptor::AcceptClosingBracket(FirstToken, ANGLED));
-
-    OptionalPartLegality.push_back(AllLegal(TemplateTypes));
-
-    auto TemplateTypeNames = ExtractResults(TemplateTypes);
-
-    Name.Result += "<" + JoinVectorOfStrings(TemplateTypeNames, ",") + ">";
-  }
-
-  ParsingLogging.Log(std::cout, true, "Found type with name");
-  ParsingLogging.OutputValue(std::cout, Name.Result);
-
-  bool WasLegal = Name.WasLegalInput && AllOf(OptionalPartLegality);
-  ParsingLogging.Log(
-      std::cout, WasLegal,
-      "Accepting type name legality and optional part legality vector");
-  ParsingLogging.OutputValue(std::cout, std::to_string(Name.WasLegalInput));
-  PrintVector(std::cout, OptionalPartLegality);
-
-  Name.WasLegalInput = Name.WasLegalInput && AllOf(OptionalPartLegality);
-  return Name;
-}*/

@@ -1,8 +1,5 @@
 #include "AcceptGeneratorSettings.h"
 
-#include <experimental/filesystem>
-
-#include "Logging.h"
 #include "TestCreator/Parsing/Acceptors/AcceptAnyToken.h"
 #include "TestCreator/Parsing/Acceptors/AcceptSpecificString.h"
 #include "TestCreator/Parsing/MicroParsers/BracketAcceptor.h"
@@ -18,9 +15,6 @@ auto AcceptSingleGeneratorSetting(TokenArray::iterator& FirstToken)
 
   GeneratorSettingDescriptor ToReturn;
 
-  // Might have a (GeneratorSettings) cast
-  // Need to generalise this
-  // TODO: that
   if (*FirstToken == "(") {
     PartsWereLegal.push_back(
         BracketAcceptor::AcceptOpeningBracket(FirstToken, ROUNDED));

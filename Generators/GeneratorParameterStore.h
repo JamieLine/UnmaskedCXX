@@ -45,8 +45,6 @@ const std::set<UnmaskedTestParameter> LegalFloatParameters = {
 };
 
 // WARNING: WEAK TYPING AHEAD
-// TODO: This really wants to become a single method with a flag to say where
-// the value has to go.
 template <typename T>
 void GeneratorParameterStore::PushParameter(UnmaskedTestParameter Param,
                                             T Value) {

@@ -1,22 +1,7 @@
 #include "GeneratorParameterStoreSeed.h"
 
-#include <algorithm>
-#include <iterator>
-#include <numeric>
-#include <set>
-
-#include "SetOperations.h"
-#include "UserlandIncludes/UnmaskedTests.h"
-
-// std::set<UnmaskedTestParameter> IntegerParameterKeys = {
-// INT_LOWER_BOUND,
-// INT_UPPER_BOUND,
-//};
-
 GeneratorParameterStoreSeed::GeneratorParameterStoreSeed() = default;
 
-// TODO(linej): Should this and the temp version be merged and have an input arg
-// which specifies temporary-ness?
 void GeneratorParameterStoreSeed::ReadInParameterDeclaration(
     std::vector<std::string>::iterator& FirstToken) {
   auto& CurrentToken = FirstToken;

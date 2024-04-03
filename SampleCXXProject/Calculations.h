@@ -18,8 +18,7 @@ void TestSpecifications() {
   UnmaskedSetParameter(INT_LOWER_BOUND, 10);
   UnmaskedSetParameter(INT_UPPER_BOUND, 100);
 
-  // TODO: Make the parser ignore comments.
-  // This shouldn't come up
+  // This shouldn't come up.
   //
   // UnmaskedPredicateTest()
   /* UnmaskedPredicateTest() */

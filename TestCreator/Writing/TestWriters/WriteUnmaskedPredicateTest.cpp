@@ -260,6 +260,7 @@ auto WriteUnmaskedPredicateTest(const TestCreationContext& Context,
       ReplaceSymbolAndLog(std::cout, ToReturn, "GENERATOR_SCRIPT_LAMBDAS",
                           JoinVectorOfStrings(GeneratorScriptLambdas, ";\n"));
 
+  // TODO: Does this actually work correctly?
   ToReturn = ReplaceSymbolAndLog(std::cout, ToReturn,
                                  "DETERMINE_PASSED_FROM_GENERATED",
                                  JoinVectorOfStrings(PassedArguments, ", "));
