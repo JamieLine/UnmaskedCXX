@@ -186,22 +186,15 @@ auto WriteUnmaskedPredicateTest(const TestCreationContext& Context,
 
   std::vector<std::string> GeneratedArguments;
 
-  for (int i = 0; i < ArgumentTypes.size(); i++) {
-    GeneratedArguments.push_back("std::get<" + std::to_string(i) +
-                                 ">(GeneratedArguments[i])");
-  }
-  ToReturn = ReplaceSymbolAndLog(std::cout, ToReturn, "GENERATED_ARGUMENTS",
-                                 JoinVectorOfStrings(GeneratedArguments, ", "));
-
   std::vector<std::string> PassedArguments;
 
-  for (auto _ : GeneratedArguments) {
+  for (auto _ : ArgumentTypes) {
     PassedArguments.push_back("");
   }
 
   std::vector<std::string> LoggingArgumentsParts;
 
-  for (int i = 0; i < GeneratedArguments.size(); i++) {
+  for (int i = 0; i < ArgumentTypes.size(); i++) {
     LoggingArgumentsParts.push_back("std::to_string(std::get<" +
                                     std::to_string(i) +
                                     ">(PassedArguments[i]))");
@@ -238,7 +231,7 @@ auto WriteUnmaskedPredicateTest(const TestCreationContext& Context,
       CurrentLambdaCounter++;
     }
 
-    if (MapContainsKey(Setting, std::string("Value"))) {
+    else if (MapContainsKey(Setting, std::string("Value"))) {
       int Index = std::stoi(Setting.at("Index"));
       // We need to clean some quotes off of the input
       //
@@ -260,9 +253,13 @@ auto WriteUnmaskedPredicateTest(const TestCreationContext& Context,
       ReplaceSymbolAndLog(std::cout, ToReturn, "GENERATOR_SCRIPT_LAMBDAS",
                           JoinVectorOfStrings(GeneratorScriptLambdas, ";\n"));
 
-  // TODO: Does this actually work correctly?
+  // TODO: 2 indentical calls of JoinVectorOfStrings, probably fine but remove
+  // if it's a performance issue
   ToReturn = ReplaceSymbolAndLog(std::cout, ToReturn,
                                  "DETERMINE_PASSED_FROM_GENERATED",
+                                 JoinVectorOfStrings(PassedArguments, ", "));
+
+  ToReturn = ReplaceSymbolAndLog(std::cout, ToReturn, "PASSED_ARGUMENTS",
                                  JoinVectorOfStrings(PassedArguments, ", "));
 
   ToReturn = ReplaceSymbolAndLog(std::cout, ToReturn, "TEST_CONDITION",
