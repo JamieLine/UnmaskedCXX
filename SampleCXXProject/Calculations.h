@@ -53,6 +53,21 @@ void TestSpecifications() {
            .GeneratorScript =
                "[&]() { return -std::get<0>(GeneratedValues); }"},
        (GeneratorSettings){.Index = 3, .GeneratorType = "Generator_int_2"}});
+
+  UnmaskedPredicateTest(
+      std::function<int(int, int)>(&AddInts),
+      [](int ReturnedValue) { return ReturnedValue == 0; },
+      {(GeneratorSettings){
+          .Index = 1,
+          .GeneratorScript =
+              "[&]() { return -std::get<0>(GeneratedValues); }"}});
+
+  UnmaskedAlwaysReturnValueTest(
+      std::function<int(int, int)>(&AddInts), 0,
+      {(GeneratorSettings){
+          .Index = 1,
+          .GeneratorScript =
+              "[&]() { return -std::get<0>(GeneratedValues); }"}});
 }
 
 #endif /* SAMPLECXXPROJECT_CALCULATIONS_H */
