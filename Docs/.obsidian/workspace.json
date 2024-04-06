@@ -1,0 +1,196 @@
+{
+  "main": {
+    "id": "4737a464444797da",
+    "type": "split",
+    "children": [
+      {
+        "id": "f10eb71f5f3a79a1",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "1f6a80ba0d4ae731",
+            "type": "leaf",
+            "state": {
+              "type": "graph",
+              "state": {}
+            }
+          },
+          {
+            "id": "71205c681139b9eb",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Test Specifications/Test Types.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "cedf390c986ed15f",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Test Specifications/`UnmaskedPredicateTest`.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "a907e76f61e15e21",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Formal Language Specification.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          }
+        ],
+        "currentTab": 3
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "74465be013ca34c8",
+    "type": "split",
+    "children": [
+      {
+        "id": "08e3c35f8a366507",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "2182fe1a18741110",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "833b0810c259a785",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "4012af2bb9f43cc0",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {}
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "efb48af395b56097",
+    "type": "split",
+    "children": [
+      {
+        "id": "e717bbd96cc3b953",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "b3168fe4b00c6194",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "Formal Language Specification.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "a8e93ea9aeeb4849",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "Formal Language Specification.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "26999fe60058f5ec",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true
+              }
+            }
+          },
+          {
+            "id": "53f40402b2408c5d",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "Formal Language Specification.md"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false
+    }
+  },
+  "active": "a907e76f61e15e21",
+  "lastOpenFiles": [
+    "Test Specifications/`UnmaskedPredicateTest`.md",
+    "Formal Language Specification.md",
+    "Test Specifications/General Test Notes.md",
+    "Test Specifications/Test Types.md",
+    "Project Goals.md",
+    "TODO.md",
+    "Validator.md",
+    "Test Specifications",
+    "Parser Architecture/Glossary.md",
+    "Parser Architecture",
+    "Welcome.md"
+  ]
+}

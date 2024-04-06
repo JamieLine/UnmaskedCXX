@@ -1,0 +1,3 @@
++ Driver - The class which contains only functions which perform Human Understandable Tasks, e.g. Parsing the tests from a single file, or writing out the test files for previously parsed tests.
++ MicroParser - A function which takes in a `TokenArray::iterator&` , parses some meaningful chunk of the incoming `TokenArray`, and moves the incoming iterator past that object. E.g. `AcceptLambda` is a MicroParser which accepts a C++ lambda function.
++ Acceptor - A function which takes in a `TokenArray::iterator&`, parses some extremely small chunk of the incoming `TokenArray`, and moves the incoming iterator past that object. E.g. `AcceptAnyToken` is an Acceptor which while move the iterator one token forwards.

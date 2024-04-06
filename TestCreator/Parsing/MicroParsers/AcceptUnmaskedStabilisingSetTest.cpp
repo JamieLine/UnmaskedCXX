@@ -2,9 +2,6 @@
 
 #include <iostream>
 
-// TODO: STABILISING SET TESTS CAN PASS ERRONEOUSLY
-// TODO: ITS BECAUSE THE RETURNED VALUES VECTOR IS EMPTY?
-
 #include "Logging.h"
 #include "TestCreator/Parsing/Acceptors/AcceptSpecificString.h"
 #include "TestCreator/Parsing/MicroParsers/AcceptGeneratorSettings.h"

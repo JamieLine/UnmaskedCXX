@@ -1,0 +1,3 @@
++ [[`UnmaskedPredicateTest`]] - A test which takes in a predicate, and determines whether or not that predicate holds true on the tested function.
++ `UnmaskedStabilisingSetTest` - A pre-written `UnmaskedPredicateTest` where the predicate is pre-defined as "All inputs generated with the given settings return the same value"
++ `UnmaskedAlwaysReturnValueTest` - A pre-written `UnmaskedPredicateTest` which accepts an additional target value, where the predicate is pre-defined as "All inputs generated with the given settings return the target value"
