@@ -16,52 +16,58 @@ float AddFloats(float A, float B) { return A + B; }
 
 void TestSpecifications() {
   UnmaskedSetParameter(INT_LOWER_BOUND, 10);
-  UnmaskedSetTempParameter(INT_UPPER_BOUND, 100);
+  UnmaskedSetParameter(INT_UPPER_BOUND, 100);
 
-  UnmaskedAlwaysReturnsValueTest(std::function<int(int, int)>(&AddInts), 0);
-
-  UnmaskedIncludeFile("SampleCXXProject/VectorCalculations.h");
-  UnmaskedSetCategory("Test Category A");
-
-  UnmaskedStabilisingSetTest(std::function<int(int, int)>(&AddInts), 0, 0);
-
-  UnmaskedSetTempParameter(INT_LOWER_BOUND, 990);
+  // This shouldn't come up.
+  //
+  // UnmaskedPredicateTest()
+  /* UnmaskedPredicateTest() */
   UnmaskedStabilisingSetTest(
-      std::function<int(int, int, int, int)>(&LinearCombination), 0, 0, 2, 0);
-  UnmaskedStabilisingSetTest(
-      std::function<int(int, int, int, int)>(&LinearCombinationWrong), 0, 0, 2,
-      0);
-  UnmaskedStabilisingSetTest(
-      std::function<int(int, int, int, int)>(&LinearCombination), 1, 0, 3, 0);
+      std::function<int(int, int)>(&AddInts),
+      {(GeneratorSettings){.Index = 1, .Fixed = true, .Value = "1"}});
+  UnmaskedAlwaysReturnValueTest(
+      std::function<int(int, int)>(&AddInts), 0,
+      {(GeneratorSettings){.Index = 0, .Fixed = true, .Value = "2"}});
+  UnmaskedAlwaysReturnValueTest(
+      std::function<int(int, int)>(&AddInts), 0,
+      {(GeneratorSettings){.Index = 0, .Fixed = true, .Value = "3"},
+       (GeneratorSettings){.Index = 1, .Fixed = true, .Value = "4"}});
 
-  UnmaskedAlwaysReturnsValueTest(std::function<int(int, int)>(&AddInts), 0, 0,
-                                 0, 1, 0);
-  UnmaskedAlwaysReturnsValueTest(std::function<int(int, int)>(&AddInts), 5, 0,
-                                 0, 1, 0);
+  UnmaskedSetCategory("Category A");
+  UnmaskedSetSeverity(LIGHT);
 
-  UnmaskedSetCategory("Test Category B");
+  UnmaskedPredicateTest(
+      std::function<int(int, int, int, int)>(&LinearCombination),
+      [](int ReturnedValue) { return ReturnedValue < 10; }, {});
 
-  UnmaskedStabilisingSetTest(std::function<float(float, float)>(&AddFloats), 0,
-                             0.0f, 1, 0.0f);
-  UnmaskedAlwaysReturnsValueTest(std::function<float(float, float)>(&AddFloats),
-                                 5.0f, 0, 0.0f, 1, 5.0f);
-  UnmaskedAlwaysReturnsValueTest(std::function<float(float, float)>(&AddFloats),
-                                 5.0f, 0, 0.0f, 1, 2.0f);
-  UnmaskedStabilisingSetTest(std::function<float(float, float)>(&AddFloats), 0,
-                             0.1f);
+  UnmaskedSetCategory("Category B");
+  UnmaskedSetSeverity(SERIOUS);
 
-  UnmaskedSetParameter(FLOAT_UPPER_BOUND, 10.0f);
+  UnmaskedIncludeFile("SampleCXXProject/Generators/Generator_int_2.h");
+  UnmaskedPredicateTest(
+      std::function<int(int, int, int, int)>(&LinearCombination),
+      [](int ReturnedValue) { return ReturnedValue != 0; },
+      {(GeneratorSettings){.Index = 1, .Fixed = true, .Value = "5"},
+       (GeneratorSettings){
+           .Index = 2,
+           .GeneratorScript =
+               "[&]() { return -std::get<0>(GeneratedValues); }"},
+       (GeneratorSettings){.Index = 3, .GeneratorType = "Generator_int_2"}});
 
-  UnmaskedSetTempParameter(FLOAT_LOWER_BOUND, -1.0f);
-  UnmaskedStabilisingSetTest(std::function<float(float, float)>(&AddFloats), 0,
-                             0.2f);
+  UnmaskedPredicateTest(
+      std::function<int(int, int)>(&AddInts),
+      [](int ReturnedValue) { return ReturnedValue == 0; },
+      {(GeneratorSettings){
+          .Index = 1,
+          .GeneratorScript =
+              "[&]() { return -std::get<0>(GeneratedValues); }"}});
 
-  UnmaskedStabilisingSetTest(std::function<float(float, float)>(&AddFloats), 1,
-                             100.0f);
-
-  UnmaskedAlwaysReturnsValueTest(
-      std::function<float(float, float, float, float)>(&Vec2DotProduct), 0, 0,
-      0.0f);
+  UnmaskedAlwaysReturnValueTest(
+      std::function<int(int, int)>(&AddInts), 0,
+      {(GeneratorSettings){
+          .Index = 1,
+          .GeneratorScript =
+              "[&]() { return -std::get<0>(GeneratedValues); }"}});
 }
 
 #endif /* SAMPLECXXPROJECT_CALCULATIONS_H */

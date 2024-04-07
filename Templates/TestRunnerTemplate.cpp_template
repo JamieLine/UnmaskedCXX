@@ -6,15 +6,11 @@ INCLUDE_TESTS
 #include <vector>
 
 #include "../TestCreator/Structs/TestResult.h"
+#include "../TestIncludes/AdvancedLogging.h"
+#include "../TestIncludes/BoolToString.h"
 
 const std::string REPORT_FILE_NAME = "UnmaskedReport.csv";
-
-std::string BoolToString(bool B) {
-  if (B) {
-    return "True";
-  }
-  return "False";
-}
+const std::string REPORT_VERSION_NUMBER = "1.1";
 
 int main(int argc, char** argv) {
   // std::vector<NameResultPair> Results;

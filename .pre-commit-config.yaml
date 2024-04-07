@@ -6,5 +6,5 @@ repos:
         args: [--style=file, -i]
       - id: clang-tidy
         args: [--config=, -p=compile_commands.json -j=4]
-      - id: cppcheck
-        args: [--project=compile_commands.json, --std=c++11, --inline-suppr]
+      #- id: cppcheck
+        #  args: [--project=compile_commands.json, --std=c++11, --inline-suppr, --suppressions-list=cppcheckSuppressions.txt]

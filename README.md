@@ -7,57 +7,11 @@
 About
 -----
 
-UnmaskedCXX is a WIP automatic test generator for C/C++, written in C++. Currently the project is only tested under C++17, but is hoping to target everything from C++11 onwards. 
+UnmaskedCXX is a WIP automatic test generator for C/C++, written in C++11. 
 
 `SampleCXXProject/` gives an example of an extremely small (header-only) library for which UnmaskedCXX can generate tests.
 
-How to Build and Run
-------------------
-
-To build the software itself, use CMake.
-
-From the root directory of this project, run
-`cmake .`
-
-And the first target will become available for your build system.
-
-That target is `TestAuthor`, which you will need to build first.
-
-On Linux/Mac, you can run
-
-`make TestAuthor`
-
-`./TestAuthor`
-
-to build and run the `TestAuthor`. Currently this will only search for `SampleCXXProject/Calculations.h` by name, however in future this will be generalised.
-
-Then re-run `cmake .` and it will generate the second target for you. The new target is `RunTests`, which by default outputs its binaries to `UnmaskedCreatedTests/`.
-
-Then run
-`make RunTests`
-
-`./UnmaskedCreatedTests/RunTests`
-
-To actually run the generated tests. The results will be fed to a file in the UnmaskedCXX root directory called `Report.csv`.
-
-If there is a problem writing any content to any file, that content will be written into the standard output to allow for easy data recovery.
-
-Usage Instructions
-------------------
-
-See `SampleCXXProject/Calculations.h` for an example.
-
-
-In a source file which contains the implementation of a function you wish to test, include `UserlandIncludes/UnmaskedTests.h` and create a new function which will never be called directly. In `SampleCXXProject/Calculations.h`, this function is `void TestSpecifications()`, but the actual name does not matter. This function should not
-appear in any compiled binaries and will never be called. 
-
-Within this new function, add the specifications of the tests you wish to run. These will take the following form.
-
-`UnmaskedTEST_TYPE(std::function<RETURN_TYPE(ARGUMENT_TYPES)>, PARAMETERS_TO_THE_TEST);`
-
-For example, to run a Stabilising Set Test on a function `int AddInts(int A, int B)`, where the argument `A` is fixed to the value `0` the test declaration will be the following.
-
-`UnmaskedStabilisingSetTest(std::function<int(int, int)>, 0, 0)`.
+THIS README WILL BE REWRITTEN SOON AS PART OF A DOCS REFACTORING.
 
 License
 -------
@@ -78,15 +32,6 @@ Requirements
 
 To run UnmaskedCXX, you will require CMake (at least version 3.12), and a C++11 compiler.
 
-To develop UnmaskedCXX, you will also require pre-commit, clang-format, clang-tidy, and cppcheck.
+To develop UnmaskedCXX, you will also require pre-commit, clang-format, and clang-tidy.
 
-Installation
-------------
 
-As UnmaskedCXX currently only scans one file by name, there is no installation needed beyond downloading the source code and running CMake if the intent is just to use the software.
-
-For developers, there is a small process to undertake.
-
-1. Clone this git repository.
-2. Install the requirements listed above for both users and developers.
-3. In the UnmaskedCXX root directory, run `pre-commit install`.

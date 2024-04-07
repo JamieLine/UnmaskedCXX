@@ -18,7 +18,7 @@ struct GeneratorParameterStoreSeed {
 
   void ResetTempParameters();
 
-  auto CreateGeneratorParameterStoreDefinition() -> std::string;
+  auto CreateGeneratorParameterStoreDefinition() const -> std::string;
 };
 
 #endif /* TESTCREATOR_STRUCTS_GENERATORPARAMETERSTORESEED_H */

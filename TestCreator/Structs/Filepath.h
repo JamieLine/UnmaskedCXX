@@ -13,7 +13,7 @@ struct Filepath {
  public:
   std::string Path;
 
-  explicit Filepath(std::string InPath) : Path(std::move(InPath)) {}
+  explicit Filepath(std::string InPath) : Path(InPath) {}
 
   // Maps a filepath to an "equivalent" legal C++ identifier
   // E.g. /home/joebloggs/downloads -> home_joebloggs_downloads
