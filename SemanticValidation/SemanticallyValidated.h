@@ -12,7 +12,7 @@ struct SemanticallyValidated {
   friend SemanticValidator;
 
  private:
-  SemanticallyValidated<T>(T InObject) : Object(InObject) {}
+  SemanticallyValidated(T InObject) : Object(InObject) {}
 };
 
 #endif /* TESTCREATOR_SEMANTICVALIDATON_SEMANTICALLYVALIDATED_H */

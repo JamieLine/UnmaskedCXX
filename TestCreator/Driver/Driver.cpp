@@ -5,7 +5,10 @@
 #include <numeric>
 #include <vector>
 
+#include "AdvancedLogging.h"
 #include "Logging.h"
+#include "SemanticValidation/SemanticValidator.h"
+#include "SemanticValidation/SemanticallyValidated.h"
 #include "StringOperations.h"
 #include "TestCreator/Parsing/MicroParsers/AcceptUnmaskedAlwaysReturnValueTest.h"
 #include "TestCreator/Parsing/MicroParsers/AcceptUnmaskedIncludeFile.h"
@@ -20,13 +23,16 @@
 #include "TestCreator/Writing/TestWriters/WriteUnmaskedPredicateTest.h"
 #include "VectorOperations.h"
 
-std::vector<std::pair<TestCreationContext, ParsedUnmaskedPredicateTest>>
+std::vector<std::pair<TestCreationContext,
+                      SemanticallyValidated<ParsedUnmaskedPredicateTest>>>
     Driver::StoredPredicateTests;
 
-std::vector<std::pair<TestCreationContext, ParsedUnmaskedPredicateTest>>
+std::vector<std::pair<TestCreationContext,
+                      SemanticallyValidated<ParsedUnmaskedPredicateTest>>>
     Driver::StoredStabilisingSetTests;
 
-std::vector<std::pair<TestCreationContext, ParsedUnmaskedPredicateTest>>
+std::vector<std::pair<TestCreationContext,
+                      SemanticallyValidated<ParsedUnmaskedPredicateTest>>>
     Driver::StoredAlwaysReturnValueTests;
 
 std::vector<Filepath> Driver::GeneratedSourceFilepaths;
@@ -83,8 +89,21 @@ auto Driver::ParseInputFile(const Filepath& FileAddress) -> TestCreationStatus {
           std::to_string(CurrentContext.CurrentTestNumber) + "_" +
           ParsedTest.Result.TestedFunction.Name;
 
-      StoredPredicateTests.emplace_back(CurrentContext, ParsedTest.Result);
-      CurrentContext.CurrentTestNumber++;
+      // We've already checked for grammatical legality.
+      auto ValidatedTest = SemanticValidator::Validate(ParsedTest.Result);
+
+      if (!ValidatedTest.DataExists) {
+        // TODO: Make this error actually usable
+        SemanticLogging.Log(
+            std::cout, false,
+            "Parsed a test which was semantically invalid, discarding.");
+      }
+
+      else {
+        StoredPredicateTests.emplace_back(CurrentContext, ValidatedTest.Data);
+
+        CurrentContext.CurrentTestNumber++;
+      }
     }
 
     else if (*CurrentToken == "UnmaskedStabilisingSetTest") {
@@ -103,9 +122,22 @@ auto Driver::ParseInputFile(const Filepath& FileAddress) -> TestCreationStatus {
           std::to_string(CurrentContext.CurrentTestNumber) + "_" +
           ParsedTest.Result.TestedFunction.Name;
 
-      StoredStabilisingSetTests.emplace_back(CurrentContext, ParsedTest.Result);
+      // We've already checked for grammatical legality.
+      auto ValidatedTest = SemanticValidator::Validate(ParsedTest.Result);
 
-      CurrentContext.CurrentTestNumber++;
+      if (!ValidatedTest.DataExists) {
+        // TODO: Make this error actually usable
+        SemanticLogging.Log(
+            std::cout, false,
+            "Parsed a test which was semantically invalid, discarding.");
+      }
+
+      else {
+        StoredStabilisingSetTests.emplace_back(CurrentContext,
+                                               ValidatedTest.Data);
+
+        CurrentContext.CurrentTestNumber++;
+      }
     }
 
     else if (*CurrentToken == "UnmaskedAlwaysReturnValueTest") {
@@ -125,10 +157,22 @@ auto Driver::ParseInputFile(const Filepath& FileAddress) -> TestCreationStatus {
           std::to_string(CurrentContext.CurrentTestNumber) + "_" +
           ParsedTest.Result.TestedFunction.Name;
 
-      StoredAlwaysReturnValueTests.emplace_back(CurrentContext,
-                                                ParsedTest.Result);
+      // We've already checked for grammatical legality.
+      auto ValidatedTest = SemanticValidator::Validate(ParsedTest.Result);
 
-      CurrentContext.CurrentTestNumber++;
+      if (!ValidatedTest.DataExists) {
+        // TODO: Make this error actually usable
+        SemanticLogging.Log(
+            std::cout, false,
+            "Parsed a test which was semantically invalid, discarding.");
+      }
+
+      else {
+        StoredAlwaysReturnValueTests.emplace_back(CurrentContext,
+                                                  ValidatedTest.Data);
+
+        CurrentContext.CurrentTestNumber++;
+      }
     }
 
     else if (*CurrentToken == "UnmaskedSetParameter") {
@@ -168,7 +212,7 @@ auto Driver::WriteAllStoredInputs() -> TestCreationStatus {
 
   for (auto& PredicateTestPair : StoredPredicateTests) {
     TestCreationContext& Context = PredicateTestPair.first;
-    ParsedUnmaskedPredicateTest& Test = PredicateTestPair.second;
+    const ParsedUnmaskedPredicateTest& Test = PredicateTestPair.second.Object;
 
     std::cout << "WHEN WRITING, THIS IS THE CONTEXT PATH\n";
     std::cout << Context.TestDefinitionPath.Path;
@@ -193,7 +237,8 @@ auto Driver::WriteAllStoredInputs() -> TestCreationStatus {
 
   for (auto& AlwaysReturnValueTestPair : StoredAlwaysReturnValueTests) {
     TestCreationContext& Context = AlwaysReturnValueTestPair.first;
-    ParsedUnmaskedPredicateTest& Test = AlwaysReturnValueTestPair.second;
+    const ParsedUnmaskedPredicateTest& Test =
+        AlwaysReturnValueTestPair.second.Object;
 
     std::cout << "WHEN WRITING, THIS IS THE CONTEXT PATH\n";
     std::cout << Context.TestDefinitionPath.Path;
@@ -220,7 +265,7 @@ auto Driver::WriteAllStoredInputs() -> TestCreationStatus {
   for (auto& StabilisingTestPair : StoredStabilisingSetTests) {
     std::cout << "MAKING STABILISING SET TEST" << std::endl;
     TestCreationContext& Context = StabilisingTestPair.first;
-    ParsedUnmaskedPredicateTest& Test = StabilisingTestPair.second;
+    const ParsedUnmaskedPredicateTest& Test = StabilisingTestPair.second.Object;
 
     bool AddedAlgorithm = false;
 

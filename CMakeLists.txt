@@ -33,6 +33,8 @@ SET(TEST_CREATOR_STRUCTS "TestCreator/Structs/Filepath.cpp"
        "TestCreator/Structs/TestCreationStatus.cpp"
        "TestCreator/Structs/GeneratorSettingBunch.cpp")
 
+SET(SEMANTIC_VALIDATION "SemanticValidation/SemanticValidator.cpp")
+
 SET(TEST_CREATOR_WRITING_FRAGMENT_WRITERS "TestCreator/Writing/FragmentWriters/WriteForLoop.cpp")
 SET(TEST_CREATOR_WRITING_TEST_WRITERS "TestCreator/Writing/TestWriters/WriteUnmaskedPredicateTest.cpp")
 
@@ -71,7 +73,8 @@ add_executable(TestAuthor Main.cpp
      ${TEST_CREATOR_PARSING_MICROPARSERS}
      ${TEST_CREATOR_STRUCTS}
      ${TEST_CREATOR_WRITING_FRAGMENT_WRITERS}
-     ${TEST_CREATOR_WRITING_TEST_WRITERS})
+     ${TEST_CREATOR_WRITING_TEST_WRITERS}
+     ${SEMANTIC_VALIDATION})
 
 target_include_directories(TestAuthor PUBLIC ${TESTED_PROJECT_INCLUDE_DIRECTORY})
 target_include_directories(TestAuthor PUBLIC ${UNMASKED_INCLUDE_DIRECTORIES})

@@ -5,6 +5,8 @@
 #include <iostream>
 #include <vector>
 
+#include "Optional.h"
+#include "SemanticValidation/SemanticallyValidated.h"
 #include "TestCreator/Parsing/AdvancedLoggingWithBrackets.h"
 #include "TestCreator/Structs/ParsedResult.h"
 #include "TestCreator/Structs/TokenArray.h"
@@ -86,6 +88,35 @@ auto ExtractResults(std::vector<ParsedResult<T>> Results) -> std::vector<T> {
 inline auto VectorContainsString(const std::vector<std::string>& Vec,
                                  std::string Target) -> bool {
   return std::find(Vec.begin(), Vec.end(), Target) != Vec.end();
+}
+
+// TODO: At least a few of these should probably not be inline
+template <typename T>
+inline auto ExtractOptionals(const std::vector<Optional<T>>& Vec)
+    -> std::vector<T> {
+  std::vector<T> ToReturn;
+  ToReturn.reserve(Vec.size());
+
+  for (const auto& OptionalItem : Vec) {
+    if (OptionalItem.DataExists) {
+      ToReturn.push_back(OptionalItem.Data);
+    }
+  }
+
+  return ToReturn;
+}
+
+template <typename T>
+inline auto ExtractValidated(const std::vector<SemanticallyValidated<T>>& Vec)
+    -> std::vector<T> {
+  std::vector<T> ToReturn;
+  ToReturn.reserve(Vec.size());
+
+  for (const auto& Item : Vec) {
+    ToReturn.push_back(Item.Object);
+  }
+
+  return ToReturn;
 }
 
 #endif /* VECTOROPERATIONS_H */

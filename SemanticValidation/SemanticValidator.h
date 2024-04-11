@@ -4,6 +4,7 @@
 #include "Optional.h"
 #include "SemanticValidation/SemanticallyValidated.h"
 #include "TestCreator/Structs/GeneratorSettingBunch.h"
+#include "TestCreator/Structs/ParsedUnmaskedPredicateTest.h"
 
 class SemanticValidator {
  public:
@@ -12,6 +13,9 @@ class SemanticValidator {
 
   static Optional<SemanticallyValidated<GeneratorSettingDescriptor>> Validate(
       GeneratorSettingDescriptor Descriptor);
+
+  static Optional<SemanticallyValidated<ParsedUnmaskedPredicateTest>> Validate(
+      ParsedUnmaskedPredicateTest Test);
 };
 
 #endif /* TESTCREATOR_SEMANTICVALIDATION_SEMANTICVALIDATOR_H */

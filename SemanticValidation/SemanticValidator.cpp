@@ -9,8 +9,7 @@
 #include "SemanticValidation/SemanticallyValidated.h"
 #include "TestCreator/Structs/GeneratorSettingBunch.h"
 #include "TestCreator/Structs/GeneratorSettingDescriptor.h"
-
-// TODO: Write Validate(UnmaskedPredicateTest) and get the driver to run it
+#include "TestCreator/Structs/ParsedUnmaskedPredicateTest.h"
 
 Optional<SemanticallyValidated<GeneratorSettingBunch>>
 SemanticValidator::Validate(GeneratorSettingBunch Bunch) {
@@ -18,7 +17,7 @@ SemanticValidator::Validate(GeneratorSettingBunch Bunch) {
                       "Beginning to check GeneratorSettingBunch");
   SemanticLogging.IncreaseIndentationLevel();
 
-  bool ToReturn;
+  bool ToReturn = true;
   for (const auto& Descriptor : Bunch.Settings) {
     if (!Validate(Descriptor).DataExists) {
       ToReturn = false;
@@ -39,9 +38,7 @@ SemanticValidator::Validate(GeneratorSettingDescriptor Descriptor) {
   if (!MapContainsKey(Descriptor, std::string("Index"))) {
     // Every bunch must contain an Index
 
-    // TODO: A) This entire loop should swap to a new function
-    // `Validate(GeneratorSettingDescriptor)`
-    // TODO: B) This should somehow be ready to produce Good Error Messages
+    // TODO: This should somehow be ready to produce Good Error Messages
     SemanticLogging.Log(std::cout, false,
                         "GeneratorSettingDescriptor had no index");
 
@@ -49,8 +46,21 @@ SemanticValidator::Validate(GeneratorSettingDescriptor Descriptor) {
         Descriptor, false);
   }
 
-  SemanticLogging.Log(std::cout, false,
-                      "GeneratorSettingDescriptor was legal.");
+  SemanticLogging.Log(std::cout, true, "GeneratorSettingDescriptor was legal.");
   return Optional<SemanticallyValidated<GeneratorSettingDescriptor>>(Descriptor,
                                                                      true);
+}
+
+Optional<SemanticallyValidated<ParsedUnmaskedPredicateTest>>
+SemanticValidator::Validate(ParsedUnmaskedPredicateTest Test) {
+  // TODO: Maybe Validate the other fields
+
+  SemanticLogging.Log(std::cout, true, "Checking ParsedUnmaskedPredicateTest");
+  SemanticLogging.IncreaseIndentationLevel();
+  bool ToReturn = Validate(Test.GeneratorSettings).DataExists;
+  SemanticLogging.DecreaseIndentationLevel();
+  SemanticLogging.Log(std::cout, ToReturn,
+                      "Finished checking ParsedUnmaskedPredicateTest");
+  return Optional<SemanticallyValidated<ParsedUnmaskedPredicateTest>>(Test,
+                                                                      ToReturn);
 }
