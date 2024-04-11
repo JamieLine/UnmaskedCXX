@@ -21,5 +21,6 @@ class AdvancedLogging {
 
 static AdvancedLogging WritingLogging("WRITER");
 static AdvancedLogging TestLogging("TEST");
+static AdvancedLogging SemanticLogging("SEMANTIC");
 
 #endif /* TESTINCLUDES_ADVANCEDLOGGING_H */

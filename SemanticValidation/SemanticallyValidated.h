@@ -1,12 +1,13 @@
 #ifndef TESTCREATOR_SEMANTICVALIDATON_SEMANTICALLYVALIDATED_H
 #define TESTCREATOR_SEMANTICVALIDATON_SEMANTICALLYVALIDATED_H
 
-#include "SemanticValidator.h"
+// Forward declaration to remove a recursion issue class SemanticValidator;
+class SemanticValidator;
 
 template <typename T>
 struct SemanticallyValidated {
  public:
-  T Object;
+  const T Object;
 
   friend SemanticValidator;
 
