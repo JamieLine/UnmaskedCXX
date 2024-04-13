@@ -34,12 +34,7 @@ TokenArray::TokenArray(std::string ToTokenize, std::vector<char> KeptDelimiters,
        CurrentIter++) {
     const char CurrentChar = *CurrentIter;
 
-    std::cout << "LOOP ITER" << std::endl;
-
     if (VectorContainsChar(KeptDelimiters, CurrentChar)) {
-      std::cout << "KEPT DELIM FOUND" << std::endl;
-
-      std::cout << CurrentChar << std::endl;
       std::string TokenText = AsString(CurrentToken);
 
       auto TokenPair = MakeRichRawTokenPair(TokenText, CurrentLineNumber,
@@ -65,9 +60,6 @@ TokenArray::TokenArray(std::string ToTokenize, std::vector<char> KeptDelimiters,
 
     else if ((VectorContainsChar(DiscardedDelimiters, CurrentChar)) ||
              (std::isspace(static_cast<unsigned char>(CurrentChar)) != 0)) {
-      std::cout << "DISCARDED DELIM FOUND" << std::endl;
-      std::cout << CurrentChar << std::endl;
-
       // If we have multiple discarded delimiters or whitespace in a row, place
       // all of them onto the previous RichToken and let the RawTokens ignore it
       if (CurrentToken.empty()) {
@@ -112,7 +104,6 @@ TokenArray::TokenArray(std::string ToTokenize, std::vector<char> KeptDelimiters,
     // the previous RichToken and if the comment is at the start then somehow
     // holding it aside until you have another token to glue it to the start of
     else if (CurrentChar == '/') {
-      std::cout << "FOUND A SLASH" << std::endl;
       if (*(CurrentIter + 1) == '*') {
         // We read in "/*", read until the opposite
 
@@ -141,7 +132,6 @@ TokenArray::TokenArray(std::string ToTokenize, std::vector<char> KeptDelimiters,
     }
 
     else {
-      std::cout << "FOUND SOMETHING ELSE" << std::endl;
       CurrentToken.push_back(CurrentChar);
     }
 
