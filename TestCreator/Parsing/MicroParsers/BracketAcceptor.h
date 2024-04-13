@@ -27,9 +27,9 @@ enum BracketHalf {
 
 class BracketAcceptor {
  public:
-  static auto AcceptOpeningBracket(TokenArray::iterator& FirstToken,
+  static auto AcceptOpeningBracket(TokenArray::RawTokenIterator& FirstToken,
                                    BracketType Type) -> bool;
-  static auto AcceptClosingBracket(TokenArray::iterator& FirstToken,
+  static auto AcceptClosingBracket(TokenArray::RawTokenIterator& FirstToken,
                                    BracketType Type) -> bool;
 
   static auto GetBracketDepth() -> std::size_t;

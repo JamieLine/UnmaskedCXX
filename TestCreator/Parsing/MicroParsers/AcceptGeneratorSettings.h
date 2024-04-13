@@ -5,7 +5,7 @@
 #include "TestCreator/Structs/ParsedResult.h"
 #include "TestCreator/Structs/TokenArray.h"
 
-auto AcceptGeneratorSettings(TokenArray::iterator& FirstToken)
+auto AcceptGeneratorSettings(TokenArray::RawTokenIterator& FirstToken)
     -> ParsedResult<GeneratorSettingBunch>;
 
 #endif /* TESTCREATOR_MICROPARSERS_ACCEPTGENERATORSETTINGS_H */

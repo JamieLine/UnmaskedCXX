@@ -15,7 +15,8 @@
 #include "TestCreator/Structs/ParsedUnmaskedPredicateTest.h"
 #include "VectorOperations.h"
 
-auto AcceptUnmaskedAlwaysReturnValueTest(TokenArray::iterator& FirstToken)
+auto AcceptUnmaskedAlwaysReturnValueTest(
+    TokenArray::RawTokenIterator& FirstToken)
     -> ParsedResult<ParsedUnmaskedPredicateTest> {
   ParsingLogging.Log(std::cout, true,
                      "Beginning to parse UnmaskedAlwaysReturnValueTest");

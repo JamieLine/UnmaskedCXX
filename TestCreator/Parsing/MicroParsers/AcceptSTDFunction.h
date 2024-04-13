@@ -5,7 +5,7 @@
 #include "TestCreator/Structs/ParsedResult.h"
 #include "TestCreator/Structs/TokenArray.h"
 
-auto AcceptSTDFunction(TokenArray::iterator& FirstToken)
+auto AcceptSTDFunction(TokenArray::RawTokenIterator& FirstToken)
     -> ParsedResult<ParsedFunction>;
 
 #endif /* TESTCREATOR_MICROPARSERS_ACCEPTSTDFUNCTION_H */

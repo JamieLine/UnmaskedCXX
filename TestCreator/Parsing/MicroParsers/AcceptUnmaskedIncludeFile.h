@@ -7,6 +7,6 @@
 #include "TestCreator/Structs/TokenArray.h"
 
 ParsedResult<std::string> AcceptUnmaskedIncludeFile(
-    TokenArray::iterator& FirstToken);
+    TokenArray::RawTokenIterator& FirstToken);
 
 #endif /* TESTCREATOR_PARSING_MICROPARSERS_ACCEPTUNMASKEDINCLUDEFILE */

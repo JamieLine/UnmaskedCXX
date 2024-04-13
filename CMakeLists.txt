@@ -31,7 +31,8 @@ SET(TEST_CREATOR_PARSING_MICROPARSERS "TestCreator/Parsing/MicroParsers/AcceptGe
 SET(TEST_CREATOR_STRUCTS "TestCreator/Structs/Filepath.cpp"
        "TestCreator/Structs/GeneratorParameterStoreSeed.cpp"
        "TestCreator/Structs/TestCreationStatus.cpp"
-       "TestCreator/Structs/GeneratorSettingBunch.cpp")
+       "TestCreator/Structs/GeneratorSettingBunch.cpp"
+       "TestCreator/Structs/TokenArray.cpp")
 
 SET(TEST_CREATOR_WRITING_FRAGMENT_WRITERS "TestCreator/Writing/FragmentWriters/WriteForLoop.cpp")
 SET(TEST_CREATOR_WRITING_TEST_WRITERS "TestCreator/Writing/TestWriters/WriteUnmaskedPredicateTest.cpp")

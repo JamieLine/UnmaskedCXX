@@ -4,7 +4,7 @@
 #include "AcceptIndexAsString.h"
 #include "TestCreator/Parsing/Acceptors/AcceptSpecificString.h"
 
-auto AcceptIndexValuePair(TokenArray::iterator& FirstToken)
+auto AcceptIndexValuePair(TokenArray::RawTokenIterator& FirstToken)
     -> ParsedResult<std::pair<std::string, std::string>> {
   ParsedResult<std::string> Index = AcceptIndexAsString(FirstToken);
 

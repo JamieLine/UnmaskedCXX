@@ -7,7 +7,8 @@
 #include "TestCreator/Structs/TokenArray.h"
 #include "VectorOperations.h"
 
-auto AcceptType(TokenArray::iterator& FirstToken) -> ParsedResult<std::string> {
+auto AcceptType(TokenArray::RawTokenIterator& FirstToken)
+    -> ParsedResult<std::string> {
   ParsingLogging.Log(std::cout, true, "Beginning to accept type");
   ParsingLogging.IncreaseIndentationLevel();
 

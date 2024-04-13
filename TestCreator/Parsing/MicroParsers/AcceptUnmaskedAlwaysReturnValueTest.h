@@ -8,7 +8,8 @@
 // This intentionally returns a different test.
 // This test is effectively shorthand presented
 // to the user.
-auto AcceptUnmaskedAlwaysReturnValueTest(TokenArray::iterator& FirstToken)
+auto AcceptUnmaskedAlwaysReturnValueTest(
+    TokenArray::RawTokenIterator& FirstToken)
     -> ParsedResult<ParsedUnmaskedPredicateTest>;
 
 #endif /* TESTCREATOR_MICROPARSERS_ACCEPTUNMASKEDALWAYSRETURNVALUETEST_H */

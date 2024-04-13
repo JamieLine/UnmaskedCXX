@@ -5,7 +5,7 @@
 #include "TestCreator/Parsing/MicroParsers/BracketAcceptor.h"
 #include "TestCreator/Structs/ParsedResult.h"
 
-auto AcceptUnmaskedSetParameter(TokenArray::iterator& FirstToken)
+auto AcceptUnmaskedSetParameter(TokenArray::RawTokenIterator& FirstToken)
     -> ParsedResult<std::pair<std::string, std::string>> {
   bool IsLegallyTitled =
       AcceptSpecificString(FirstToken, "UnmaskedSetParameter");
