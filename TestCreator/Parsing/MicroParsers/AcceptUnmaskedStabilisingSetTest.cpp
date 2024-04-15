@@ -14,7 +14,7 @@
 #include "TestCreator/Structs/ParsedUnmaskedPredicateTest.h"
 #include "VectorOperations.h"
 
-auto AcceptUnmaskedStabilisingSetTest(TokenArray::iterator& FirstToken)
+auto AcceptUnmaskedStabilisingSetTest(TokenArray::RawTokenIterator& FirstToken)
     -> ParsedResult<ParsedUnmaskedPredicateTest> {
   ParsingLogging.Log(std::cout, true,
                      "Beginning to parse UnmaskedStabilisingSetTest");

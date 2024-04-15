@@ -4,7 +4,7 @@
 
 #include "TestCreator/Parsing/AdvancedLoggingWithBrackets.h"
 
-auto AcceptSpecificString(TokenArray::iterator& FirstToken,
+auto AcceptSpecificString(TokenArray::RawTokenIterator& FirstToken,
                           std::string TargetString) -> bool {
   bool ToReturn = (*FirstToken == TargetString);
   ParsingLogging.IncreaseIndentationLevel();

@@ -13,7 +13,7 @@ const std::set<std::pair<std::string, std::string>> LegalParameters = {
 
 auto GetCaptureAllLegalParametersSource() -> std::string;
 
-auto AcceptLambda(TokenArray::iterator& FirstToken)
+auto AcceptLambda(TokenArray::RawTokenIterator& FirstToken)
     -> ParsedResult<std::string>;
 
 #endif /* TESTCREATOR_MICROPARSERS_ACCEPTLAMBDA_H */

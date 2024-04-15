@@ -2,7 +2,7 @@
 
 #include <algorithm>
 
-auto AcceptIndexAsString(TokenArray::iterator& FirstToken)
+auto AcceptIndexAsString(TokenArray::RawTokenIterator& FirstToken)
     -> ParsedResult<std::string> {
   // Its an index if its an integer at least 0
   // which is equivalent to every char being a digit

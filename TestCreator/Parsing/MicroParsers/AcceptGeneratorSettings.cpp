@@ -9,7 +9,7 @@
 #include "TestCreator/Structs/TokenArray.h"
 #include "VectorOperations.h"
 
-auto AcceptSingleGeneratorSetting(TokenArray::iterator& FirstToken)
+auto AcceptSingleGeneratorSetting(TokenArray::RawTokenIterator& FirstToken)
     -> ParsedResult<GeneratorSettingDescriptor> {
   std::vector<bool> PartsWereLegal;
 
@@ -90,7 +90,7 @@ auto AcceptSingleGeneratorSetting(TokenArray::iterator& FirstToken)
   return {AllOf(PartsWereLegal), ToReturn};
 }
 
-auto AcceptGeneratorSettings(TokenArray::iterator& FirstToken)
+auto AcceptGeneratorSettings(TokenArray::RawTokenIterator& FirstToken)
     -> ParsedResult<GeneratorSettingBunch> {
   // We might be given no generator settings, in which case this is the end of
   // the test definiton

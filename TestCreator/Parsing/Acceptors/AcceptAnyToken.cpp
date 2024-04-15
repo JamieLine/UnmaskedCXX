@@ -4,7 +4,7 @@
 
 #include "TestCreator/Parsing/AdvancedLoggingWithBrackets.h"
 #include "TestCreator/Parsing/MicroParsers/BracketAcceptor.h"
-auto AcceptAnyToken(TokenArray::iterator& FirstToken)
+auto AcceptAnyToken(TokenArray::RawTokenIterator& FirstToken)
     -> ParsedResult<std::string> {
   if (*FirstToken == "{") {
     ParsingLogging.Log(std::cout, true, "Parsing { as any token");

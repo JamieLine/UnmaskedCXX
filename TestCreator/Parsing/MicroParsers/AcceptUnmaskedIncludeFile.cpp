@@ -11,7 +11,7 @@
 #include "VectorOperations.h"
 
 ParsedResult<std::string> AcceptUnmaskedIncludeFile(
-    TokenArray::iterator& FirstToken) {
+    TokenArray::RawTokenIterator& FirstToken) {
   std::vector<bool> PartsWereLegal;
 
   // Accept the marker, the opening bracket, and the opening quote

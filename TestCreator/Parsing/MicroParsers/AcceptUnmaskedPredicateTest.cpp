@@ -11,7 +11,7 @@
 #include "TestCreator/Structs/GeneratorSettingBunch.h"
 #include "VectorOperations.h"
 
-auto AcceptUnmaskedPredicateTest(TokenArray::iterator& FirstToken)
+auto AcceptUnmaskedPredicateTest(TokenArray::RawTokenIterator& FirstToken)
     -> ParsedResult<ParsedUnmaskedPredicateTest> {
   ParsingLogging.Log(std::cout, true,
                      "Beginning to parse UnmaskedPredicateTest");

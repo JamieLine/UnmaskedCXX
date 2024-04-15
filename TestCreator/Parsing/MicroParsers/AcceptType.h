@@ -4,6 +4,7 @@
 #include "TestCreator/Structs/ParsedResult.h"
 #include "TestCreator/Structs/TokenArray.h"
 
-auto AcceptType(TokenArray::iterator& FirstToken) -> ParsedResult<std::string>;
+auto AcceptType(TokenArray::RawTokenIterator& FirstToken)
+    -> ParsedResult<std::string>;
 
 #endif /* TESTCREATOR_MICROPARSERS_ACCEPTTYPE_H */

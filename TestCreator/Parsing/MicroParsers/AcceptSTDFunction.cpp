@@ -12,7 +12,7 @@
 #include "TestCreator/Structs/ParsedFunction.h"
 #include "TestCreator/Structs/ParsedResult.h"
 
-auto AcceptSTDFunction(TokenArray::iterator &FirstToken)
+auto AcceptSTDFunction(TokenArray::RawTokenIterator& FirstToken)
     -> ParsedResult<ParsedFunction> {
   ParsingLogging.Log(std::cout, true, "Beginning to accept STD function");
   ParsingLogging.IncreaseIndentationLevel();

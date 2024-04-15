@@ -9,8 +9,8 @@
 
 std::vector<BracketType> BracketAcceptor::CurrentlyOpenBrackets;
 
-auto BracketAcceptor::AcceptOpeningBracket(TokenArray::iterator& FirstToken,
-                                           BracketType Type) -> bool {
+auto BracketAcceptor::AcceptOpeningBracket(
+    TokenArray::RawTokenIterator& FirstToken, BracketType Type) -> bool {
   ParsingLogging.Log(std::cout, true,
                      "BracketAcceptor is taking in a new bracket");
   bool GotToken = AcceptSpecificString(FirstToken, GetOpeningBrackets(Type));
@@ -25,8 +25,8 @@ auto BracketAcceptor::AcceptOpeningBracket(TokenArray::iterator& FirstToken,
   return true;
 }
 
-auto BracketAcceptor::AcceptClosingBracket(TokenArray::iterator& FirstToken,
-                                           BracketType Type) -> bool {
+auto BracketAcceptor::AcceptClosingBracket(
+    TokenArray::RawTokenIterator& FirstToken, BracketType Type) -> bool {
   bool GotToken = AcceptSpecificString(FirstToken, GetClosingBrackets(Type));
 
   ParsingLogging.OutputBracketAcceptorStack(std::cout);

@@ -8,7 +8,7 @@
 // This intentionally returns a different test.
 // This test is effectively shorthand presented
 // to the user.
-auto AcceptUnmaskedStabilisingSetTest(TokenArray::iterator& FirstToken)
+auto AcceptUnmaskedStabilisingSetTest(TokenArray::RawTokenIterator& FirstToken)
     -> ParsedResult<ParsedUnmaskedPredicateTest>;
 
 #endif /* TESTCREATOR_MICROPARSERS_ACCEPTUNMASKEDSTABILISINGSETTEST_H */

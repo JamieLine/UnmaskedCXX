@@ -34,7 +34,7 @@ auto GetCaptureAllLegalParametersSource() -> std::string {
 
 // This function returns the source of the lambda function AFTER
 // it has been translated to work in the generated test
-auto AcceptLambda(TokenArray::iterator& FirstToken)
+auto AcceptLambda(TokenArray::RawTokenIterator& FirstToken)
     -> ParsedResult<std::string> {
   ParsingLogging.Log(std::cout, true, "Beginning to accept lambda");
   ParsingLogging.IncreaseIndentationLevel();

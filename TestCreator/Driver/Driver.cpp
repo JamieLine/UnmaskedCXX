@@ -46,12 +46,12 @@ auto Driver::ParseInputFile(const Filepath& FileAddress) -> TestCreationStatus {
 
   // We wish to tokenize this file but some delimiters are important and some
   // can be discarded. Broadly, it is important if it carries specific meaning.
-  const std::vector<std::string> KeptDelimiters = {
-      "&", ".", ",", ";", "(", ")", "{", "}", "[", "]", "<", ">", "\""};
-  const std::vector<std::string> DiscardedDelimiters = {
-      " ",
-      "\n",
-      "\t",
+  const std::vector<char> KeptDelimiters = {'&', '.', ',', ';', '(', ')', '{',
+                                            '}', '[', ']', '<', '>', '\"'};
+  const std::vector<char> DiscardedDelimiters = {
+      ' ',
+      '\n',
+      '\t',
   };
 
   TestCreationContext CurrentContext(FileAddress);
@@ -60,13 +60,16 @@ auto Driver::ParseInputFile(const Filepath& FileAddress) -> TestCreationStatus {
   std::cout << CurrentContext.TestDefinitionPath.Path;
   std::cout << std::endl;
 
-  TokenArray Tokens = Tokenize(InputFile, KeptDelimiters, DiscardedDelimiters);
+  TokenArray Tokens(InputFile, KeptDelimiters, DiscardedDelimiters);
 
-  TokenArray::iterator CurrentToken = Tokens.begin();
+  // TODO: REMOVE
+  Tokens.DEBUG_OutputBothArrays();
+
+  TokenArray::RawTokenIterator CurrentToken = Tokens.RawBegin();
 
   // THE OLD VERSION OF THIS USED A MAP TO FIND NEARBY TOKENS WHICH MAY BE WAY
   // FASTER? OR MAYBE SLOWER?
-  while (CurrentToken != Tokens.end()) {
+  while (CurrentToken != Tokens.RawEnd()) {
     // This really wants to be a switch statement but those are not allowed on
     // strings
 
@@ -94,7 +97,7 @@ auto Driver::ParseInputFile(const Filepath& FileAddress) -> TestCreationStatus {
             "Attempted to parse UnmaskedStabilisingSetTest, but it was "
             "illegal.");
 
-        PrintAround(CurrentToken, Tokens);
+        //   PrintAround(CurrentToken, Tokens);
         return TestCreationStatus::ATTEMPTED_ILLEGAL_PARSE;
       }
 
@@ -116,7 +119,7 @@ auto Driver::ParseInputFile(const Filepath& FileAddress) -> TestCreationStatus {
             "Attempted to parse UnmaskedAlwaysReturnValueTest, but it was "
             "illegal.");
 
-        PrintAround(CurrentToken, Tokens);
+        //        PrintAround(CurrentToken, Tokens);
         return TestCreationStatus::ATTEMPTED_ILLEGAL_PARSE;
       }
 

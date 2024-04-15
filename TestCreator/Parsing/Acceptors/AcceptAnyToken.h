@@ -4,7 +4,7 @@
 #include "TestCreator/Structs/ParsedResult.h"
 #include "TestCreator/Structs/TokenArray.h"
 
-auto AcceptAnyToken(TokenArray::iterator& FirstToken)
+auto AcceptAnyToken(TokenArray::RawTokenIterator& FirstToken)
     -> ParsedResult<std::string>;
 
 #endif /* TESTCREATOR_ACCEPTORS_ACCEPTANYTOKEN_H */

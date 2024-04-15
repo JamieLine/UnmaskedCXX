@@ -7,7 +7,7 @@
 #include "TestCreator/Structs/ParsedResult.h"
 #include "TestCreator/Structs/TokenArray.h"
 
-auto AcceptUnmaskedSetParameter(TokenArray::iterator& FirstToken)
+auto AcceptUnmaskedSetParameter(TokenArray::RawTokenIterator& FirstToken)
     -> ParsedResult<std::pair<std::string, std::string>>;
 
 #endif /* TESTCREATOR_MICROPARSERS_ACCEPTUNMASKEDSETPARAMETER */
