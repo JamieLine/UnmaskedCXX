@@ -8,6 +8,7 @@
 #include "TestCreator/Parsing/AdvancedLoggingWithBrackets.h"
 #include "TestCreator/Parsing/MicroParsers/AcceptLambda.h"
 #include "TestCreator/Parsing/MicroParsers/BracketAcceptor.h"
+#include "TestCreator/Parsing/PerformSubTask.h"
 #include "TestCreator/Structs/GeneratorSettingBunch.h"
 #include "VectorOperations.h"
 
@@ -25,7 +26,8 @@ auto AcceptUnmaskedPredicateTest(TokenArray::RawTokenIterator& FirstToken)
   std::vector<bool> HadLegalCommas;
   std::vector<bool> HadLegalGeneratorSettings;
 
-  ParsedResult<ParsedFunction> TestedFunction = AcceptSTDFunction(FirstToken);
+  ParsedResult<ParsedFunction> TestedFunction =
+      PerformSubTask("Accepting STD Function", AcceptSTDFunction, FirstToken);
   HadLegalCommas.push_back(AcceptSpecificString(FirstToken, ","));
   ParsedResult<std::string> LambdaSource = AcceptLambda(FirstToken);
   HadLegalCommas.push_back(AcceptSpecificString(FirstToken, ","));

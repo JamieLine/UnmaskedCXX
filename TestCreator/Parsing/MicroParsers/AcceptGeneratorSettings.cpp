@@ -1,8 +1,12 @@
 #include "AcceptGeneratorSettings.h"
 
 #include "TestCreator/Parsing/Acceptors/AcceptAnyToken.h"
+#include "TestCreator/Parsing/Acceptors/AcceptCastToType.h"
 #include "TestCreator/Parsing/Acceptors/AcceptSpecificString.h"
+#include "TestCreator/Parsing/MicroParsers/AcceptCastToType.h"
+#include "TestCreator/Parsing/MicroParsers/AcceptIdentifierValuePair.h"
 #include "TestCreator/Parsing/MicroParsers/BracketAcceptor.h"
+#include "TestCreator/Parsing/PerformSubTask.h"
 #include "TestCreator/Structs/GeneratorSettingBunch.h"
 #include "TestCreator/Structs/GeneratorSettingDescriptor.h"
 #include "TestCreator/Structs/ParsedResult.h"
@@ -16,6 +20,12 @@ auto AcceptSingleGeneratorSetting(TokenArray::RawTokenIterator& FirstToken)
   GeneratorSettingDescriptor ToReturn;
 
   if (*FirstToken == "(") {
+
+    bool CastWasLegal = PerformSubTask("Parsing cast to GeneratorSettings", &AcceptCastToType, FirstToken, std::string("GeneratorSettings"));
+    if (!CastWasLegal) {
+      FirstToken.GetCurrentTask()->PushErrorMessage("Saw an opening bracket which appeared to be part of a cast to GeneratorSettings, which then failed.");
+    }
+    /*
     PartsWereLegal.push_back(
         BracketAcceptor::AcceptOpeningBracket(FirstToken, ROUNDED));
     PartsWereLegal.push_back(
@@ -24,14 +34,27 @@ auto AcceptSingleGeneratorSetting(TokenArray::RawTokenIterator& FirstToken)
         BracketAcceptor::AcceptClosingBracket(FirstToken, ROUNDED));
     ParsingLogging.Log(std::cout, true,
                        "Finished parsing GeneratorSettings cast");
-    PrintVector(std::cout, PartsWereLegal);
+    PrintVector(std::cout, PartsWereLegal);*/
   }
 
-  PartsWereLegal.push_back(
-      BracketAcceptor::AcceptOpeningBracket(FirstToken, BRACE));
+  bool ListOpeningBraceWasLegal = BracketAcceptor::AcceptOpeningBracket(FirstToken, BRACE);
+  if (!ListOpeningBraceWasLegal) {
+    std::string PreviousToken = *(FirstToken - 1);
+    FirstToken.GetCurrentTask()->PushErrorMessage("Could not find opening brace which begins a GeneratorSetting definition. Expected '{', and found " + PreviousToken);
+    return {false, std::map<std::string, std::string>()};
+  }
+
+  /*PartsWereLegal.push_back(
+      BracketAcceptor::AcceptOpeningBracket(FirstToken, BRACE));*/
+
+
   while (*FirstToken != "}") {
     // Perform a full legality check on something of the form
     // ".{Identifier} = {Value}"
+    // TODO: Make this entire section a sub task.
+
+    auto IdentifierValuePair = PerformSubTask("Attempting to find identifier-value pair as part of a generator setting", AcceptIdentifierValuePair, FirstToken);
+    
     PartsWereLegal.push_back(AcceptSpecificString(FirstToken, "."));
 
     auto Identifier = AcceptAnyToken(FirstToken);
@@ -48,6 +71,10 @@ auto AcceptSingleGeneratorSetting(TokenArray::RawTokenIterator& FirstToken)
 
     // This has to check the depth because the value can contain a lambda which
     // doesn't need full parsing
+    // A comma means that this is not the last setting
+    // And a brace at the starting depth means this is the last setting.
+
+    // THE RIGHT WAY
     while (*FirstToken != "," &&
            (!(*FirstToken == "}" &&
               BracketAcceptor::GetBracketDepth() == StartingBracketDepth))) {

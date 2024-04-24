@@ -38,6 +38,7 @@ SET(TEST_CREATOR_WRITING_FRAGMENT_WRITERS "TestCreator/Writing/FragmentWriters/W
 SET(TEST_CREATOR_WRITING_TEST_WRITERS "TestCreator/Writing/TestWriters/WriteUnmaskedPredicateTest.cpp")
 
 SET(TEST_DRIVER "TestCreator/Driver/Driver.cpp")
+SET(ERROR_WRITER "TestCreator/ErrorWriter/ErrorWriter.cpp")
 
 #SET(TEST_AUTHOR_FILES "TestCreator/Parsing/Parsers/CreateStabilisingSetTest.cpp"
 #					  "TestCreator/Parsing/Parsers/CreateAlwaysReturnValueTest.cpp"
@@ -72,7 +73,8 @@ add_executable(TestAuthor Main.cpp
      ${TEST_CREATOR_PARSING_MICROPARSERS}
      ${TEST_CREATOR_STRUCTS}
      ${TEST_CREATOR_WRITING_FRAGMENT_WRITERS}
-     ${TEST_CREATOR_WRITING_TEST_WRITERS})
+     ${TEST_CREATOR_WRITING_TEST_WRITERS}
+     ${ERROR_WRITER})
 
 target_include_directories(TestAuthor PUBLIC ${TESTED_PROJECT_INCLUDE_DIRECTORY})
 target_include_directories(TestAuthor PUBLIC ${UNMASKED_INCLUDE_DIRECTORIES})

@@ -2,10 +2,12 @@
 
 #include <algorithm>
 
+#include "Task.h"
 #include "TestCreator/Structs/RichToken.h"
 #include "VectorOperations.h"
 
-TokenArray::TokenArray(std::string ToTokenize, std::vector<char> KeptDelimiters,
+TokenArray::TokenArray(std::string TaskDescription, std::string ToTokenize,
+                       std::vector<char> KeptDelimiters,
                        std::vector<char> DiscardedDelimiters) {
   // TODO: TEST ALL OF THIS
   //
@@ -160,7 +162,13 @@ TokenArray::TokenArray(std::string ToTokenize, std::vector<char> KeptDelimiters,
   RichTokens.erase(std::remove_if(RichTokens.begin(), RichTokens.end(),
                                   [](RichToken R) { return R.Text.empty(); }),
                    RichTokens.end());
+
+  // Now we set up the error handling infrastructure
+  RootTask = new Task(TaskDescription, nullptr, RawBegin());
+  CurrentTask = RootTask;
 }
+
+TokenArray::~TokenArray() { delete RootTask; }
 
 void TokenArray::DEBUG_OutputBothArrays() {
   for (auto RawIter = RawBegin(); RawIter != RawEnd(); RawIter++) {
@@ -181,3 +189,20 @@ void TokenArray::DEBUG_OutputBothArrays() {
     std::cout << std::endl;
   }
 }
+
+/*template<typename ReturnType, typename... ArgumentTypesWithoutToken>
+ReturnType PerformSubTask(std::string Description, ReturnType
+(*F)(TokenArray::RawTokenIterator&, ArgumentTypesWithoutToken...),
+TokenArray::RawTokenIterator& FirstToken, ArgumentTypesWithoutToken... Args) {
+  TokenArray& ThisTokenArray = FirstToken.GetArray();
+
+  ThisTokenArray.CurrentTask->SubTasks.emplace_back(Description,
+ThisTokenArray.CurrentTask, FirstToken); ThisTokenArray.CurrentTask =
+&ThisTokenArray.CurrentTask->SubTasks.back();
+
+  ReturnType ReturnValue = F(FirstToken, Args...);
+
+  ThisTokenArray.CurrentTask = ThisTokenArray.CurrentTask->Parent;
+
+  return ReturnValue;
+}*/

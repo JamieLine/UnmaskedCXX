@@ -1,18 +1,31 @@
 #ifndef TESTCREATOR_STRUCTS_TOKENARRAY_H
 #define TESTCREATOR_STRUCTS_TOKENARRAY_H
 
+#include <iostream>
+#include <memory>
 #include <vector>
 
 #include "RichToken.h"
 
 // typedef std::vector<std::string> TokenArray;
 
+// Forward declaration
+class Task;
+
 class TokenArray {
  private:
   std::vector<std::string> RawTokens;
   std::vector<RichToken> RichTokens;
 
+  // TODO: Maybe TokenArray shouldn't also hold its parsing task tree? But
+  // that's difficult and probably not worth it?
+  Task* RootTask;
+  
+
  public:
+  Task* CurrentTask;
+
+
   class RichTokenIterator;  // Forward declaration, so we can define a Raw ->
                             // Rich converter. The other direction doesn't need
                             // a forward declaration.
@@ -54,6 +67,10 @@ class TokenArray {
     reference operator*() const { return SourceArray.RawTokens.at(Index); }
 
     RichTokenIterator ToRich() { return RichTokenIterator(Index, SourceArray); }
+
+    TokenArray& GetArray() { return SourceArray; }
+
+    Task* GetCurrentTask() { return SourceArray.CurrentTask; }
 
     // TODO: Write a "PrintAround" method that outputs the tokens around the one
     // this iterator points to
@@ -100,10 +117,43 @@ class TokenArray {
   }
 
   // TODO: Move Tokenize into here
-  TokenArray(std::string ToTokenize, std::vector<char> KeptDelimiters,
+  TokenArray(std::string TaskDescription, std::string ToTokenize,
+             std::vector<char> KeptDelimiters,
              std::vector<char> DiscardedDelimiters);
 
   void DEBUG_OutputBothArrays();
+
+  inline Task* GetTaskTreeRoot() { return RootTask; }
+
+
+  ~TokenArray();
 };
+
+/*
+#include "Task.h"
+
+template <typename ReturnType, typename... ArgumentTypesWithoutToken>
+ReturnType PerformSubTask(std::string Description,
+                          ReturnType (*F)(TokenArray::RawTokenIterator&,
+                                          ArgumentTypesWithoutToken...),
+                          TokenArray::RawTokenIterator& FirstToken,
+                          ArgumentTypesWithoutToken... Args) {
+  TokenArray& ThisTokenArray = FirstToken.GetArray();
+
+  ThisTokenArray.CurrentTask->SubTasks.emplace_back(
+      Description, ThisTokenArray.CurrentTask, FirstToken);
+  ThisTokenArray.CurrentTask = &ThisTokenArray.CurrentTask->SubTasks.back();
+
+  ReturnType ReturnValue = F(FirstToken, Args...);
+
+  ThisTokenArray.CurrentTask = ThisTokenArray.CurrentTask->Parent;
+
+  return ReturnValue;
+} */
+
+// template<typename ReturnType, typename... ArgumentTypesWithoutToken>
+// ReturnType PerformSubTask(std::string Description, ReturnType
+// (*F)(TokenArray::RawTokenIterator&, ArgumentTypesWithoutToken...),
+// TokenArray::RawTokenIterator& FirstToken, ArgumentTypesWithoutToken... Args);
 
 #endif /* TESTCREATOR_STRUCTS_TOKENARRAY_H */

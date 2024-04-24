@@ -21,6 +21,10 @@ AnalyzeTemporaryDtors: false
 FormatStyle:     google
 User:            linej
 CheckOptions:
+  - key: SortIncludes
+    value: Never
+  - key: IncludeBlocks
+    value: Preserve
   - key:             readability-suspicious-call-argument.PrefixSimilarAbove
     value:           '30'
   - key:             cppcoreguidelines-no-malloc.Reallocations

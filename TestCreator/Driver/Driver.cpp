@@ -7,11 +7,13 @@
 
 #include "Logging.h"
 #include "StringOperations.h"
+#include "TestCreator/ErrorWriter/ErrorWriter.h"
 #include "TestCreator/Parsing/MicroParsers/AcceptUnmaskedAlwaysReturnValueTest.h"
 #include "TestCreator/Parsing/MicroParsers/AcceptUnmaskedIncludeFile.h"
 #include "TestCreator/Parsing/MicroParsers/AcceptUnmaskedPredicateTest.h"
 #include "TestCreator/Parsing/MicroParsers/AcceptUnmaskedSetParameter.h"
 #include "TestCreator/Parsing/MicroParsers/AcceptUnmaskedStabilisingSetTest.h"
+#include "TestCreator/Parsing/PerformSubTask.h"
 #include "TestCreator/Structs/Filepath.h"
 #include "TestCreator/Structs/ParsedUnmaskedPredicateTest.h"
 #include "TestCreator/Structs/TestCreationContext.h"
@@ -60,7 +62,8 @@ auto Driver::ParseInputFile(const Filepath& FileAddress) -> TestCreationStatus {
   std::cout << CurrentContext.TestDefinitionPath.Path;
   std::cout << std::endl;
 
-  TokenArray Tokens(InputFile, KeptDelimiters, DiscardedDelimiters);
+  TokenArray Tokens("Parsing " + FileAddress.Path, InputFile, KeptDelimiters,
+                    DiscardedDelimiters);
 
   // TODO: REMOVE
   Tokens.DEBUG_OutputBothArrays();
@@ -74,7 +77,9 @@ auto Driver::ParseInputFile(const Filepath& FileAddress) -> TestCreationStatus {
     // strings
 
     if (*CurrentToken == "UnmaskedPredicateTest") {
-      auto ParsedTest = AcceptUnmaskedPredicateTest(CurrentToken);
+      auto ParsedTest =
+          PerformSubTask("Parsing UnmaskedPredicateTest",
+                         AcceptUnmaskedPredicateTest, CurrentToken);
       if (!ParsedTest.WasLegalInput) {
         Log(std::cout, ERROR,
             "Attempted to parse UnmaskedPredicateTest, but it was illegal.");
@@ -162,6 +167,11 @@ auto Driver::ParseInputFile(const Filepath& FileAddress) -> TestCreationStatus {
       CurrentToken++;
     }
   }
+
+  // TODO: REMOVE THIS ITS FOR TESTING
+  std::cout << "ERROR WRITER TEST" << std::endl;
+  ErrorWriter Writer(Tokens);
+  Writer.PrintEverything();
 
   return TestCreationStatus::ALL_OK;
 }
